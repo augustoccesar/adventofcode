@@ -28,30 +28,39 @@ func readIntSliceInput() []int {
 	return iInput
 }
 
-func getValidNextAdapters(currJoltage int, adapters []int) []int {
-	valid := []int{}
-	for _, adapter := range adapters {
-		diff := adapter - currJoltage
-		if diff > 0 && diff <= 3 {
-			valid = append(valid, adapter)
-		}
-	}
-
-	return valid
-}
-
 func partOne() {
 	adapters := readIntSliceInput()
 	sort.Ints(adapters)
 
-	currAdapter := 0
+	largestJolts := adapters[len(adapters)-1]
+	smalledsJolts := adapters[0]
+	lookup := map[int]bool{}
+
+	for _, item := range adapters {
+		lookup[item] = true
+	}
+
+	// 3 starts with 1 to compensate for the built-in adapter on the device
+	// that is always 3 jolts more than the largest adapter
 	diffs := map[int]int{1: 0, 2: 0, 3: 1}
-	for i := range adapters {
-		validAdapters := getValidNextAdapters(currAdapter, adapters[i:])
-		nextAdapter := validAdapters[0]
-		diff := validAdapters[0] - currAdapter
+
+	// Add the starting adapter diff to the outlet
+	diffs[smalledsJolts]++
+
+	for _, adapter := range adapters {
+		if adapter == largestJolts {
+			break
+		}
+
+		validAdapters := []int{}
+		for i := 1; i <= 3; i++ {
+			if _, ok := lookup[adapter+i]; ok {
+				validAdapters = append(validAdapters, adapter+i)
+			}
+		}
+
+		diff := validAdapters[0] - adapter
 		diffs[diff]++
-		currAdapter = nextAdapter
 	}
 
 	result := diffs[1] * diffs[3]
@@ -86,9 +95,9 @@ func partTwo() {
 	// 10: 7        (4 -> 0 from the 9 + 0 from the 8 + 4 from the 7)
 	// 11: 10       (4 -> 4 from the 10 + 0 from the 9 + 0 from the 8)
 	// 12: 11, 10   (8 -> 4 from the 11 + 4 from the 10 + 0 from the 9)
-	// 15: 12       (8 -> 0 from the 14 + 0 from the 13 + 4 from the 12)
-	// 16: 15       (8 -> 4 from the 15 + 0 from the 14 + 0 from the 13)
-	// 19: 16       (8 -> 0 from the 18 + 0 from the 17 + 4 from the 16)
+	// 15: 12       (8 -> 0 from the 14 + 0 from the 13 + 8 from the 12)
+	// 16: 15       (8 -> 8 from the 15 + 0 from the 14 + 0 from the 13)
+	// 19: 16       (8 -> 0 from the 18 + 0 from the 17 + 8 from the 16)
 
 	adapters := readIntSliceInput()
 	sort.Ints(adapters)
