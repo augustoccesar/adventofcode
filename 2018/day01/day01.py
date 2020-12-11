@@ -1,12 +1,3 @@
-def read_input() -> str:
-    try:
-        f = open("./input.txt", "r")
-        # f = open("./example.txt", "r")
-        return f.read()
-    except OSError:
-        exit(1)
-
-
 def part_one():
     result = sum([int(x) for x in read_input().split("\n")])
 
@@ -31,6 +22,17 @@ def part_two():
     print(f"Part Two: {result}")
 
 
+# -----------------------------------------------------------------------------
+
+
+def read_input() -> str:
+    try:
+        f = open("./input.txt", "r")
+        return f.read()
+    except OSError:
+        exit(1)
+
+
 if __name__ == "__main__":
     part_one()
-    part_two()
+    part_two
