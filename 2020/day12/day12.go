@@ -9,89 +9,47 @@ import (
 	"strings"
 )
 
+var commandPattern = regexp.MustCompile(`(\w)(\d+)`)
+var commands = strings.Split(readInput(), "\n")
+var directions = []string{"E", "S", "W", "N"}
+
 func partOne() {
-	commandPattern := regexp.MustCompile(`(\w)(\d+)`)
-	commands := strings.Split(readInput(), "\n")
-
-	directions := []string{"E", "S", "W", "N"}
-	facingIdx := 0
-
-	sum := map[string]int{"NS": 0, "WE": 0}
+	tracker := map[string]int{"NS": 0, "WE": 0}
+	facingIdx := 0 // To be used to query direction
 
 	for _, command := range commands {
-		match := commandPattern.FindAllStringSubmatch(command, -1)[0]
-		cmd := match[1]
-		value, _ := strconv.Atoi(match[2])
+		cmd, value := parseCommand(command)
 
 		if cmd == "F" {
 			facing := directions[facingIdx]
-
-			switch facing {
-			case "E":
-				sum["WE"] += value
-				break
-			case "W":
-				sum["WE"] -= value
-				break
-			case "N":
-				sum["NS"] += value
-				break
-			case "S":
-				sum["NS"] -= value
-				break
-			}
+			moveInDirection(tracker, facing, value)
 		}
 
 		if cmd == "R" || cmd == "L" {
-			base := 0
-			if cmd == "R" {
-				base = 0
-			} else {
-				base = 360
-				value *= -1
+			if cmd == "L" {
+				value = 360 - value // Equivalent of the left rotation to the right
 			}
 
-			v := (base + value) / 90
-
-			facingIdx = (facingIdx + v) % 4
+			facingIdx = (facingIdx + (value / 90)) % 4
 		}
 
 		if inArr(cmd, directions) {
-			switch cmd {
-			case "E":
-				sum["WE"] += value
-				break
-			case "W":
-				sum["WE"] -= value
-				break
-			case "N":
-				sum["NS"] += value
-				break
-			case "S":
-				sum["NS"] -= value
-				break
-			}
+			moveInDirection(tracker, cmd, value)
 		}
 
 	}
 
-	ns := int(math.Abs(float64(sum["NS"])))
-	we := int(math.Abs(float64(sum["WE"])))
+	ns := int(math.Abs(float64(tracker["NS"])))
+	we := int(math.Abs(float64(tracker["WE"])))
 	fmt.Printf("Part One: %d\n", ns+we)
 }
 
 func partTwo() {
-	commandPattern := regexp.MustCompile(`(\w)(\d+)`)
-	commands := strings.Split(readInput(), "\n")
-
-	directions := []string{"E", "S", "W", "N"}
 	waypoint := map[string]int{"NS": 1, "WE": 10}
 	ship := map[string]int{"NS": 0, "WE": 0}
 
 	for _, command := range commands {
-		match := commandPattern.FindAllStringSubmatch(command, -1)[0]
-		cmd := match[1]
-		value, _ := strconv.Atoi(match[2])
+		cmd, value := parseCommand(command)
 
 		if cmd == "F" {
 			ship["NS"] += waypoint["NS"] * value
@@ -101,7 +59,7 @@ func partTwo() {
 		if cmd == "R" || cmd == "L" {
 			fValue := degreeToRadians(value)
 			if cmd == "R" {
-				fValue = degreeToRadians(360) - fValue
+				fValue = -fValue
 			}
 
 			sin := int(math.Sin(fValue))
@@ -115,20 +73,7 @@ func partTwo() {
 		}
 
 		if inArr(cmd, directions) {
-			switch cmd {
-			case "E":
-				waypoint["WE"] += value
-				break
-			case "W":
-				waypoint["WE"] -= value
-				break
-			case "N":
-				waypoint["NS"] += value
-				break
-			case "S":
-				waypoint["NS"] -= value
-				break
-			}
+			moveInDirection(waypoint, cmd, value)
 		}
 	}
 
@@ -136,6 +81,32 @@ func partTwo() {
 	we := int(math.Abs(float64(ship["WE"])))
 
 	fmt.Printf("Part Two: %d\n", we+ns)
+}
+
+// command, value
+func parseCommand(rawCommand string) (string, int) {
+	match := commandPattern.FindAllStringSubmatch(rawCommand, -1)[0]
+	cmd := match[1]
+	value, _ := strconv.Atoi(match[2])
+
+	return cmd, value
+}
+
+func moveInDirection(movementTracker map[string]int, direction string, amount int) {
+	switch direction {
+	case "E":
+		movementTracker["WE"] += amount
+		break
+	case "W":
+		movementTracker["WE"] -= amount
+		break
+	case "N":
+		movementTracker["NS"] += amount
+		break
+	case "S":
+		movementTracker["NS"] -= amount
+		break
+	}
 }
 
 func degreeToRadians(degrees int) float64 {
