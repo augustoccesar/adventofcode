@@ -41,7 +41,8 @@ func partTwo() {
 
 	lastResult := 0
 	sequentialResult := 0
-	for true {
+	// If the same result happens more than 2 times on a row, consider it the answer
+	for sequentialResult <= 2 {
 		rules, messages := parseInput()
 		rules[8] = newRules[8].rule
 		rules[11] = newRules[11].rule
@@ -50,10 +51,6 @@ func partTwo() {
 
 		if res == lastResult {
 			sequentialResult++
-			// If the same result happens more than 2 times on a row, consider it the answer
-			if sequentialResult > 2 {
-				break
-			}
 		} else {
 			lastResult = res
 			sequentialResult = 0
