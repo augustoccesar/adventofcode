@@ -2,17 +2,17 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"math"
-	"strconv"
 	"strings"
+
+	"github.com/augustoccesar/adventofcode/utils"
 )
 
 func partOne() {
-	input := readInput()
+	input := utils.ReadFile("./input.txt")
 	data := strings.Split(input, "\n")
 
-	earliestOnPort, _ := strconv.Atoi(data[0])
+	earliestOnPort := utils.Atoi(data[0])
 	busIDs := strings.Split(data[1], ",")
 	shortestID, shortestTime := math.MaxInt64, math.MaxInt64
 
@@ -21,7 +21,7 @@ func partOne() {
 			continue
 		}
 
-		iTime, _ := strconv.Atoi(time)
+		iTime := utils.Atoi(time)
 		mult := earliestOnPort / iTime
 		nextTime := -1
 		for nextTime == -1 {
@@ -43,17 +43,17 @@ func partOne() {
 }
 
 func partTwo() {
-	input := strings.Split(readInput(), "\n")[1]
+	input := strings.Split(utils.ReadFile("./input.txt"), "\n")[1]
 	busIDs := strings.Split(input, ",")
 
 	time := 0
-	inc, _ := strconv.Atoi(busIDs[0]) // Initial increment is by the first bus time
+	inc := utils.Atoi(busIDs[0]) // Initial increment is by the first bus time
 	for i := 1; i < len(busIDs); i++ {
 		if busIDs[i] == "x" {
 			continue
 		}
 
-		newTime, _ := strconv.Atoi(busIDs[i])
+		newTime := utils.Atoi(busIDs[i])
 		for true {
 			time += inc
 			if (time+i)%newTime == 0 {
@@ -74,13 +74,4 @@ func partTwo() {
 func main() {
 	partOne()
 	partTwo()
-}
-
-func readInput() string {
-	input, err := ioutil.ReadFile("./input.txt")
-	if err != nil {
-		panic(err)
-	}
-
-	return string(input)
 }
