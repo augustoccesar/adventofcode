@@ -49,3 +49,27 @@ func SliceAll(slice []string, value string) bool {
 
 	return true
 }
+
+// SliceCombinations Generate combinations for an X size using a slice of strings
+// Example:
+// []int{"0", "1"} and size 2 generates list containing:
+//    - []int{"0", "0"}
+//    - []int{"0", "1"}
+//    - []int{"1", "0"}
+//    - []int{"1", "1"}
+func SliceCombinations(slice []string, size int) [][]string {
+	result := [][]string{}
+	for _, item := range slice {
+		if size > 1 {
+			for _, item2 := range SliceCombinations(slice, size-1) {
+				n := append([]string{item}, item2...)
+				result = append(result, n)
+			}
+			continue
+		}
+
+		result = append(result, []string{item})
+	}
+
+	return result
+}
