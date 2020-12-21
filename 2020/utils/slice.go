@@ -73,3 +73,17 @@ func SliceCombinations(slice []string, size int) [][]string {
 
 	return result
 }
+
+func SliceCount(slice []string) map[string]int {
+	result := map[string]int{}
+
+	for _, item := range slice {
+		if _, ok := result[item]; !ok {
+			result[item] = 0
+		}
+
+		result[item]++
+	}
+
+	return result
+}

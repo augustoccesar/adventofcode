@@ -2,8 +2,9 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"strings"
+
+	"github.com/augustoccesar/adventofcode/utils"
 )
 
 // row, col
@@ -18,38 +19,8 @@ var directionModifiers = [][]int{
 	{1, -1},  // Down Left
 }
 
-func countItems(arr []string) map[string]int {
-	result := map[string]int{}
-
-	for _, item := range arr {
-		if _, ok := result[item]; !ok {
-			result[item] = 0
-		}
-
-		result[item]++
-	}
-
-	return result
-}
-
-func countItemsMap(m [][]string) map[string]int {
-	result := map[string]int{}
-
-	for _, row := range m {
-		for _, item := range row {
-			if _, ok := result[item]; !ok {
-				result[item] = 0
-			}
-
-			result[item]++
-		}
-	}
-
-	return result
-}
-
 func buildMap() [][]string {
-	input := readInput()
+	input := utils.ReadFile("./input.txt")
 
 	rows := strings.Split(input, "\n")
 	sMap := make([][]string, len(rows))
@@ -104,7 +75,7 @@ func getLineOfSigth(sMap [][]string, rowIdx int, colIdx int, sightLen int) []str
 func runIterations(sMap *[][]string, maxOccupied int, sightLen int) {
 	hadChanges := true
 	for hadChanges {
-		nextMap := deepCopy(*sMap)
+		nextMap := utils.MatrixDeepCopy(*sMap)
 
 		changes := 0
 		for rowIdx, row := range *sMap {
@@ -114,7 +85,7 @@ func runIterations(sMap *[][]string, maxOccupied int, sightLen int) {
 				}
 
 				spotsOnSight := getLineOfSigth(*sMap, rowIdx, colIdx, sightLen)
-				itemsCount := countItems(spotsOnSight)
+				itemsCount := utils.SliceCount(spotsOnSight)
 
 				if spot == "L" && itemsCount["#"] == 0 {
 					nextMap[rowIdx][colIdx] = "#"
@@ -142,7 +113,7 @@ func partOne() {
 
 	runIterations(&sMap, 4, 1)
 
-	fmt.Printf("Part One: %d\n", countItemsMap(sMap)["#"])
+	fmt.Printf("Part One: %d\n", utils.MatrixCount(sMap)["#"])
 }
 
 func partTwo() {
@@ -150,31 +121,12 @@ func partTwo() {
 
 	runIterations(&sMap, 5, -1)
 
-	fmt.Printf("Part Two: %d\n", countItemsMap(sMap)["#"])
-}
-
-func main() {
-	partOne()
-	partTwo()
+	fmt.Printf("Part Two: %d\n", utils.MatrixCount(sMap)["#"])
 }
 
 // --------------------------------------------------------------------------------------------------------------------
 
-func readInput() string {
-	input, err := ioutil.ReadFile("./input.txt")
-	if err != nil {
-		panic(err)
-	}
-
-	return string(input)
-}
-
-func deepCopy(in [][]string) [][]string {
-	out := make([][]string, len(in))
-	for i, v := range in {
-		out[i] = make([]string, len(v))
-		copy(out[i], v)
-	}
-
-	return out
+func main() {
+	partOne()
+	partTwo()
 }

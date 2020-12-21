@@ -96,3 +96,13 @@ func MatrixRemove(matrix [][]string, item string) [][]string {
 
 	return matrix
 }
+
+func MatrixDeepCopy(matrix [][]string) [][]string {
+	newMatrix := make([][]string, len(matrix))
+	for i, v := range matrix {
+		newMatrix[i] = make([]string, len(v))
+		copy(newMatrix[i], v)
+	}
+
+	return newMatrix
+}
