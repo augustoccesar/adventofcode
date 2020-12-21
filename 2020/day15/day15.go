@@ -2,15 +2,16 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"strconv"
 	"strings"
+
+	"github.com/augustoccesar/adventofcode/utils"
 )
 
 func resolve(lastTurn int) int {
 	mem := map[int][2]int{}
 	input := []int{}
-	for i, item := range strings.Split(readInput(), ",") {
+	for i, item := range strings.Split(utils.ReadFile("./input.txt"), ",") {
 		iItem, _ := strconv.Atoi(item)
 		input = append(input, iItem)
 
@@ -57,13 +58,4 @@ func partTwo() {
 func main() {
 	partOne()
 	partTwo()
-}
-
-func readInput() string {
-	input, err := ioutil.ReadFile("./input.txt")
-	if err != nil {
-		panic(err)
-	}
-
-	return string(input)
 }
