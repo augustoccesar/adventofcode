@@ -2,11 +2,11 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"math"
 	"regexp"
-	"strconv"
 	"strings"
+
+	"github.com/augustoccesar/adventofcode/utils"
 )
 
 type side = string
@@ -27,7 +27,7 @@ type tile struct {
 func (t *tile) rotate() *tile {
 	newTile := t.clone()
 
-	newTile.data = rotate(t.data)
+	newTile.data = utils.MatrixRotate(t.data)
 
 	return newTile
 }
@@ -35,7 +35,7 @@ func (t *tile) rotate() *tile {
 func (t *tile) flip() *tile {
 	newTile := t.clone()
 
-	newTile.data = flip(t.data)
+	newTile.data = utils.MatrixFlip(t.data)
 
 	return newTile
 }
@@ -85,7 +85,7 @@ func (t *tile) getDataSide(side side) string {
 }
 
 func (t *tile) col(i int) []string {
-	return col(t.data, i)
+	return utils.MatrixCol(t.data, i)
 }
 
 func (t *tile) clone() *tile {
@@ -296,13 +296,13 @@ func partTwo() {
 
 	mutations := [][][]string{
 		combinedTiles,
-		rotate(combinedTiles),
-		rotate(rotate(combinedTiles)),
-		rotate(rotate(rotate(combinedTiles))),
-		flip(combinedTiles),
-		rotate(flip(combinedTiles)),
-		rotate(rotate(flip(combinedTiles))),
-		rotate(rotate(rotate(flip(combinedTiles)))),
+		utils.MatrixRotate(combinedTiles),
+		utils.MatrixRotate(utils.MatrixRotate(combinedTiles)),
+		utils.MatrixRotate(utils.MatrixRotate(utils.MatrixRotate(combinedTiles))),
+		utils.MatrixFlip(combinedTiles),
+		utils.MatrixRotate(utils.MatrixFlip(combinedTiles)),
+		utils.MatrixRotate(utils.MatrixRotate(utils.MatrixFlip(combinedTiles))),
+		utils.MatrixRotate(utils.MatrixRotate(utils.MatrixRotate(utils.MatrixFlip(combinedTiles)))),
 	}
 
 	amount := 0
@@ -313,7 +313,7 @@ func partTwo() {
 		}
 	}
 
-	total := count(combinedTiles, "#")
+	total := utils.MatrixCount(combinedTiles, "#")
 	occupiedBySeamonsters := amount * 15
 
 	fmt.Printf("Part Two: %d\n", total-occupiedBySeamonsters)
@@ -367,8 +367,8 @@ func lookForSeamonsters(data [][]string) int {
 					continue
 				}
 
-				data := lookupCoordinates(data, coords)
-				if all(data, "#") {
+				data := utils.MatrixLookup(data, coords)
+				if utils.SliceAll(data, "#") {
 					monsters++
 				}
 			}
@@ -380,103 +380,17 @@ func lookForSeamonsters(data [][]string) int {
 
 // --------------------------------------------------------------------------------------------------------------------
 
-func rotate(matrix [][]string) [][]string {
-	newMatrix := make([][]string, len(matrix))
-
-	for rowIdx := range newMatrix {
-		newMatrix[rowIdx] = reverse(col(matrix, rowIdx))
-	}
-
-	return newMatrix
-}
-
-func flip(matrix [][]string) [][]string {
-	newMatrix := make([][]string, len(matrix))
-
-	for rowIdx, row := range matrix {
-		newRow := make([]string, len(row))
-		for i, j := 0, len(row)-1; i < j; i, j = i+1, j-1 {
-			newRow[i], newRow[j] = row[j], row[i]
-		}
-		newMatrix[rowIdx] = newRow
-	}
-
-	return newMatrix
-}
-
-func col(matrix [][]string, i int) []string {
-	col := make([]string, len(matrix))
-	for rowIdx, row := range matrix {
-		col[rowIdx] = row[i]
-	}
-
-	return col
-}
-
-func stringify(matrix [][]string) string {
-	var res strings.Builder
-
-	for _, row := range matrix {
-		for _, item := range row {
-			fmt.Fprintf(&res, "%s ", item)
-		}
-		fmt.Fprint(&res, "\n")
-	}
-
-	return res.String()
-}
-
-func lookupCoordinates(matrix [][]string, coords [][2]int) []string {
-	res := []string{}
-	for _, coord := range coords {
-		res = append(res, matrix[coord[0]][coord[1]])
-	}
-
-	return res
-}
-
-func count(matrix [][]string, value string) int {
-	items := 0
-	for _, row := range matrix {
-		for _, item := range row {
-			if item == value {
-				items++
-			}
-		}
-	}
-
-	return items
-}
-
-func all(slice []string, value string) bool {
-	for _, item := range slice {
-		if item != value {
-			return false
-		}
-	}
-
-	return true
-}
-
-func reverse(slice []string) []string {
-	for i, j := 0, len(slice)-1; i < j; i, j = i+1, j-1 {
-		slice[i], slice[j] = slice[j], slice[i]
-	}
-
-	return slice
-}
-
 func parseInput() []*tile {
 	reg := regexp.MustCompile(`Tile\s(\d+):`)
 
-	input := readInput()
+	input := utils.ReadFile("./input.txt")
 	tiles := []*tile{}
 
 	for _, tileData := range strings.Split(input, "\n\n") {
 		lines := strings.Split(tileData, "\n")
 
 		id := reg.FindStringSubmatch(lines[0])[1]
-		t := createNewTile(atoi(id), make([][]string, len(lines)-1))
+		t := createNewTile(utils.Atoi(id), make([][]string, len(lines)-1))
 		for rowIdx, row := range lines[1:] {
 			cols := strings.Split(row, "")
 			t.data[rowIdx] = make([]string, len(cols))
@@ -491,27 +405,9 @@ func parseInput() []*tile {
 	return tiles
 }
 
-func atoi(str string) int {
-	val, err := strconv.Atoi(str)
-	if err != nil {
-		panic(err)
-	}
-
-	return val
-}
-
 // --------------------------------------------------------------------------------------------------------------------
 
 func main() {
 	partOne()
 	partTwo()
-}
-
-func readInput() string {
-	input, err := ioutil.ReadFile("./input.txt")
-	if err != nil {
-		panic(err)
-	}
-
-	return string(input)
 }
