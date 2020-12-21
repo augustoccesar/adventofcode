@@ -3,7 +3,7 @@ package utils
 func SliceIntersect(sliceA []string, sliceB []string) []string {
 	res := []string{}
 	for _, item := range sliceA {
-		if Contains(sliceB, item) {
+		if SliceContains(sliceB, item) {
 			res = append(res, item)
 		}
 	}
