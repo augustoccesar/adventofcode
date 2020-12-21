@@ -294,19 +294,15 @@ func partTwo() {
 
 	combinedTiles := combineTiles(tiles)
 
-	res := flip(combinedTiles)
-	res = rotate(res)
-	res = rotate(res)
-
 	mutations := [][][]string{
-		res,
-		rotate(res),
-		rotate(rotate(res)),
-		rotate(rotate(rotate(res))),
-		flip(res),
-		rotate(flip(res)),
-		rotate(rotate(flip(res))),
-		rotate(rotate(rotate(flip(res)))),
+		combinedTiles,
+		rotate(combinedTiles),
+		rotate(rotate(combinedTiles)),
+		rotate(rotate(rotate(combinedTiles))),
+		flip(combinedTiles),
+		rotate(flip(combinedTiles)),
+		rotate(rotate(flip(combinedTiles))),
+		rotate(rotate(rotate(flip(combinedTiles)))),
 	}
 
 	amount := 0
@@ -317,7 +313,7 @@ func partTwo() {
 		}
 	}
 
-	total := count(res, "#")
+	total := count(combinedTiles, "#")
 	occupiedBySeamonsters := amount * 15
 
 	fmt.Printf("Part Two: %d\n", total-occupiedBySeamonsters)
