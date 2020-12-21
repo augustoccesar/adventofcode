@@ -2,10 +2,10 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"regexp"
-	"strconv"
 	"strings"
+
+	"github.com/augustoccesar/adventofcode/utils"
 )
 
 var numberPattern = regexp.MustCompile(`\d+`)
@@ -75,7 +75,7 @@ func execute(rules map[int]string, messages []string, visitLimiters map[int]*vis
 				stillHasNumbers = true
 
 				rules[i] = numberPattern.ReplaceAllStringFunc(rules[i], func(s string) string {
-					digit := atoi(s)
+					digit := utils.Atoi(s)
 
 					if limiter, ok := visitLimiters[digit]; ok {
 						if limiter.currentVisits > limiter.maxVisits {
@@ -84,7 +84,7 @@ func execute(rules map[int]string, messages []string, visitLimiters map[int]*vis
 						limiter.currentVisits++
 					}
 
-					return rules[atoi(s)]
+					return rules[utils.Atoi(s)]
 				})
 			}
 		}
@@ -118,12 +118,12 @@ func cleanRule(rule string) string {
 
 func parseInput() (rules map[int]string, messages []string) {
 	rules = map[int]string{}
-	parts := strings.Split(readInput(), "\n\n")
+	parts := strings.Split(utils.ReadFile("./input.txt"), "\n\n")
 
 	for _, rule := range strings.Split(parts[0], "\n") {
 		ruleParts := strings.Split(rule, ": ")
 
-		ruleKey := atoi(ruleParts[0])
+		ruleKey := utils.Atoi(ruleParts[0])
 		ruleValue := "(" + ruleParts[1] + ")" // Group the values into parenthesis for the matching regex
 
 		rules[ruleKey] = ruleValue
@@ -138,22 +138,4 @@ func parseInput() (rules map[int]string, messages []string) {
 func main() {
 	partOne()
 	partTwo()
-}
-
-func readInput() string {
-	input, err := ioutil.ReadFile("./input.txt")
-	if err != nil {
-		panic(err)
-	}
-
-	return string(input)
-}
-
-func atoi(str string) int {
-	val, err := strconv.Atoi(str)
-	if err != nil {
-		panic(err)
-	}
-
-	return val
 }
