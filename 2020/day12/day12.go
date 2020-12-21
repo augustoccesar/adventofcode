@@ -2,15 +2,16 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"math"
 	"regexp"
 	"strconv"
 	"strings"
+
+	"github.com/augustoccesar/adventofcode/utils"
 )
 
 var commandPattern = regexp.MustCompile(`(\w)(\d+)`)
-var commands = strings.Split(readInput(), "\n")
+var commands = strings.Split(utils.ReadFile("./input.txt"), "\n")
 var directions = []string{"E", "S", "W", "N"}
 
 func partOne() {
@@ -33,7 +34,7 @@ func partOne() {
 			facingIdx = (facingIdx + (value / 90)) % 4
 		}
 
-		if inArr(cmd, directions) {
+		if utils.SliceContains(directions, cmd) {
 			moveInDirection(tracker, cmd, value)
 		}
 
@@ -57,7 +58,7 @@ func partTwo() {
 		}
 
 		if cmd == "R" || cmd == "L" {
-			fValue := degreeToRadians(value)
+			fValue := utils.DegreeToRadians(value)
 			if cmd == "R" {
 				fValue = -fValue
 			}
@@ -72,7 +73,7 @@ func partTwo() {
 			waypoint["NS"] = x*sin + y*cos
 		}
 
-		if inArr(cmd, directions) {
+		if utils.SliceContains(directions, cmd) {
 			moveInDirection(waypoint, cmd, value)
 		}
 	}
@@ -109,32 +110,9 @@ func moveInDirection(movementTracker map[string]int, direction string, amount in
 	}
 }
 
-func degreeToRadians(degrees int) float64 {
-	return float64(degrees) * (math.Pi / 180.0)
-}
-
-func inArr(str string, arr []string) bool {
-	for _, item := range arr {
-		if item == str {
-			return true
-		}
-	}
-
-	return false
-}
-
 // --------------------------------------------------------------------------------------------------------------------
 
 func main() {
 	partOne()
 	partTwo()
-}
-
-func readInput() string {
-	input, err := ioutil.ReadFile("./input.txt")
-	if err != nil {
-		panic(err)
-	}
-
-	return string(input)
 }
