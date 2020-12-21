@@ -40,9 +40,9 @@ func (t *tile) flip() *tile {
 	return newTile
 }
 
-func (tileA *tile) fit(tileB *tile) bool {
+func (tileA *tile) fit(tileB *tile) (bool, side, side) {
 	if tileA.id == tileB.id {
-		return false
+		return false, "", ""
 	}
 
 	alignments := [][]side{
@@ -54,13 +54,11 @@ func (tileA *tile) fit(tileB *tile) bool {
 
 	for _, alignment := range alignments {
 		if tileA.getDataSide(alignment[0]) == tileB.getDataSide(alignment[1]) {
-			tileA.neighborTiles[alignment[0]] = tileB
-			tileB.neighborTiles[alignment[1]] = tileA
-			return true
+			return true, alignment[0], alignment[1]
 		}
 	}
 
-	return false
+	return false, "", ""
 }
 
 func (t *tile) getDataSide(side side) string {
@@ -102,7 +100,6 @@ func (t *tile) clone() *tile {
 	return &newTile
 }
 
-// TODO: Maybe rotation can receive a number of times to do it
 func (t *tile) mutations() []*tile {
 	return []*tile{
 		t,
@@ -200,9 +197,13 @@ func puzzleTogether(tiles []*tile) []*tile {
 		for _, tileA := range unassigned {
 			for _, tileB := range assigned {
 				for _, tileAMutation := range tileA.mutations() {
-					if tileB.fit(tileAMutation) {
-						assigned[tileA.id] = tileAMutation
-						*tileA = *tileAMutation
+					doesFit, sideB, sideA := tileB.fit(tileAMutation)
+					if doesFit {
+						tileA = tileAMutation
+
+						assigned[tileA.id] = tileA
+						tileB.neighborTiles[sideB] = tileA
+						tileA.neighborTiles[sideA] = tileB
 						delete(unassigned, tileA.id)
 						break
 					}
@@ -286,19 +287,99 @@ func partOne() {
 
 func partTwo() {
 	tiles := puzzleTogether(parseInput())
-	// newTiles := make([]*tile, len(tiles))
 
 	for _, tile := range tiles {
 		*tile = *tile.removeBorders()
-		// newTiles[i] = tile.removeBorders()
 	}
 
 	combinedTiles := combineTiles(tiles)
 
-	// res := flip(combinedTiles)
-	// res = rotate(res)
-	// res = rotate(res)
-	fmt.Print(stringify(combinedTiles))
+	res := flip(combinedTiles)
+	res = rotate(res)
+	res = rotate(res)
+
+	mutations := [][][]string{
+		res,
+		rotate(res),
+		rotate(rotate(res)),
+		rotate(rotate(rotate(res))),
+		flip(res),
+		rotate(flip(res)),
+		rotate(rotate(flip(res))),
+		rotate(rotate(rotate(flip(res)))),
+	}
+
+	amount := 0
+	for _, possibleData := range mutations {
+		amount = lookForSeamonsters(possibleData)
+		if amount > 0 {
+			break
+		}
+	}
+
+	total := count(res, "#")
+	occupiedBySeamonsters := amount * 15
+
+	fmt.Printf("Part Two: %d\n", total-occupiedBySeamonsters)
+}
+
+//                   #
+// #    ##    ##    ###
+//  #  #  #  #  #  #
+func lookForSeamonsters(data [][]string) int {
+	coordinates := func(row, col int) (validStart bool, coordinates [][2]int) {
+		coords := [][2]int{
+			{row + 1, col - 18},
+
+			{row + 1, col - 13},
+			{row + 1, col - 12},
+
+			{row + 1, col - 7},
+			{row + 1, col - 6},
+
+			{row + 1, col - 1},
+			{row + 1, col},
+			{row + 1, col + 1},
+
+			{row + 2, col - 17},
+			{row + 2, col - 14},
+			{row + 2, col - 11},
+			{row + 2, col - 8},
+			{row + 2, col - 5},
+			{row + 2, col - 2},
+		}
+
+		for _, coord := range coords {
+			if coord[0] > len(data)-1 || coord[0] < 0 {
+				return false, [][2]int{}
+			}
+
+			if coord[1] > len(data[0])-1 || coord[1] < 0 {
+				return false, [][2]int{}
+			}
+		}
+
+		return true, coords
+	}
+
+	monsters := 0
+	for i, row := range data {
+		for j, item := range row {
+			if item == "#" {
+				valid, coords := coordinates(i, j)
+				if !valid {
+					continue
+				}
+
+				data := lookupCoordinates(data, coords)
+				if all(data, "#") {
+					monsters++
+				}
+			}
+		}
+	}
+
+	return monsters
 }
 
 // --------------------------------------------------------------------------------------------------------------------
@@ -336,14 +417,6 @@ func col(matrix [][]string, i int) []string {
 	return col
 }
 
-func reverse(slice []string) []string {
-	for i, j := 0, len(slice)-1; i < j; i, j = i+1, j-1 {
-		slice[i], slice[j] = slice[j], slice[i]
-	}
-
-	return slice
-}
-
 func stringify(matrix [][]string) string {
 	var res strings.Builder
 
@@ -355,6 +428,46 @@ func stringify(matrix [][]string) string {
 	}
 
 	return res.String()
+}
+
+func lookupCoordinates(matrix [][]string, coords [][2]int) []string {
+	res := []string{}
+	for _, coord := range coords {
+		res = append(res, matrix[coord[0]][coord[1]])
+	}
+
+	return res
+}
+
+func count(matrix [][]string, value string) int {
+	items := 0
+	for _, row := range matrix {
+		for _, item := range row {
+			if item == value {
+				items++
+			}
+		}
+	}
+
+	return items
+}
+
+func all(slice []string, value string) bool {
+	for _, item := range slice {
+		if item != value {
+			return false
+		}
+	}
+
+	return true
+}
+
+func reverse(slice []string) []string {
+	for i, j := 0, len(slice)-1; i < j; i, j = i+1, j-1 {
+		slice[i], slice[j] = slice[j], slice[i]
+	}
+
+	return slice
 }
 
 func parseInput() []*tile {
@@ -394,13 +507,12 @@ func atoi(str string) int {
 // --------------------------------------------------------------------------------------------------------------------
 
 func main() {
-	// partOne()
+	partOne()
 	partTwo()
 }
 
 func readInput() string {
-	// input, err := ioutil.ReadFile("./input.txt")
-	input, err := ioutil.ReadFile("./example.txt")
+	input, err := ioutil.ReadFile("./input.txt")
 	if err != nil {
 		panic(err)
 	}
