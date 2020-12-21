@@ -2,8 +2,9 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"strings"
+
+	"github.com/augustoccesar/adventofcode/utils"
 )
 
 type status = int
@@ -70,7 +71,7 @@ func (d *dimension) defineNewStatus(x, y, z, w int) status {
 }
 
 func partOne() {
-	activeCubes, length, height := parseInput(readInput())
+	activeCubes, length, height := parseInput(utils.ReadFile("./input.txt"))
 	currentDimension := dimension{activeCubes: activeCubes}
 
 	for i := 1; i <= 6; i++ {
@@ -95,7 +96,7 @@ func partOne() {
 }
 
 func partTwo() {
-	activeCubes, length, height := parseInput(readInput())
+	activeCubes, length, height := parseInput(utils.ReadFile("./input.txt"))
 	currentDimension := dimension{activeCubes: activeCubes}
 
 	for i := 1; i <= 6; i++ {
@@ -142,13 +143,4 @@ func parseInput(input string) (activeCubes map[string]bool, length, height int) 
 	}
 
 	return activeCubes, length, height
-}
-
-func readInput() string {
-	input, err := ioutil.ReadFile("./input.txt")
-	if err != nil {
-		panic(err)
-	}
-
-	return string(input)
 }
