@@ -68,7 +68,7 @@ func processRecipes(recipes []recipe) (ingredients []string, allergens []string,
 				continue
 			}
 
-			allergenPossibleIngredients[allergen] = utils.Matches(allergenPossibleIngredients[allergen], recipe.ingredients)
+			allergenPossibleIngredients[allergen] = utils.SliceIntersect(allergenPossibleIngredients[allergen], recipe.ingredients)
 		}
 
 		ingredients = append(ingredients, recipe.ingredients...)
@@ -79,7 +79,7 @@ func processRecipes(recipes []recipe) (ingredients []string, allergens []string,
 			if len(aIngredients) == 1 {
 				ingredientAllergen[aIngredients[0]] = allergen
 
-				utils.RemoveFromAll(&allergenPossibleIngredients, aIngredients[0])
+				utils.MapRemoveFromAll(&allergenPossibleIngredients, aIngredients[0])
 				delete(allergenPossibleIngredients, allergen)
 			}
 		}

@@ -1,6 +1,6 @@
 package utils
 
-func Matches(sliceA []string, sliceB []string) []string {
+func SliceIntersect(sliceA []string, sliceB []string) []string {
 	res := []string{}
 	for _, item := range sliceA {
 		if Contains(sliceB, item) {
@@ -10,7 +10,7 @@ func Matches(sliceA []string, sliceB []string) []string {
 	return res
 }
 
-func Contains(slice []string, value string) bool {
+func SliceContains(slice []string, value string) bool {
 	for _, item := range slice {
 		if item == value {
 			return true

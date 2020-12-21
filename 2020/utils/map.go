@@ -1,6 +1,6 @@
 package utils
 
-func RemoveFromAll(m *map[string][]string, value string) {
+func MapRemoveFromAll(m *map[string][]string, value string) {
 	nm := *m
 
 	for k, v := range nm {
