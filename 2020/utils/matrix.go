@@ -72,3 +72,11 @@ func MatrixFlip(matrix [][]string) [][]string {
 
 	return newMatrix
 }
+
+func MatrixRemove(matrix [][]string, item string) [][]string {
+	for i, row := range matrix {
+		matrix[i] = SliceRemove(row, item)
+	}
+
+	return matrix
+}

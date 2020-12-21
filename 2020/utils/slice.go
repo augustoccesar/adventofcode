@@ -28,6 +28,18 @@ func SliceReverse(slice []string) []string {
 	return slice
 }
 
+func SliceRemove(slice []string, item string) []string {
+	newSlice := []string{}
+
+	for _, value := range slice {
+		if value != item {
+			newSlice = append(newSlice, value)
+		}
+	}
+
+	return newSlice
+}
+
 func SliceAll(slice []string, value string) bool {
 	for _, item := range slice {
 		if item != value {

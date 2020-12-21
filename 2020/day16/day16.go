@@ -2,10 +2,10 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"regexp"
-	"strconv"
 	"strings"
+
+	"github.com/augustoccesar/adventofcode/utils"
 )
 
 var rulePattern = regexp.MustCompile(`(.+):\s(\d+)-(\d+)\sor\s(\d+)-(\d+)`)
@@ -63,8 +63,8 @@ func generateRule(line string) Rule {
 	return Rule{
 		Name: match[1],
 		Ranges: []Range{
-			{Start: atoi(match[2]), End: atoi(match[3])},
-			{Start: atoi(match[4]), End: atoi(match[5])},
+			{Start: utils.Atoi(match[2]), End: utils.Atoi(match[3])},
+			{Start: utils.Atoi(match[4]), End: utils.Atoi(match[5])},
 		},
 	}
 }
@@ -153,7 +153,7 @@ func partTwo() {
 
 				// Since the field is now assigned to a group index, remove it from all the other
 				// groups
-				removeFromAll(validFields[0], groupsValidFields)
+				utils.MatrixRemove(groupsValidFields, validFields[0])
 
 				setAmount++
 			}
@@ -171,7 +171,7 @@ func partTwo() {
 // --------------------------------------------------------------------------------------------------------------------
 
 func parseInput() (rules []Rule, myTicket []int, nearbyTickets [][]int) {
-	inputParts := strings.Split(readInput(), "\n\n")
+	inputParts := strings.Split(utils.ReadFile("./input.txt"), "\n\n")
 	ruleLines := strings.Split(inputParts[0], "\n")
 	myTicketLine := strings.Replace(inputParts[1], "your ticket:\n", "", -1)
 	nearbyTicketsLines := strings.Split(strings.Replace(inputParts[2], "nearby tickets:\n", "", -1), "\n")
@@ -185,13 +185,13 @@ func parseInput() (rules []Rule, myTicket []int, nearbyTickets [][]int) {
 	}
 
 	for i, item := range strings.Split(myTicketLine, ",") {
-		myTicket[i] = atoi(item)
+		myTicket[i] = utils.Atoi(item)
 	}
 
 	for i, line := range nearbyTicketsLines {
 		nearbyTickets[i] = make([]int, len(rules))
 		for j, item := range strings.Split(line, ",") {
-			nearbyTickets[i][j] = atoi(item)
+			nearbyTickets[i][j] = utils.Atoi(item)
 		}
 	}
 
@@ -203,52 +203,4 @@ func parseInput() (rules []Rule, myTicket []int, nearbyTickets [][]int) {
 func main() {
 	partOne()
 	partTwo()
-}
-
-func readInput() string {
-	input, err := ioutil.ReadFile("./input.txt")
-	if err != nil {
-		panic(err)
-	}
-
-	return string(input)
-}
-
-// atoi is just an override of the default Atoi, since I don't want to worry about it failing (the input
-// should always cointain valid integer strings)
-func atoi(str string) int {
-	val, err := strconv.Atoi(str)
-	if err != nil {
-		panic(err)
-	}
-	return val
-}
-
-// remove remove a string from a string slice
-func remove(str string, arr []string) []string {
-	idx := -1
-	for i, item := range arr {
-		if item == str {
-			idx = i
-		}
-	}
-
-	if idx == -1 {
-		return arr
-	}
-
-	arr[idx] = arr[len(arr)-1]
-	arr[len(arr)-1] = ""
-	arr = arr[:len(arr)-1]
-
-	return arr
-}
-
-// removeFromAll remove a string from a number of string slices
-func removeFromAll(str string, arr [][]string) [][]string {
-	for i, dArr := range arr {
-		arr[i] = remove(str, dArr)
-	}
-
-	return arr
 }
