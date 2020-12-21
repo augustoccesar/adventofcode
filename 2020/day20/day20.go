@@ -313,7 +313,7 @@ func partTwo() {
 		}
 	}
 
-	total := utils.MatrixCount(combinedTiles, "#")
+	total := utils.MatrixCountItem(combinedTiles, "#")
 	occupiedBySeamonsters := amount * 15
 
 	fmt.Printf("Part Two: %d\n", total-occupiedBySeamonsters)

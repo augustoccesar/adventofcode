@@ -46,7 +46,23 @@ func MatrixLookup(matrix [][]string, coords [][2]int) []string {
 	return res
 }
 
-func MatrixCount(matrix [][]string, value string) int {
+func MatrixCount(matrix [][]string) map[string]int {
+	result := map[string]int{}
+
+	for _, row := range m {
+		for _, item := range row {
+			if _, ok := result[item]; !ok {
+				result[item] = 0
+			}
+
+			result[item]++
+		}
+	}
+
+	return result
+}
+
+func MatrixCountItem(matrix [][]string, value string) int {
 	items := 0
 	for _, row := range matrix {
 		for _, item := range row {
