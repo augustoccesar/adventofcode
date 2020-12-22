@@ -87,3 +87,9 @@ func SliceCount(slice []string) map[string]int {
 
 	return result
 }
+
+func SlicePopFront(slice []string) (item string, newSlice []string) {
+	item, newSlice = slice[0], slice[1:]
+
+	return
+}
