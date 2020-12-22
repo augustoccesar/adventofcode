@@ -1,5 +1,12 @@
 package utils
 
+func SliceCopy(slice []string) []string {
+	newSlice := make([]string, len(slice))
+	copy(newSlice, slice)
+
+	return newSlice
+}
+
 func SliceIntersect(sliceA []string, sliceB []string) []string {
 	res := []string{}
 	for _, item := range sliceA {
