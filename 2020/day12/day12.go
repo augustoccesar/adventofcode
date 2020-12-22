@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"math"
 	"regexp"
-	"strconv"
 	"strings"
 
 	"github.com/augustoccesar/adventofcode/utils"
@@ -88,7 +87,7 @@ func partTwo() {
 func parseCommand(rawCommand string) (string, int) {
 	match := commandPattern.FindAllStringSubmatch(rawCommand, -1)[0]
 	cmd := match[1]
-	value, _ := strconv.Atoi(match[2])
+	value := utils.Atoi(match[2])
 
 	return cmd, value
 }
