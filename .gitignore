@@ -2,3 +2,9 @@
 *example*.txt
 
 **/bin
+
+**/.settings
+**/.project
+**/.classpath
+**/.gradle
+**/build

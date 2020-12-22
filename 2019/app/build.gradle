@@ -1,0 +1,13 @@
+plugins {
+    id 'application'
+}
+
+repositories {
+}
+
+dependencies {
+}
+
+application {
+    mainClass = 'com.augustoccesar.adventofcode.Main'
+}
