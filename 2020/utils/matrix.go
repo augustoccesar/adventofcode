@@ -49,7 +49,7 @@ func MatrixLookup(matrix [][]string, coords [][2]int) []string {
 func MatrixCount(matrix [][]string) map[string]int {
 	result := map[string]int{}
 
-	for _, row := range m {
+	for _, row := range matrix {
 		for _, item := range row {
 			if _, ok := result[item]; !ok {
 				result[item] = 0
