@@ -2,27 +2,18 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"sort"
-	"strconv"
 	"strings"
+
+	"github.com/augustoccesar/adventofcode/utils"
 )
 
-func readInput() string {
-	input, err := ioutil.ReadFile("./input.txt")
-	if err != nil {
-		panic(err)
-	}
-
-	return string(input)
-}
-
 func readIntSliceInput() []int {
-	input := strings.Split(readInput(), "\n")
+	input := strings.Split(utils.ReadFile("./input.txt"), "\n")
 	iInput := make([]int, len(input))
 
 	for i, item := range input {
-		iInput[i], _ = strconv.Atoi(item)
+		iInput[i] = utils.Atoi(item)
 	}
 
 	return iInput
