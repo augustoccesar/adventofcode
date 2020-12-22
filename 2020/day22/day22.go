@@ -90,7 +90,7 @@ func hasDecksHappened(history [][]string, deckHash1, deckHash2 string) bool {
 	return false
 }
 
-func playRecursive(players []player) (gameWinner *player) {
+func playRecursive(players []player) (gameWinner player) {
 	p1 := players[0]
 	p2 := players[1]
 
@@ -98,14 +98,14 @@ func playRecursive(players []player) (gameWinner *player) {
 
 	round := 1
 	for len(p1.deck) > 0 && len(p2.deck) > 0 {
-		var roundWinner *player = nil
+		var roundWinner *player
 
 		// Before either player deals a card, if there was a previous round in this game that had
 		// exactly the same cards in the same order in the same players' decks, the game instantly
 		// ends in a win for player 1. Previous rounds from other games are not considered.
 		// (This prevents infinite games of Recursive Combat, which everyone agrees is a bad idea.)
 		if hasDecksHappened(deckRoundHistory, p1.hashDeck(), p2.hashDeck()) {
-			gameWinner = &p1
+			gameWinner = p1
 			break
 		}
 
@@ -157,12 +157,12 @@ func playRecursive(players []player) (gameWinner *player) {
 		// If collecting cards by winning the round causes a player to have all of the cards,
 		// they win, and the game ends.
 		if len(p1.deck) == 0 {
-			gameWinner = &p2
+			gameWinner = p2
 			break
 		}
 
 		if len(p2.deck) == 0 {
-			gameWinner = &p1
+			gameWinner = p1
 			break
 		}
 	}
