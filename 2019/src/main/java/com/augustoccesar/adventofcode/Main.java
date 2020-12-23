@@ -2,6 +2,9 @@ package com.augustoccesar.adventofcode;
 
 import java.util.Map;
 
+import com.augustoccesar.adventofcode.day01.Day1;
+import com.augustoccesar.adventofcode.day02.Day2;
+
 public class Main {
     public static void main(String[] args) {
         Map<String, BaseDay> days = Map.of("1", new Day1(), "2", new Day2());

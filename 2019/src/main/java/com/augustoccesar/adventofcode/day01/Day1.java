@@ -1,10 +1,11 @@
-package com.augustoccesar.adventofcode;
+package com.augustoccesar.adventofcode.day01;
 
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class Day1 extends BaseDay {
+import com.augustoccesar.adventofcode.BaseDay;
 
+public class Day1 extends BaseDay {
     @Override
     public void partOne() throws IOException {
         final AtomicInteger sum = new AtomicInteger(0);

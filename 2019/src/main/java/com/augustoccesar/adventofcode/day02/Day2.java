@@ -1,20 +1,22 @@
-package com.augustoccesar.adventofcode;
+package com.augustoccesar.adventofcode.day02;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.augustoccesar.adventofcode.BaseDay;
+
 public class Day2 extends BaseDay {
     @Override
-    void partOne() throws IOException {
+    public void partOne() throws IOException {
         int output = generateOutput(12, 2);
 
         System.out.println("Part One: " + output);
     }
 
     @Override
-    void partTwo() throws IOException {
+    public void partTwo() throws IOException {
         boolean found = false;
         int expected = 19690720;
         int noun = -1;

@@ -6,9 +6,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 public abstract class BaseDay {
-    abstract void partOne() throws IOException;
+    public abstract void partOne() throws IOException;
 
-    abstract void partTwo() throws IOException;
+    public abstract void partTwo() throws IOException;
 
     public void run() {
         try {
