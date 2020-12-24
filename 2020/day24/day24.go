@@ -30,8 +30,12 @@ func partTwo() {
 
 		for id, blacks := range blackNeighborsCount {
 			_, isBlack := blackTiles[id]
-			if isBlack && blacks != 0 && blacks <= 2 { // Any black tile with zero or more than 2 black tiles immediately adjacent to it is flipped to white. (AKA not black anymore)
+
+			// Any black tile with zero or more than 2 black tiles immediately adjacent to it
+			// is flipped to white. (AKA not black anymore, so check for the opposite range)
+			if isBlack && blacks != 0 && blacks <= 2 {
 				newBlacks[id] = blackTiles[id]
+
 			} else if !isBlack && blacks == 2 { // Any white tile with exactly 2 black tiles immediately adjacent to it is flipped to black.
 				newBlacks[id] = NewTileWithCoords(tileIDToCoords(id))
 			}
@@ -42,6 +46,8 @@ func partTwo() {
 
 	fmt.Printf("Day Two: %d\n", len(blackTiles))
 }
+
+// --------------------------------------------------------------------------------------------------------------------
 
 func parseInput() map[string]*Tile {
 	inputLines := strings.Split(utils.ReadFile("./input.txt"), "\n")
@@ -64,8 +70,6 @@ func parseInput() map[string]*Tile {
 	return blackTiles
 }
 
-// --------------------------------------------------------------------------------------------------------------------
-
 // NW  _  NE
 //  W  C  E
 // SW  _  SE
@@ -82,6 +86,15 @@ const (
 	DirectionW  Direction = "w"
 	DirectionSW Direction = "sw"
 )
+
+var directionModifiers = map[Direction][]int{
+	DirectionNW: {-1, 0, 1},
+	DirectionW:  {-1, 1, 0},
+	DirectionSW: {0, 1, -1},
+	DirectionNE: {0, -1, 1},
+	DirectionE:  {1, -1, 0},
+	DirectionSE: {1, 0, -1},
+}
 
 // https://en.wikipedia.org/wiki/Hexagonal_tiling
 // https://stackoverflow.com/questions/2459402/hexagonal-grid-coordinates-to-pixel-coordinates
@@ -104,54 +117,20 @@ func (t *Tile) ID() string {
 }
 
 func (t *Tile) Move(dir Direction) {
-	switch dir {
-	case DirectionNW:
-		t.X = t.X - 1
-		t.Y = t.Y
-		t.Z = t.Z + 1
-		break
-	case DirectionW:
-		t.X = t.X - 1
-		t.Y = t.Y + 1
-		t.Z = t.Z
-		break
-	case DirectionSW:
-		t.X = t.X
-		t.Y = t.Y + 1
-		t.Z = t.Z - 1
-		break
+	modifier := directionModifiers[dir]
 
-	case DirectionNE:
-		t.X = t.X
-		t.Y = t.Y - 1
-		t.Z = t.Z + 1
-		break
-	case DirectionE:
-		t.X = t.X + 1
-		t.Y = t.Y - 1
-		t.Z = t.Z
-		break
-	case DirectionSE:
-		t.X = t.X + 1
-		t.Y = t.Y
-		t.Z = t.Z - 1
-		break
-	}
+	t.X = t.X + modifier[0]
+	t.Y = t.Y + modifier[1]
+	t.Z = t.Z + modifier[2]
 }
 
 func (t *Tile) NeighborsIDs() []string {
 	ids := make([]string, 6)
-	coordsFromPoint := [][]int{
-		{-1, 0, 1}, // NW
-		{-1, 1, 0}, // W
-		{0, 1, -1}, // SW
-		{0, -1, 1}, // NE
-		{1, -1, 0}, // E
-		{1, 0, -1}, // SE
-	}
 
-	for i, coord := range coordsFromPoint {
+	i := 0
+	for _, coord := range directionModifiers {
 		ids[i] = coordsToID(t.X+coord[0], t.Y+coord[1], t.Z+coord[2])
+		i++
 	}
 
 	return ids
