@@ -2,70 +2,28 @@ package main
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 
 	"github.com/augustoccesar/adventofcode/utils"
 )
 
 func partOne() {
-	input := utils.ReadFile("./input.txt")
-	cups := []int{}
-	for _, item := range strings.Split(input, "") {
-		cups = append(cups, utils.Atoi(item))
-	}
-	maxCupLabel, minCupLabel := utils.SliceIntMaxMin(cups)
+	input := strings.Split(utils.ReadFile("./input.txt"), "")
+	cups := make([]int, len(input))
 
-	circle := utils.NewSliceIntCircular(cups)
-
-	currCupIdx := 0
-	for i := 0; i < 100; i++ {
-		currCupLabel := circle.Get(currCupIdx)
-
-		// fmt.Printf("--- move %d ---\n", i+1)
-		// fmt.Printf("Current Cup: %d\n", currCupLabel)
-		// fmt.Printf("Cups: %+v\n", circle)
-
-		// The crab picks up the three cups that are immediately clockwise of the current cup.
-		// They are removed from the circle; cup spacing is adjusted as necessary to maintain the circle.
-		removedCups := circle.PopFromIdx(currCupIdx+1, 3)
-
-		// The crab selects a destination cup: the cup with a label equal to the current
-		// cup's label minus one.
-		destinationCupLabel := currCupLabel
-		destinationCupIdx := -1
-
-		// If this would select one of the cups that was just picked up,
-		// the crab will keep subtracting one until it finds a cup that wasn't just picked up.
-		for destinationCupIdx == -1 {
-			destinationCupLabel--
-			destinationCupIdx = circle.Find(destinationCupLabel)
-
-			// If at any point in this process the value goes below the lowest value on any cup's label,
-			// it wraps around to the highest value on any cup's label instead.
-			if destinationCupLabel < minCupLabel {
-				destinationCupLabel = maxCupLabel + 1 // compensate for decrement on start of loop
-			}
-		}
-
-		// fmt.Printf("Removed: %+v\n", removedCups)
-		// fmt.Printf("Remaining: %+v\n", circle)
-		// fmt.Printf("Destination: idx: %d, label: %d\n", destinationCupIdx, destinationCupLabel)
-
-		// The crab places the cups it just picked up so that they are immediately clockwise of the destination cup.
-		// They keep the same order as when they were picked up.
-		circle.InsertAt(destinationCupIdx, removedCups)
-
-		// fmt.Printf("New Cups: %+v\n\n", circle)
-
-		// Update location of the current cup
-		currCupIdx = circle.Find(currCupLabel)
-		currCupIdx = (currCupIdx + 1) % circle.Len()
+	for i, item := range input {
+		cups[i] = utils.Atoi(item)
 	}
 
-	oneIdx := circle.Find(1)
-	tail := circle.Tail(oneIdx)
+	circle := playGame(cups, 100)
 
-	fmt.Printf("Part One: %s\n", strings.Join(utils.SliceIntToStr(tail), ""))
+	result := strings.Builder{}
+	for _, cup := range circle.Tail(1) {
+		result.WriteString(strconv.Itoa(cup.Label))
+	}
+
+	fmt.Printf("Part One: %s\n", result.String())
 }
 
 func partTwo() {
@@ -78,18 +36,26 @@ func partTwo() {
 	for i := 0; i < len(input); i++ {
 		cups[i] = utils.Atoi(input[i])
 	}
-	maxCupLabel, minCupLabel := utils.SliceIntMaxMin(cups)
+	maxCupLabel, _ := utils.SliceIntMaxMin(cups)
 
-	if len(input) < cupsAmount {
-		for i, j := len(input), maxCupLabel+1; i < cupsAmount; i, j = i+1, j+1 {
-			cups[i] = j
-		}
+	for i, j := len(input), maxCupLabel+1; i < cupsAmount; i, j = i+1, j+1 {
+		cups[i] = j
 	}
-	maxCupLabel, minCupLabel = utils.SliceIntMaxMin(cups)
 
-	circle := NewCircle(cups)
+	circle := playGame(cups, moves)
 
-	currCup := circle.Find(cups[0])
+	cupOne := circle.Find(1)
+	resCups := []*Cup{cupOne.Next, cupOne.Next.Next}
+
+	fmt.Printf("Part Two: %d\n", resCups[0].Label*resCups[1].Label)
+}
+
+func playGame(cupLabels []int, moves int) *Circle {
+	maxCupLabel, minCupLabel := utils.SliceIntMaxMin(cupLabels)
+
+	circle := NewCircle(cupLabels)
+
+	currCup := circle.Find(cupLabels[0])
 	for i := 0; i < moves; i++ {
 		// The crab picks up the three cups that are immediately clockwise of the current cup.
 		// They are removed from the circle; cup spacing is adjusted as necessary to maintain the circle.
@@ -121,10 +87,7 @@ func partTwo() {
 		currCup = currCup.Next
 	}
 
-	cupOne := circle.Find(1)
-	resCups := []*Cup{cupOne.Next, cupOne.Next.Next}
-
-	fmt.Printf("Part Two: %d\n", resCups[0].Label*resCups[1].Label)
+	return circle
 }
 
 type Cup struct {
