@@ -9,48 +9,13 @@ import (
 )
 
 func partOne() {
-	inputLines := strings.Split(utils.ReadFile("./input.txt"), "\n")
+	blackTiles := parseInput()
 
-	tilesMap := map[string]*Tile{}
-	for _, line := range inputLines {
-		tile := NewTile()
-
-		for _, step := range linePattern.FindAllString(line, -1) {
-			tile.Move(step)
-		}
-
-		if _, ok := tilesMap[tile.ID()]; !ok {
-			tilesMap[tile.ID()] = tile
-		}
-
-		tilesMap[tile.ID()].Flip()
-	}
-
-	colorCount := map[Color]int{ColorWhite: 0, ColorBlack: 0}
-	for _, v := range tilesMap {
-		colorCount[v.Color]++
-	}
-
-	fmt.Printf("Part One: %d\n", colorCount[ColorBlack])
+	fmt.Printf("Part One: %d\n", len(blackTiles))
 }
 
 func partTwo() {
-	inputLines := strings.Split(utils.ReadFile("./input.txt"), "\n")
-
-	blackTiles := map[string]*Tile{}
-	for _, line := range inputLines {
-		tile := NewTile()
-
-		for _, step := range linePattern.FindAllString(line, -1) {
-			tile.Move(step)
-		}
-
-		if _, ok := blackTiles[tile.ID()]; !ok {
-			blackTiles[tile.ID()] = tile
-		} else {
-			delete(blackTiles, tile.ID())
-		}
-	}
+	blackTiles := parseInput()
 
 	for i := 0; i < 100; i++ {
 		blackNeighborsCount := make(map[string]int)
@@ -78,6 +43,27 @@ func partTwo() {
 	fmt.Printf("Day Two: %d\n", len(blackTiles))
 }
 
+func parseInput() map[string]*Tile {
+	inputLines := strings.Split(utils.ReadFile("./input.txt"), "\n")
+
+	blackTiles := map[string]*Tile{}
+	for _, line := range inputLines {
+		tile := NewTile()
+
+		for _, step := range linePattern.FindAllString(line, -1) {
+			tile.Move(step)
+		}
+
+		if _, ok := blackTiles[tile.ID()]; !ok {
+			blackTiles[tile.ID()] = tile
+		} else {
+			delete(blackTiles, tile.ID())
+		}
+	}
+
+	return blackTiles
+}
+
 // --------------------------------------------------------------------------------------------------------------------
 
 // NW  _  NE
@@ -87,7 +73,6 @@ func partTwo() {
 var linePattern = regexp.MustCompile(`w|e|se|ne|sw|nw`)
 
 type Direction = string
-type Color = string
 
 const (
 	DirectionNE Direction = "ne"
@@ -96,38 +81,26 @@ const (
 	DirectionNW Direction = "nw"
 	DirectionW  Direction = "w"
 	DirectionSW Direction = "sw"
-
-	ColorBlack = "b"
-	ColorWhite = "w"
 )
 
 // https://en.wikipedia.org/wiki/Hexagonal_tiling
 // https://stackoverflow.com/questions/2459402/hexagonal-grid-coordinates-to-pixel-coordinates
 type Tile struct {
-	X     int
-	Y     int
-	Z     int
-	Color Color
+	X int
+	Y int
+	Z int
 }
 
 func NewTile() *Tile {
-	return &Tile{X: 0, Y: 0, Z: 0, Color: ColorWhite}
+	return &Tile{X: 0, Y: 0, Z: 0}
 }
 
 func NewTileWithCoords(x, y, z int) *Tile {
-	return &Tile{X: x, Y: y, Z: z, Color: ColorWhite}
+	return &Tile{X: x, Y: y, Z: z}
 }
 
 func (t *Tile) ID() string {
 	return coordsToID(t.X, t.Y, t.Z)
-}
-
-func (t *Tile) Flip() {
-	if t.Color == ColorBlack {
-		t.Color = ColorWhite
-	} else {
-		t.Color = ColorBlack
-	}
 }
 
 func (t *Tile) Move(dir Direction) {
