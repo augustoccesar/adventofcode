@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include <algorithm>
+#include <map>
 
 #define c_to_digit(c) (c - '0')
 
