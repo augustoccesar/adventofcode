@@ -128,27 +128,25 @@ func NewCircle(cups []int) *Circle {
 
 // Inclusive
 func (c *Circle) PopFromLabel(label, amount int) []*Cup {
+	popped := make([]*Cup, amount)
 	startCup := c.cupsMap[label]
 
-	headAffected := startCup == c.Head
-	var tmp *Cup
-	tmp = startCup
-	res := make([]*Cup, amount)
-	for i := 0; i < amount-1; i++ {
-		res[i] = tmp
-		tmp = tmp.Next
-		if !headAffected {
-			headAffected = tmp == c.Head
+	headAffected := false
+	endCup := startCup
+	for i := 0; i < amount; i++ {
+		popped[i] = endCup
+		headAffected = headAffected || endCup == c.Head
+
+		// If there are still loops to go, move the end cup
+		if i < amount-1 {
+			endCup = endCup.Next
 		}
 	}
-	res[len(res)-1] = tmp
 
 	// Remove the cups from the lookup map
-	for i := 0; i < len(res); i++ {
-		delete(c.cupsMap, res[i].Label)
+	for i := 0; i < len(popped); i++ {
+		delete(c.cupsMap, popped[i].Label)
 	}
-
-	endCup := tmp
 
 	if headAffected {
 		c.Head = startCup.Previous
@@ -159,15 +157,15 @@ func (c *Circle) PopFromLabel(label, amount int) []*Cup {
 	endCup.Next.Previous = startCup.Previous
 
 	// Close the circle of the removed ones
-	if len(res) > 1 {
-		res[0].Previous = res[len(res)-1]
-		res[len(res)-1].Next = res[0]
+	if len(popped) > 1 {
+		popped[0].Previous = popped[len(popped)-1]
+		popped[len(popped)-1].Next = popped[0]
 	} else {
-		res[0].Next = nil
-		res[0].Previous = nil
+		popped[0].Next = nil
+		popped[0].Previous = nil
 	}
 
-	return res
+	return popped
 }
 
 func (c *Circle) InsertAfterLabel(label int, cups []*Cup) {
