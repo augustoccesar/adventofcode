@@ -1,6 +1,6 @@
-# Advent of Code
+# 🎄🎅 Advent of Code 🎅🎄
 
-## Years/Lang
+## Years/Lang 🎁
 
 - [2020 - Golang 1.15](2020)
 - [2019 - Java 15](2019)
