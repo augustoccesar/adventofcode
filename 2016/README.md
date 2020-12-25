@@ -1,4 +1,4 @@
-# AoC 2016
+# [AoC 2016](https://adventofcode.com/2016)
 
 Using Rust 1.48
 
