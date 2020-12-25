@@ -1,4 +1,4 @@
-# AoC 20200
+# AoC 2020
 
 Using Golang 1.15
 
