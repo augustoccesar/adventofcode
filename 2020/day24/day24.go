@@ -32,10 +32,11 @@ func partTwo() {
 			_, isBlack := blackTiles[id]
 
 			// Any black tile with zero or more than 2 black tiles immediately adjacent to it
-			// is flipped to white. (AKA not black anymore, so check for the opposite range)
-			if isBlack && blacks != 0 && blacks <= 2 {
+			// is flipped to white. (AKA not black anymore, so check for the opposite range).
+			// No need to check for the zero condition since during the creation of blackNeighborsCount
+			// it only get ones that have any black neighbor
+			if isBlack && blacks <= 2 {
 				newBlacks[id] = blackTiles[id]
-
 			} else if !isBlack && blacks == 2 { // Any white tile with exactly 2 black tiles immediately adjacent to it is flipped to black.
 				newBlacks[id] = NewTileWithCoords(tileIDToCoords(id))
 			}
