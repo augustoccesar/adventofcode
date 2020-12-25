@@ -1,0 +1,7 @@
+[package]
+name = "aoc2016"
+version = "0.1.0"
+authors = ["Augusto Cesar <augusto.acfs@gmail.com>"]
+edition = "2018"
+
+[dependencies]
