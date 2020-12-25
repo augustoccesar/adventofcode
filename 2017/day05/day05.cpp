@@ -31,12 +31,44 @@ void part_one(std::string file_path)
 
 void part_two(std::string file_path)
 {
+    auto input = read_input(file_path);
+    auto arr = parse_input(input);
+
+    size_t curr = 0;
+    size_t steps = 0;
+    while (true)
+    {
+        steps++;
+        int offset = arr[curr];
+        size_t next = curr + offset;
+
+        if (offset >= 3)
+        {
+            arr[curr]--;
+        }
+        else
+        {
+            arr[curr]++;
+        }
+
+        if (next >= arr.size() || next < 0)
+        {
+            break;
+        }
+
+        curr = next;
+        continue;
+    }
+
+    std::cout << "Part Two: " << steps << std::endl;
 }
 
-std::vector<int> parse_input(std::string input) {
+std::vector<int> parse_input(std::string input)
+{
     std::vector<int> vec;
 
-    for (auto item : split(input, '\n')) {
+    for (auto item : split(input, '\n'))
+    {
         vec.push_back(std::stoi(item));
     }
 
