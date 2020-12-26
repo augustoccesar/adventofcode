@@ -1,5 +1,6 @@
 .vscode
 *example*.txt
+**/.DS_Store
 
 **/bin
 
