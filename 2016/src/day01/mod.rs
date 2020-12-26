@@ -8,11 +8,7 @@ pub struct Day01 {}
 
 impl Task for Day01 {
     fn part_one(&self) {
-        let input = fs::read_to_string("inputs/day01_input.txt").unwrap();
-        let commands = input
-            .split(", ")
-            .map(|cmd| Command::parse(cmd))
-            .collect::<Vec<Command>>();
+        let commands: Vec<Command> = parse_input();
         let mut facing: usize = 0;
         let mut point: Point2D = Point2D::new(0, 0);
 
@@ -27,11 +23,7 @@ impl Task for Day01 {
         println!("Part One: {:?}", point.taxicab_distance(Point2D::new(0, 0)));
     }
     fn part_two(&self) {
-        let input = fs::read_to_string("inputs/day01_input.txt").unwrap();
-        let commands = input
-            .split(", ")
-            .map(|cmd| Command::parse(cmd))
-            .collect::<Vec<Command>>();
+        let commands: Vec<Command> = parse_input();
         let mut facing: usize = 0;
         let mut point: Point2D = Point2D::new(0, 0);
         let mut pos_history: HashMap<String, bool> = HashMap::new();
@@ -82,6 +74,14 @@ fn update_facing(was: &mut usize, turn: String) {
     } else if turn == "L" {
         *was = wrap_index(i16::try_from(*was).unwrap() - 1, 4);
     }
+}
+
+fn parse_input() -> Vec<Command> {
+    let input = fs::read_to_string("inputs/day01_input.txt").unwrap();
+    return input
+        .split(", ")
+        .map(|cmd| Command::parse(cmd))
+        .collect::<Vec<Command>>();
 }
 
 #[derive(Debug)]
