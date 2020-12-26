@@ -108,7 +108,7 @@ struct Point2D {
     y: i16,
 }
 
-impl<'a> Point2D {
+impl Point2D {
     pub fn new(x: i16, y: i16) -> Point2D {
         return Point2D { x: x, y: y };
     }
