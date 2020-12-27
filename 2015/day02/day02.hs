@@ -20,22 +20,16 @@ split str = case break (== 'x') str of
   (a, "") -> [a]
 
 parseString :: String -> [Int]
-parseString str = do
-  let d = split str
-  map read d :: [Int]
+parseString str = map read (split str) :: [Int]
 
 parseInput :: String -> [[Int]]
-parseInput input = do
-  let ls = lines input
-  map parseString ls
+parseInput input = map parseString $ lines input
 
 partOne :: String -> IO ()
 partOne input = do
-  let inputs = parseInput input
-  let wrappingAreas = map wrappingArea inputs
-  let total = sum wrappingAreas
-
-  putStrLn $ "Part One: " ++ show total
+  putStrLn $
+    "Part One: "
+      ++ show (sum . map wrappingArea $ parseInput input)
 
 partTwo :: String -> IO ()
 partTwo input = do
