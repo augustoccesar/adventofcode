@@ -10,6 +10,13 @@ wrappingArea input = do
   -- 2*l*w + 2*w*h + 2*h*l
   2 * l * w + 2 * w * h + 2 * h * l + slack
 
+ribbonArea :: [Int] -> Int
+ribbonArea input = do
+  let small = xSmaller input 2
+  let wrap = sum (small) * 2
+  let bow = product input
+  wrap + bow
+
 xSmaller :: [Int] -> Int -> [Int]
 xSmaller l x = do
   take x . sort $ l
@@ -33,7 +40,9 @@ partOne input = do
 
 partTwo :: String -> IO ()
 partTwo input = do
-  putStrLn "Part Two: "
+  putStrLn $
+    "Part Two: "
+      ++ show (sum . map ribbonArea $ parseInput input)
 
 main :: IO ()
 main = do
