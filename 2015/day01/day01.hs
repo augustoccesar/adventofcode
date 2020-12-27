@@ -10,12 +10,11 @@ transformString :: String -> [Int]
 transformString = map transform
 
 firstNegativePos :: String -> Int
-firstNegativePos input =
+firstNegativePos =
   length
     . takeWhile (>= 0)
     . scanl (+) 0
     . transformString
-    $ input
 
 partOne :: String -> IO ()
 partOne input = do
