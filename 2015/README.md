@@ -1,6 +1,6 @@
 # [AoC 2015](https://adventofcode.com/2015)
 
-Using Haskell 8.8.4
+Using Haskell 8.8
 
 ## Calendar (Part One / Part Two)
 
