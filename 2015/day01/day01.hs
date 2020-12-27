@@ -10,12 +10,12 @@ transformString :: String -> [Int]
 transformString = map transform
 
 firstNegativePos :: String -> Int
-firstNegativePos input = do
-  -- This probably can be simplified by dots and dollar signs, but didn't quite got how it works yet
-  let a = transformString input
-  let b = scanl (+) 0 a
-  let d = takeWhile (>= 0) b
-  length d
+firstNegativePos input =
+  length
+    . takeWhile (>= 0)
+    . scanl (+) 0
+    . transformString
+    $ input
 
 partOne :: String -> IO ()
 partOne input = do
