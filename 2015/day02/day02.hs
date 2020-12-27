@@ -12,10 +12,7 @@ wrappingArea input = do
 
 ribbonArea :: [Int] -> Int
 ribbonArea input = do
-  let small = xSmaller input 2
-  let wrap = sum (small) * 2
-  let bow = product input
-  wrap + bow
+  sum (xSmaller input 2) * 2 + product input
 
 xSmaller :: [Int] -> Int -> [Int]
 xSmaller l x = do
@@ -27,7 +24,7 @@ split str = case break (== 'x') str of
   (a, "") -> [a]
 
 parseString :: String -> [Int]
-parseString str = map read (split str) :: [Int]
+parseString str = map read (split str)
 
 parseInput :: String -> [[Int]]
 parseInput input = map parseString $ lines input
