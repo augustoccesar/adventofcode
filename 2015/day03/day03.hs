@@ -1,4 +1,5 @@
 import Data.List (sort)
+import Debug.Trace (trace)
 
 data Point = Point {x :: Int, y :: Int} deriving (Show, Eq)
 
@@ -25,11 +26,14 @@ createHistory ph (c : x) = do
 partOne :: String -> IO ()
 partOne input = putStrLn $ "Part One: " ++ show (length $ unique ph)
   where
-    (ph, _) = createHistory [Point 0 0] input
+    (ph, _) = createHistory [Point 0 0] input -- (p)oint (h)istory
 
 partTwo :: String -> IO ()
-partTwo input = do
-  putStrLn $ "Part Two: "
+partTwo input = putStrLn $ "Part Two: " ++ show (length $ unique (sph ++ rsph))
+  where
+    idxMoves = zip [0 ..] input
+    (sph, _) = createHistory [Point 0 0] [m | (_, m) <- filter (even . fst) idxMoves] -- (s)anta (p)oint (h)istory
+    (rsph, _) = createHistory [Point 0 0] [m | (_, m) <- filter (odd . fst) idxMoves] -- (r)obo(s)anta (p)oint (h)istory
 
 main :: IO ()
 main = do
