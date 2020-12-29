@@ -2,32 +2,11 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"sort"
-	"strconv"
 	"strings"
+
+	"github.com/augustoccesar/adventofcode/utils"
 )
-
-func getReport() []int {
-	input, err := ioutil.ReadFile("./input.txt")
-	if err != nil {
-		panic(err)
-	}
-
-	report := strings.Split(string(input), "\n")
-	intReport := make([]int, len(report))
-
-	for i, item := range report {
-		itemInt, err := strconv.Atoi(item)
-		if err != nil {
-			panic(err)
-		}
-
-		intReport[i] = itemInt
-	}
-
-	return intReport
-}
 
 func partOne() {
 	report := getReport()
@@ -39,7 +18,7 @@ func partOne() {
 
 	for _, item := range report {
 		if value, ok := lookupTable[item]; ok {
-			fmt.Printf("Part One: %d * %d = %d\n", item, value, item*value)
+			fmt.Printf("Part One: %d\n", item*value)
 			break
 		}
 	}
@@ -83,13 +62,27 @@ func partTwo() {
 	}
 
 	fmt.Printf(
-		"Part Two: %d * %d * %d = %d\n",
-		possibleNumbers[pin1],
-		possibleNumbers[pin2],
-		possibleNumbers[pin3],
+		"Part Two: %d\n",
 		possibleNumbers[pin1]*possibleNumbers[pin2]*possibleNumbers[pin3],
 	)
 }
+
+func getReport() []int {
+	input := utils.ReadFile("./input.txt")
+
+	report := strings.Split(string(input), "\n")
+	intReport := make([]int, len(report))
+
+	for i, item := range report {
+		itemInt := utils.Atoi(item)
+
+		intReport[i] = itemInt
+	}
+
+	return intReport
+}
+
+// --------------------------------------------------------------------------------------------------------------------
 
 func main() {
 	partOne()
