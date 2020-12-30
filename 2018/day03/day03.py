@@ -30,10 +30,10 @@ def part_two():
             else:
                 points_map[cp] = [c.identifier]
 
-    res = [cid for cid in claim_ids if cid not in set(intersect)][0]
+    res = set(claim_ids) - set(intersect)
 
-    print(f"Part Two: {res}")
-    
+    print(f"Part Two: {res.pop()}")
+
 
 # -----------------------------------------------------------------------------
 
