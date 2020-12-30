@@ -1,15 +1,19 @@
 mod day01;
+mod day02;
+
 mod task;
 
 use std::collections::HashMap;
 use std::env;
 
 use day01::Day01;
+use day02::Day02;
 use task::Task;
 
 fn days<'a>() -> HashMap<String, &'a dyn Task> {
     let mut days: HashMap<String, &'a dyn Task> = HashMap::new();
     days.insert(String::from("01"), &Day01 {});
+    days.insert(String::from("02"), &Day02 {});
     return days;
 }
 
