@@ -16,7 +16,24 @@ def part_one():
 
 
 def part_two():
-    pass
+    claims = parse_input()
+    points_map: Dict[List[Tuple[int, int]]] = {}
+    intersect = []
+
+    claim_ids = [c.identifier for c in claims]
+
+    for c in claims:
+        for cp in c.area():
+            if points_map.get(cp) != None:
+                points_map[cp].append(c.identifier)
+                intersect.extend(points_map[cp])
+            else:
+                points_map[cp] = [c.identifier]
+
+    res = [cid for cid in claim_ids if cid not in set(intersect)][0]
+
+    print(f"Part Two: {res}")
+    
 
 # -----------------------------------------------------------------------------
 
@@ -26,7 +43,7 @@ claim_pattern = re.compile(r'#(\d+)\s@\s(\d+,\d+):\s(\d+x\d+)')
 
 @dataclass
 class Claim:
-    num: int
+    identifier: int
     starting_pos: Tuple[int, int]
     size: Tuple[int, int]
 
@@ -67,5 +84,5 @@ def __read_input() -> str:
 
 
 if __name__ == "__main__":
-    # part_one()
+    part_one()
     part_two()
