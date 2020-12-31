@@ -7,6 +7,10 @@ use crate::task::Task;
 pub struct Day01 {}
 
 impl Task for Day01 {
+    fn day(&self) -> std::string::String {
+        return String::from("01");
+    }
+
     fn part_one(&self) {
         let commands: Vec<Command> = parse_input();
         let mut facing: usize = 0;

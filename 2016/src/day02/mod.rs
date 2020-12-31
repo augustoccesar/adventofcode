@@ -7,6 +7,10 @@ use crate::task::Task;
 pub struct Day02 {}
 
 impl Task for Day02 {
+    fn day(&self) -> std::string::String {
+        return String::from("02");
+    }
+
     fn part_one(&self) {
         let input = parse_input();
         let keypad = create_simple_keypad();

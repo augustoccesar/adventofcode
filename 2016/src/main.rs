@@ -12,8 +12,10 @@ use task::Task;
 
 fn days<'a>() -> HashMap<String, &'a dyn Task> {
     let mut days: HashMap<String, &'a dyn Task> = HashMap::new();
-    days.insert(String::from("01"), &Day01 {});
-    days.insert(String::from("02"), &Day02 {});
+    let tasks: Vec<&'a dyn Task> = vec![&Day01 {}, &Day02 {}];
+    for task in tasks {
+        days.insert(task.day(), task);
+    }
     return days;
 }
 
