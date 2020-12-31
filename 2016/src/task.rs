@@ -7,4 +7,7 @@ pub trait Task {
     fn read_input(&self) -> String {
         return fs::read_to_string(format!("inputs/day{}_input.txt", self.day())).unwrap();
     }
+    fn read_custom_input(&self, name: &str) -> String {
+        return fs::read_to_string(format!("inputs/day{}_{}.txt", self.day(), name)).unwrap();
+    }
 }
