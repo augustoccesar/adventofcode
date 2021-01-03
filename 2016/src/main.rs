@@ -6,6 +6,7 @@ mod task;
 
 use std::collections::HashMap;
 use std::env;
+use std::time::Instant;
 
 use day01::Day01;
 use day02::Day02;
@@ -22,8 +23,15 @@ fn days<'a>() -> HashMap<String, &'a dyn Task> {
 }
 
 fn run_task(task: &dyn Task) {
+    let start = Instant::now();
     task.part_one();
+    let duration = start.elapsed();
+    println!("({:?})\n", duration);
+
+    let start = Instant::now();
     task.part_two();
+    let duration = start.elapsed();
+    println!("({:?})\n", duration);
 }
 
 fn main() {
