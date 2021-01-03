@@ -1,5 +1,10 @@
 use crate::task::Task;
+use lazy_static::lazy_static;
 use regex::Regex;
+
+lazy_static! {
+    static ref TRIANGLE_RE: Regex = Regex::new(r"(\d+)\s+(\d+)\s+(\d+)").unwrap();
+}
 
 pub struct Day03 {}
 
@@ -10,11 +15,10 @@ impl Task for Day03 {
 
     fn part_one(&self) {
         let input = self.read_input();
-        let re = Regex::new(r"(\d+)\s+(\d+)\s+(\d+)").unwrap();
 
         let mut valid = 0;
 
-        for cap in re.captures_iter(&input) {
+        for cap in TRIANGLE_RE.captures_iter(&input) {
             let a = cap[1].parse::<i16>();
             let b = cap[2].parse::<i16>();
             let c = cap[3].parse::<i16>();
@@ -34,10 +38,9 @@ impl Task for Day03 {
         // ...
 
         let input = self.read_input();
-        let re = Regex::new(r"(\d+)\s+(\d+)\s+(\d+)").unwrap();
 
         let mut rows: Vec<[i16; 3]> = vec![];
-        for cap in re.captures_iter(&input) {
+        for cap in TRIANGLE_RE.captures_iter(&input) {
             let a = cap[1].parse::<i16>();
             let b = cap[2].parse::<i16>();
             let c = cap[3].parse::<i16>();
