@@ -1,6 +1,7 @@
 mod day01;
 mod day02;
 mod day03;
+mod day04;
 
 mod task;
 
@@ -11,11 +12,12 @@ use std::time::Instant;
 use day01::Day01;
 use day02::Day02;
 use day03::Day03;
+use day04::Day04;
 use task::Task;
 
 fn days<'a>() -> HashMap<String, &'a dyn Task> {
     let mut days: HashMap<String, &'a dyn Task> = HashMap::new();
-    let tasks: Vec<&'a dyn Task> = vec![&Day01 {}, &Day02 {}, &Day03 {}];
+    let tasks: Vec<&'a dyn Task> = vec![&Day01 {}, &Day02 {}, &Day03 {}, &Day04 {}];
     for task in tasks {
         days.insert(task.day(), task);
     }
