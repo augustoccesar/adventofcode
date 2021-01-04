@@ -5,6 +5,7 @@ use std::collections::HashMap;
 
 lazy_static! {
     static ref ROOM_RE: Regex = Regex::new(r"([a-z-]+)-(\d+)\[(\w+)\]").unwrap();
+    static ref ALPHABET: Vec<char> = ('a'..='z').map(char::from).collect::<Vec<char>>();
 }
 
 pub struct Day04 {}
@@ -90,13 +91,12 @@ fn generate_checksum(string: &str) -> String {
 }
 
 fn shift(c: &char, shift_amount: usize) -> char {
-    let alphabet = ('a'..='z').map(char::from).collect::<Vec<_>>();
-    let curr_idx = alphabet.iter().position(|item| item == c).unwrap();
+    let curr_idx = ALPHABET.iter().position(|item| item == c).unwrap();
     let mut desired_idx = curr_idx + shift_amount;
 
-    if desired_idx >= alphabet.len() {
-        desired_idx = desired_idx % alphabet.len();
+    if desired_idx >= ALPHABET.len() {
+        desired_idx = desired_idx % ALPHABET.len();
     }
 
-    return alphabet[desired_idx];
+    return ALPHABET[desired_idx];
 }
