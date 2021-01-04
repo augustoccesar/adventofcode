@@ -5,7 +5,7 @@ use std::iter::FromIterator;
 pub struct Day05 {}
 
 impl Task for Day05 {
-    fn day(&self) -> std::string::String {
+    fn day(&self) -> String {
         return String::from("05");
     }
 
