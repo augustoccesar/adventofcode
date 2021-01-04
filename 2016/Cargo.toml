@@ -7,3 +7,5 @@ edition = "2018"
 [dependencies]
 regex = "1"
 lazy_static = "1.4.0"
+md-5 = "0.9.1"
+hex = "0.4.2"
