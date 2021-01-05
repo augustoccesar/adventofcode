@@ -24,8 +24,12 @@ public abstract class BaseDay {
     }
 
     protected String readInput() throws IOException {
+        return readInput("input");
+    }
+
+    protected String readInput(final String name) throws IOException {
         final StringBuilder stringBuilder = new StringBuilder("");
-        final InputStream input = this.getClass().getResourceAsStream(resourceFolder() + "/input.txt");
+        final InputStream input = this.getClass().getResourceAsStream(resourceFolder() + "/" + name + ".txt");
         final BufferedReader br = new BufferedReader(new InputStreamReader(input));
 
         while (br.ready()) {

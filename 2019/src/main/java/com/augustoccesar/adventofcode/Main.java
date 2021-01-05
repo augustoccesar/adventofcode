@@ -4,10 +4,15 @@ import java.util.Map;
 
 import com.augustoccesar.adventofcode.day01.Day1;
 import com.augustoccesar.adventofcode.day02.Day2;
+import com.augustoccesar.adventofcode.day03.Day3;
 
 public class Main {
     public static void main(String[] args) {
-        Map<String, BaseDay> days = Map.of("1", new Day1(), "2", new Day2());
+        Map<String, BaseDay> days = Map.of(
+                "1", new Day1(),
+                "2", new Day2(),
+                "3", new Day3()
+        );
 
         if (args.length < 1) {
             System.err.println("No Day arg passed.");
