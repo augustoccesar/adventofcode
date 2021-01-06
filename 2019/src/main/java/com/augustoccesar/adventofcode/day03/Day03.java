@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class Day3 extends BaseDay {
+public class Day03 extends BaseDay {
     @Override
     public void partOne() throws IOException {
         final List<HashMap<String, Pair<Point2D, Integer>>> wires = getWiresPaths();

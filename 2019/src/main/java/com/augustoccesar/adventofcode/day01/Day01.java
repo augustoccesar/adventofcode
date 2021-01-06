@@ -5,7 +5,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import com.augustoccesar.adventofcode.BaseDay;
 
-public class Day1 extends BaseDay {
+public class Day01 extends BaseDay {
     @Override
     public void partOne() throws IOException {
         final AtomicInteger sum = new AtomicInteger(0);

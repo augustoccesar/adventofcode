@@ -7,7 +7,7 @@ import java.util.stream.Stream;
 
 import com.augustoccesar.adventofcode.BaseDay;
 
-public class Day2 extends BaseDay {
+public class Day02 extends BaseDay {
     @Override
     public void partOne() throws IOException {
         int output = generateOutput(12, 2);

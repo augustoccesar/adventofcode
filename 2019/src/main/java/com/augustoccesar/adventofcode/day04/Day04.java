@@ -10,7 +10,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class Day4 extends BaseDay {
+public class Day04 extends BaseDay {
     @Override
     public void partOne() throws IOException {
         System.out.println("Part One: " + getValidCount(1));

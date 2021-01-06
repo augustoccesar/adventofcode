@@ -28,7 +28,7 @@ public abstract class BaseDay {
     }
 
     protected String readInput(final String name) throws IOException {
-        final StringBuilder stringBuilder = new StringBuilder("");
+        final StringBuilder stringBuilder = new StringBuilder();
         final InputStream input = this.getClass().getResourceAsStream(resourceFolder() + "/" + name + ".txt");
         final BufferedReader br = new BufferedReader(new InputStreamReader(input));
 

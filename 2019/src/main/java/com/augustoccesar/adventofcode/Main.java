@@ -1,19 +1,19 @@
 package com.augustoccesar.adventofcode;
 
-import com.augustoccesar.adventofcode.day01.Day1;
-import com.augustoccesar.adventofcode.day02.Day2;
-import com.augustoccesar.adventofcode.day03.Day3;
-import com.augustoccesar.adventofcode.day04.Day4;
+import com.augustoccesar.adventofcode.day01.Day01;
+import com.augustoccesar.adventofcode.day02.Day02;
+import com.augustoccesar.adventofcode.day03.Day03;
+import com.augustoccesar.adventofcode.day04.Day04;
 
 import java.util.Map;
 
 public class Main {
     public static void main(String[] args) {
         Map<String, BaseDay> days = Map.of(
-                "1", new Day1(),
-                "2", new Day2(),
-                "3", new Day3(),
-                "4", new Day4()
+                "01", new Day01(),
+                "02", new Day02(),
+                "03", new Day03(),
+                "04", new Day04()
         );
 
         if (args.length < 1) {
