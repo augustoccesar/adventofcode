@@ -1,19 +1,27 @@
 package com.augustoccesar.adventofcode.day04;
 
 import com.augustoccesar.adventofcode.BaseDay;
-import com.augustoccesar.adventofcode.utils.Pair;
-import com.augustoccesar.adventofcode.utils.Point2D;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 public class Day4 extends BaseDay {
     @Override
     public void partOne() throws IOException {
+        System.out.println("Part One: " + getValidCount(1));
+    }
+
+    @Override
+    public void partTwo() throws IOException {
+        System.out.println("Part One: " + getValidCount(2));
+    }
+
+    private int getValidCount(int version) throws IOException {
         final String[] input = this.readInput().strip().split("-");
         final int rangeStart = Integer.parseInt(input[0]);
         final int rangeEnd = Integer.parseInt(input[1]);
@@ -21,22 +29,19 @@ public class Day4 extends BaseDay {
         AtomicInteger valid = new AtomicInteger(0);
 
         IntStream.rangeClosed(rangeStart, rangeEnd).forEach((trying) -> {
-            if (isValid(trying)) {
+            if (isValid(trying, version)) {
                 valid.incrementAndGet();
             }
         });
 
-        System.out.println("Part One: " + valid.get());
+        return valid.get();
     }
 
-    @Override
-    public void partTwo() throws IOException {
-        System.out.println("Part Two: ");
-    }
+    private boolean isValid(int password, int version) {
+        String stringPass = String.valueOf(password);
+        List<Character> passChars = stringPass.chars().mapToObj((c) -> (char) c).collect(Collectors.toList());
 
-    private boolean isValid(int password) {
-        List<Character> passChars = String.valueOf(password).chars().mapToObj((c) -> (char) c).collect(Collectors.toList());
-        boolean hasDouble = false;
+        Set<String> pairs = new HashSet<>();
 
         for (int i = 0; i < passChars.size(); i++) {
             final int currentValue = Character.getNumericValue(passChars.get(i));
@@ -52,13 +57,17 @@ public class Day4 extends BaseDay {
             }
 
             if (currentValue == previousValue) {
-                hasDouble = true;
+                pairs.add(String.valueOf(currentValue).repeat(2));
                 continue;
             }
 
             return false;
         }
 
-        return hasDouble;
+        return switch (version) {
+            case 1 -> pairs.size() > 0;
+            case 2 -> pairs.stream().anyMatch(pair -> stringPass.indexOf(pair) == stringPass.lastIndexOf(pair));
+            default -> false;
+        };
     }
 }
