@@ -5,15 +5,13 @@ import com.augustoccesar.adventofcode.utils.Pair;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.ToString;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
-import java.lang.reflect.Parameter;
-import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class Day05 extends BaseDay {
