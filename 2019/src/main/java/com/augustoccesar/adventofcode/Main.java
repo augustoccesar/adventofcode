@@ -21,7 +21,12 @@ public class Main {
             System.exit(1);
         }
 
-        final BaseDay day = days.get(args[0]);
+        String dayString = args[0];
+        if (dayString.length() < 2) {
+            dayString = "0" + dayString;
+        }
+
+        final BaseDay day = days.get(dayString);
 
         if (day == null) {
             System.err.println("Day not found.");
