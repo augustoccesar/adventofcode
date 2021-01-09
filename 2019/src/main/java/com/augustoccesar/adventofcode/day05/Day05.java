@@ -81,27 +81,6 @@ public class Day05 extends BaseDay {
                 throw new RuntimeException("Found unknown operation");
             }
 
-            if (op == Operation.EXIT) {
-                return new Instruction(
-                        Operation.EXIT,
-                        Collections.emptyList()
-                );
-            }
-
-            if (op == Operation.READ || op == Operation.WRITE) {
-                return new Instruction(
-                        Operation.from(rawInstruction.get(0)),
-                        List.of(Parameter.from(ParameterMode.IO, rawInstruction.get(1)))
-                );
-            }
-
-            if (rawInstruction.get(0) == 99) {
-                return new Instruction(
-                        Operation.EXIT,
-                        Collections.emptyList()
-                );
-            }
-
             String opString = String.valueOf(rawInstruction.get(0));
             final Operation operation = Operation.from(opString.charAt(opString.length() - 1));
             final int maxOpStringSize = 2 + operation.paramSize;
