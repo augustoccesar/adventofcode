@@ -4,6 +4,7 @@ import com.augustoccesar.adventofcode.day01.Day01;
 import com.augustoccesar.adventofcode.day02.Day02;
 import com.augustoccesar.adventofcode.day03.Day03;
 import com.augustoccesar.adventofcode.day04.Day04;
+import com.augustoccesar.adventofcode.day05.Day05;
 
 import java.util.Map;
 
@@ -13,7 +14,8 @@ public class Main {
                 "01", new Day01(),
                 "02", new Day02(),
                 "03", new Day03(),
-                "04", new Day04()
+                "04", new Day04(),
+                "05", new Day05()
         );
 
         if (args.length < 1) {
