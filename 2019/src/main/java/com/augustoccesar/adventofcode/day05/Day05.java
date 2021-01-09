@@ -1,6 +1,7 @@
 package com.augustoccesar.adventofcode.day05;
 
 import com.augustoccesar.adventofcode.BaseDay;
+import com.augustoccesar.adventofcode.utils.Pair;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,10 +20,23 @@ public class Day05 extends BaseDay {
     @Override
     public void partOne() throws IOException {
         String program = this.readInput().strip();
+        int result = runProgram(program, 1);
+
+        System.out.println("Part One: " + result);
+    }
+
+    @Override
+    public void partTwo() throws IOException {
+        String program = this.readInput().strip();
+        int result = runProgram(program, 5);
+
+        System.out.println("Part Two: " + result);
+    }
+
+    private int runProgram(final String program, final int input) {
         ArrayList<Integer> memory = Stream.of(program.split(","))
                 .map(Integer::parseInt)
                 .collect(Collectors.toCollection(ArrayList::new));
-        int input = 1;
         int lastOutput = Integer.MIN_VALUE;
 
         for (int i = 0; ; ) {
@@ -33,25 +47,32 @@ public class Day05 extends BaseDay {
             }
 
             Instruction instruction = Instruction.from(memory.subList(i, i + op.getParamSize() + 1));
-            Optional<Integer> output = instruction.apply(input, memory);
-            if(output.isPresent()) {
-                lastOutput = output.get();
+
+            Optional<Pair<Instruction.ApplyResult, Integer>> output = instruction.apply(input, memory);
+            if (output.isPresent()) {
+                final Pair<Instruction.ApplyResult, Integer> pair = output.get();
+                switch (output.get().getLeft()) {
+                    case Output -> lastOutput = pair.getRight();
+                    case ModifyInstructorPointer -> {
+                        i = pair.getRight();
+                        continue;
+                    }
+                }
             }
 
             i += op.getParamSize() + 1;
         }
 
-        System.out.println("Part One: " + lastOutput);
-    }
-
-    @Override
-    public void partTwo() throws IOException {
-        System.out.println("Part Two: Not implemented");
+        return lastOutput;
     }
 
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
     @Getter
     static class Instruction {
+        enum ApplyResult {
+            Output, ModifyInstructorPointer
+        }
+
         private final Operation operation;
         private final List<Parameter> parameters;
 
@@ -84,17 +105,27 @@ public class Day05 extends BaseDay {
             }
 
             String opString = String.valueOf(rawInstruction.get(0));
-            if (opString.length() < 5) {
-                int diff = 5 - opString.length();
+            final Operation operation = Operation.from(opString.charAt(opString.length() - 1));
+            final int maxOpStringSize = 2 + operation.paramSize;
+            if (opString.length() < maxOpStringSize) {
+                int diff = maxOpStringSize - opString.length();
                 opString = "0".repeat(diff) + opString;
             }
 
-            final Operation operation = Operation.from(opString.charAt(4)); // Op code
-            final List<Parameter> parameters = List.of(
-                    Parameter.from(ParameterMode.from(opString.charAt(2)), rawInstruction.get(1)),
-                    Parameter.from(ParameterMode.from(opString.charAt(1)), rawInstruction.get(2)),
-                    Parameter.from(ParameterMode.IO, rawInstruction.get(3))
-            );
+            ArrayList<Parameter> parameters = new ArrayList<>();
+            int startingPos = opString.length() - 3; // First value that is not part of the operation
+            for (int i = startingPos, j = 1; i >= 0; i--, j++) {
+                if (i == 0 && op.writeToMemory) { // If it writes, the last loop is a IO parameter
+                    parameters.add(
+                            Parameter.from(ParameterMode.IO, rawInstruction.get(j))
+                    );
+                    continue;
+                }
+
+                parameters.add(
+                        Parameter.from(ParameterMode.from(opString.charAt(i)), rawInstruction.get(j))
+                );
+            }
 
             return new Instruction(
                     operation,
@@ -102,7 +133,7 @@ public class Day05 extends BaseDay {
             );
         }
 
-        public Optional<Integer> apply(int input, ArrayList<Integer> memory) {
+        public Optional<Pair<ApplyResult, Integer>> apply(int input, ArrayList<Integer> memory) {
             if (!this.isValid()) {
                 throw new RuntimeException(String.format("Applying invalid instruction: %s", this));
             }
@@ -112,44 +143,57 @@ public class Day05 extends BaseDay {
             }
 
             if (this.operation == Operation.READ) {
-                // Opcode 3 takes a single integer as input and saves it to the position given by its only parameter.
-                // For example, the instruction 3,50 would take an input value and store it at address 50.
                 memory.set(this.parameters.get(0).getValue(), input);
                 return Optional.empty();
             }
 
             if (this.operation == Operation.WRITE) {
-                // Opcode 4 outputs the value of its only parameter. For example, the instruction 4,50
-                // would output the value at address 50.
-                return Optional.of(memory.get(this.parameters.get(0).getValue()));
+                return Optional.of(
+                        Pair.of(
+                                ApplyResult.Output,
+                                memory.get(this.parameters.get(0).getValue())
+                        )
+                );
             }
 
-            if (this.operation == Operation.SUM || this.operation == Operation.MULTIPLY) {
-                // TODO: There is probably a less verbose way of doing this parsing of the params
-                int param1Value, param2Value;
-                int targetIndex = this.getParameters().get(2).getValue();
-                Parameter param1 = this.parameters.get(0);
-                Parameter param2 = this.parameters.get(1);
+            List<Integer> paramValues = this.getParameters().stream()
+                    .map(item -> {
+                        if (item.getMode() == ParameterMode.POSITION) {
+                            return memory.get(item.getValue());
+                        } else if (item.getMode() == ParameterMode.IMMEDIATE || item.getMode() == ParameterMode.IO) {
+                            return item.getValue();
+                        } else {
+                            throw new RuntimeException(String.format("Invalid mode for parameter: %s", item.getMode()));
+                        }
+                    }).collect(Collectors.toList());
+            int lastIndex = paramValues.size() - 1;
 
-                if (param1.getMode() == ParameterMode.POSITION) {
-                    param1Value = memory.get(param1.value);
-                } else if (param1.getMode() == ParameterMode.IMMEDIATE) {
-                    param1Value = param1.value;
-                } else {
-                    throw new RuntimeException(String.format("Invalid mode for parameter 1: %s", param1.getMode()));
+            switch (this.operation) {
+                case SUM -> memory.set(paramValues.get(lastIndex), paramValues.stream().limit(lastIndex).reduce(0, Integer::sum));
+                case MULTIPLY -> memory.set(paramValues.get(lastIndex), paramValues.stream().limit(lastIndex).reduce(1, Math::multiplyExact));
+                case JUMP_IF_TRUE -> {
+                    if (paramValues.get(0) != 0) {
+                        return Optional.of(Pair.of(ApplyResult.ModifyInstructorPointer, paramValues.get(1)));
+                    }
                 }
-
-                if (param2.getMode() == ParameterMode.POSITION) {
-                    param2Value = memory.get(param2.value);
-                } else if (param2.getMode() == ParameterMode.IMMEDIATE) {
-                    param2Value = param2.value;
-                } else {
-                    throw new RuntimeException(String.format("Invalid mode for parameter 2: %s", param2.getMode()));
+                case JUMP_IF_FALSE -> {
+                    if (paramValues.get(0) == 0) {
+                        return Optional.of(Pair.of(ApplyResult.ModifyInstructorPointer, paramValues.get(1)));
+                    }
                 }
-
-                switch (this.operation) {
-                    case SUM -> memory.set(targetIndex, param1Value + param2Value);
-                    case MULTIPLY -> memory.set(targetIndex, param1Value * param2Value);
+                case LESS_THAN -> {
+                    if (paramValues.get(0) < paramValues.get(1)) {
+                        memory.set(paramValues.get(2), 1);
+                    } else {
+                        memory.set(paramValues.get(2), 0);
+                    }
+                }
+                case EQUALS -> {
+                    if (paramValues.get(0).equals(paramValues.get(1))) {
+                        memory.set(paramValues.get(2), 1);
+                    } else {
+                        memory.set(paramValues.get(2), 0);
+                    }
                 }
             }
 
@@ -164,15 +208,20 @@ public class Day05 extends BaseDay {
     @AllArgsConstructor
     @Getter
     enum Operation {
-        UNKNOWN(Integer.MIN_VALUE, 0),
-        SUM(1, 3),
-        MULTIPLY(2, 3),
-        READ(3, 1),
-        WRITE(4, 1),
-        EXIT(99, 0);
+        UNKNOWN(Integer.MIN_VALUE, 0, false),
+        SUM(1, 3, true),
+        MULTIPLY(2, 3, true),
+        READ(3, 1, true),
+        WRITE(4, 1, true),
+        JUMP_IF_TRUE(5, 2, false),
+        JUMP_IF_FALSE(6, 2, false),
+        LESS_THAN(7, 3, true),
+        EQUALS(8, 3, true),
+        EXIT(99, 0, false);
 
         private final int repr;
         private final int paramSize;
+        private final boolean writeToMemory;
 
         public static Operation from(char charRepr) {
             return from(Character.getNumericValue(charRepr));
@@ -190,6 +239,10 @@ public class Day05 extends BaseDay {
                 case 2 -> MULTIPLY;
                 case 3 -> READ;
                 case 4 -> WRITE;
+                case 5 -> JUMP_IF_TRUE;
+                case 6 -> JUMP_IF_FALSE;
+                case 7 -> LESS_THAN;
+                case 8 -> EQUALS;
                 case 99 -> EXIT;
                 default -> UNKNOWN;
             };
