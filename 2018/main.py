@@ -1,13 +1,14 @@
 import sys
 
-from aoc import Day01, Day02, Day03, Day04
+from aoc import Day01, Day02, Day03, Day04, Day05
 
 if __name__ == "__main__":
     days = {
         "01": Day01(),
         "02": Day02(),
         "03": Day03(),
-        "04": Day04()
+        "04": Day04(),
+        "05": Day05()
     }
 
     if len(sys.argv) < 2:
