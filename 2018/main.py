@@ -1,5 +1,6 @@
-from aoc import Day01, Day02, Day03, Day04
 import sys
+
+from aoc import Day01, Day02, Day03, Day04
 
 if __name__ == "__main__":
     days = {
