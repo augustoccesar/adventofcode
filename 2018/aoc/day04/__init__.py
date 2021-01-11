@@ -13,26 +13,7 @@ event_pattern = re.compile(r"\[(\d+-\d+-\d+\s\d+:(\d+))\]\s(Guard|falls|wakes)\s
 class Day04(Task):
     def part_one(self) -> str:
         data = "\n".join(sorted(self.read_input().splitlines()))
-
-        registry: Dict[int, List[Tuple[int, int]]] = {}
-
-        curr_guard, curr_time_start, curr_time_end = -1, -1, -1
-        for match in event_pattern.finditer(data):
-            if match.group(3) == "Guard":
-                curr_guard = int(match.group(4))
-                continue
-
-            if match.group(3) == "falls":
-                curr_time_start = int(match.group(2))
-                continue
-
-            if match.group(3) == "wakes":
-                curr_time_end = int(match.group(2))
-                if registry.get(curr_guard, None) is not None:
-                    registry[curr_guard].append((curr_time_start, curr_time_end))
-                else:
-                    registry[curr_guard] = [(curr_time_start, curr_time_end)]
-                continue
+        registry = parse_data(data)
 
         sleepy_id: int = max(guards_sleep_time(registry).items(), key=operator.itemgetter(1))[0]
         highest_minute: int = guard_highest_minute_occurrence(registry[sleepy_id])
@@ -61,3 +42,27 @@ def guards_sleep_time(registry: Dict[int, List[Tuple[int, int]]]) -> Dict[int, i
 
 def tuples_to_ranges(t: List[Tuple[int, int]]) -> List[range]:
     return list(map(lambda y: range(y[0], y[1]), t))
+
+
+def parse_data(data: str) -> Dict[int, List[Tuple[int, int]]]:
+    registry: Dict[int, List[Tuple[int, int]]] = {}
+
+    curr_guard, curr_time_start, curr_time_end = -1, -1, -1
+    for match in event_pattern.finditer(data):
+        if match.group(3) == "Guard":
+            curr_guard = int(match.group(4))
+            continue
+
+        if match.group(3) == "falls":
+            curr_time_start = int(match.group(2))
+            continue
+
+        if match.group(3) == "wakes":
+            curr_time_end = int(match.group(2))
+            if registry.get(curr_guard, None) is not None:
+                registry[curr_guard].append((curr_time_start, curr_time_end))
+            else:
+                registry[curr_guard] = [(curr_time_start, curr_time_end)]
+            continue
+
+    return registry
