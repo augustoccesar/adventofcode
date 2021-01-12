@@ -1,87 +1,75 @@
-#include "../base.cpp"
+#include "../Task.h"
+#include "../String.h"
 
-std::vector<int> parse_input(std::string input);
+class Day05 : public AbstractTask {
+public:
+    virtual std::string part_one() override {
+        auto arr = parse_input(input());
 
-void part_one(std::string file_path)
-{
-    auto input = read_input(file_path);
-    auto arr = parse_input(input);
+        size_t curr = 0;
+        size_t steps = 0;
+        while (true) {
+            steps++;
+            int jumps = arr[curr];
+            size_t next = curr + jumps;
 
-    size_t curr = 0;
-    size_t steps = 0;
-    while (true)
-    {
-        steps++;
-        int jumps = arr[curr];
-        size_t next = curr + jumps;
-
-        arr[curr]++;
-
-        if (next >= arr.size() || next < 0)
-        {
-            break;
-        }
-
-        curr = next;
-        continue;
-    }
-
-    std::cout << "Part One: " << steps << std::endl;
-}
-
-void part_two(std::string file_path)
-{
-    auto input = read_input(file_path);
-    auto arr = parse_input(input);
-
-    size_t curr = 0;
-    size_t steps = 0;
-    while (true)
-    {
-        steps++;
-        int offset = arr[curr];
-        size_t next = curr + offset;
-
-        if (offset >= 3)
-        {
-            arr[curr]--;
-        }
-        else
-        {
             arr[curr]++;
+
+            if (next >= arr.size() || next < 0) {
+                break;
+            }
+
+            curr = next;
+            continue;
         }
 
-        if (next >= arr.size() || next < 0)
+        return std::to_string(steps);
+    }
+
+    virtual std::string part_two() override {
+        auto arr = parse_input(input());
+
+        size_t curr = 0;
+        size_t steps = 0;
+        while (true)
         {
-            break;
+            steps++;
+            int offset = arr[curr];
+            size_t next = curr + offset;
+
+            if (offset >= 3)
+            {
+                arr[curr]--;
+            }
+            else
+            {
+                arr[curr]++;
+            }
+
+            if (next >= arr.size() || next < 0)
+            {
+                break;
+            }
+
+            curr = next;
+            continue;
         }
 
-        curr = next;
-        continue;
+        return std::to_string(steps);
     }
 
-    std::cout << "Part Two: " << steps << std::endl;
-}
-
-std::vector<int> parse_input(std::string input)
-{
-    std::vector<int> vec;
-
-    for (auto item : split(input, '\n'))
-    {
-        vec.push_back(std::stoi(item));
+private:
+    std::string input() {
+        return read_input("inputs/day05_input.txt");
     }
 
-    return vec;
-}
+    std::vector<int> parse_input(std::string input) {
+        std::vector<int> vec;
 
-// --------------------------------------------------------------------------------------------------------------------
+        for (auto item : split(input, '\n')) {
+            vec.push_back(std::stoi(item));
+        }
 
-int main()
-{
-    auto input_path = "./input.txt";
-    part_one(input_path);
-    part_two(input_path);
-
-    return 0;
-}
+        return vec;
+    }
+};

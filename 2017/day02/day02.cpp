@@ -1,70 +1,66 @@
-#include "../base.cpp"
+#include <fstream>
 
-void part_one(std::string input_file)
-{
-    std::ifstream infile(input_file);
+#include "../Task.h"
+#include "../String.h"
 
-    int checksum = 0;
-    while (!infile.eof())
-    {
-        std::string line;
-        getline(infile, line);
 
-        std::vector<int> lineItems;
-        for (auto itemStr : split(line, ' '))
-        {
-            lineItems.push_back(std::stoi(itemStr));
+class Day02 : public AbstractTask {
+public:
+    virtual std::string part_one() override {
+        auto infile = input();
+
+        int checksum = 0;
+        while (!infile.eof()) {
+            std::string line;
+            getline(infile, line);
+
+            std::vector<int> lineItems;
+            for (auto itemStr : split(line, ' ')) {
+                lineItems.push_back(std::stoi(itemStr));
+            }
+
+            auto max = *std::max_element(lineItems.begin(), lineItems.end());
+            auto min = *std::min_element(lineItems.begin(), lineItems.end());
+            checksum += max - min;
         }
 
-        auto max = *std::max_element(lineItems.begin(), lineItems.end());
-        auto min = *std::min_element(lineItems.begin(), lineItems.end());
-        checksum += max - min;
+        return std::to_string(checksum);
     }
 
-    printf("Part One: %d\n", checksum);
-}
+    virtual std::string part_two() override {
+        auto infile = input();
 
-void part_two(std::string input_file)
-{
-    std::ifstream infile(input_file);
+        int checksum = 0;
+        while (!infile.eof()) {
+            std::string line;
+            getline(infile, line);
 
-    int checksum = 0;
-    while (!infile.eof())
-    {
-        std::string line;
-        getline(infile, line);
+            std::vector<int> lineItems;
+            for (auto itemStr : split(line, ' ')) {
+                auto item = std::stoi(itemStr);
+                lineItems.push_back(item);
+            }
 
-        std::vector<int> lineItems;
-        for (auto itemStr : split(line, ' '))
-        {
-            auto item = std::stoi(itemStr);
-            lineItems.push_back(item);
-        }
+            bool found = false;
+            for (size_t i = 0; i < lineItems.size() && !found; i++) {
+                for (size_t j = i + 1; j < lineItems.size() && !found; j++) {
+                    int base = std::max(lineItems[i], lineItems[j]);
+                    int divider = std::min(lineItems[j], lineItems[i]);
 
-        bool found = false;
-        for (size_t i = 0; i < lineItems.size() && !found; i++)
-        {
-            for (size_t j = i + 1; j < lineItems.size() && !found; j++)
-            {
-                int base = std::max(lineItems[i], lineItems[j]);
-                int divider = std::min(lineItems[j], lineItems[i]);
-
-                if (base % divider == 0)
-                {
-                    checksum += base / divider;
-                    found = true;
+                    if (base % divider == 0) {
+                        checksum += base / divider;
+                        found = true;
+                    }
                 }
             }
         }
+
+        return std::to_string(checksum);
     }
 
-    printf("Part Two: %d\n", checksum);
-}
-
-int main()
-{
-    auto input_file = "./input.txt";
-    part_one(input_file);
-    part_two(input_file);
-    return 0;
-}
+private:
+    std::ifstream input() {
+        std::ifstream infile("inputs/day02_input.txt");
+        return infile;
+    }
+};

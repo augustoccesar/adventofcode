@@ -1,36 +1,31 @@
-#include "../base.cpp"
+#include "../Task.h"
+#include "../String.h"
 
-using namespace std;
-
-string input = read_input("./input.txt");
-
-int calculate(string input, int steps)
-{
-    int sum = 0;
-    for (size_t i = 0; i < input.length(); i++)
-    {
-        int next_idx = (i + steps) % input.length();
-        if (input[i] == input[next_idx])
-            sum += c_to_digit(input[i]);
+class Day01 : public AbstractTask {
+public:
+    virtual std::string part_one() override {
+        return std::to_string(calculate(input(), 1));
     }
 
-    return sum;
-}
+    virtual std::string part_two() override {
+        auto data = input();
+        int steps = data.length() / 2;
+        return std::to_string(calculate(data, steps));
+    }
 
-void part_one()
-{
-    printf("Part One: %d\n", calculate(input, 1));
-}
+private:
+    std::string input() {
+        return read_input("inputs/day01_input.txt");
+    }
 
-void part_two()
-{
-    int steps = input.length() / 2;
-    printf("Part Two: %d\n", calculate(input, steps));
-}
+    int calculate(std::string input, int steps) {
+        int sum = 0;
+        for (size_t i = 0; i < input.length(); i++) {
+            int next_idx = (i + steps) % input.length();
+            if (input[i] == input[next_idx])
+                sum += c_to_digit(input[i]);
+        }
 
-int main()
-{
-    part_one();
-    part_two();
-    return 0;
-}
+        return sum;
+    }
+};

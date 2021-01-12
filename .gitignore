@@ -7,7 +7,7 @@
 **/.DS_Store
 
 **/bin
-
+**/cmake-build*
 **/.settings
 **/.project
 **/.classpath
