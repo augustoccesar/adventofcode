@@ -31,23 +31,18 @@ public:
 
         size_t curr = 0;
         size_t steps = 0;
-        while (true)
-        {
+        while (true) {
             steps++;
             int offset = arr[curr];
             size_t next = curr + offset;
 
-            if (offset >= 3)
-            {
+            if (offset >= 3) {
                 arr[curr]--;
-            }
-            else
-            {
+            } else {
                 arr[curr]++;
             }
 
-            if (next >= arr.size() || next < 0)
-            {
+            if (next >= arr.size() || next < 0) {
                 break;
             }
 
