@@ -9,35 +9,41 @@
 
 
 int main(int argc, char *argv[]) {
-    std::unordered_map<int, AbstractTask *> day_map;
-
-    auto day01 = Day01{};
-    auto day02 = Day02{};
-//    auto day03 = Day03{};
-    auto day04 = Day04{};
-    auto day05 = Day05{};
-
-    day_map[1] = &day01;
-    day_map[2] = &day02;
-//    day_map[3] = &day03;
-    day_map[4] = &day04;
-    day_map[5] = &day05;
-
     if (argc < 2) {
         std::cerr << "Invalid amount of arguments" << std::endl;
         exit(1);
     }
 
     auto i_day = std::stoi(argv[1]);
+    AbstractTask *day;
 
-    if (day_map.contains(i_day)) {
-        auto day = day_map[i_day];
-
-        std::cout << "Part One: " << day->part_one() << std::endl;
-        std::cout << "Part Two: " << day->part_two() << std::endl;
-        exit(0);
-    } else {
-        std::cerr << "Day not found" << std::endl;
-        exit(1);
+    switch (i_day) {
+        case 1: {
+            auto day01 = Day01{};
+            day = &day01;
+            break;
+        }
+        case 2: {
+            auto day02 = Day02{};
+            day = &day02;
+            break;
+        }
+        case 4: {
+            auto day04 = Day04{};
+            day = &day04;
+            break;
+        }
+        case 5: {
+            auto day05 = Day05{};
+            day = &day05;
+            break;
+        }
+        default:
+            std::cerr << "Day not found" << std::endl;
+            exit(1);
     }
+
+    std::cout << "Part One: " << day->part_one() << std::endl;
+    std::cout << "Part Two: " << day->part_two() << std::endl;
+    exit(0);
 }
