@@ -1,12 +1,12 @@
 # [AoC 2015](https://adventofcode.com/2015)
 
-Using Haskell 8.8
+Using Typescript 4.1
 
 ## Calendar (Part One / Part Two)
 
  |  |  |  |  |  |  
 :-: | :-: | :-: | :-: | :-: |
-[1](day01)<br>✅/✅ | [2](day02)<br>✅/✅ | [3](day03)<br>✅/✅  | [4](day04)<br>❌/❌  | [5](day05)<br>❌/❌
+[1](day01)<br>❌/❌ | [2](day02)<br>❌/❌ | [3](day03)<br>❌/❌  | [4](day04)<br>❌/❌  | [5](day05)<br>❌/❌
 [6](day06)<br>❌/❌ | [7](day07)<br>❌/❌ | [8](day08)<br>❌/❌  | [9](day09)<br>❌/❌ | [10](day10)<br>❌/❌  
 [11](day11)<br>❌/❌ | [12](day12)<br>❌/❌ | [13](day13)<br>❌/❌  | [14](day14)<br>❌/❌  | [15](day15)<br>❌/❌
 [16](day16)<br>❌/❌ | [17](day17)<br>❌/❌ | [18](day18)<br>❌/❌  | [19](day19)<br>❌/❌  | [20](day20)<br>❌/❌
@@ -22,7 +22,3 @@ For running Day 1
 ```
 make day=1
 ```
-
-## ⚠️ Note
-Not sure if this one will be a permanent one. Still pretty much just exploring
-the language.

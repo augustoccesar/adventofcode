@@ -1,17 +1,21 @@
 .vscode
 .idea
 
-**/__pycache__
-
 *example*.txt
-**/.DS_Store
 
-**/bin
-**/cmake-build*
 **/.settings
 **/.project
 **/.classpath
-**/.gradle
-**/build
 
+**/__pycache__
+*.tsbuildinfo
+**/.DS_Store
+
+**/.gradle
+**/node_modules
+
+**/bin
+**/dist
+**/build
+**/cmake-build*
 **/target
