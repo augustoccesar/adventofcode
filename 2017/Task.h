@@ -6,9 +6,10 @@
 
 class AbstractTask {
 public:
-    virtual std::string part_one() { return ""; };
+    virtual std::string part_one() = 0;
 
-    virtual std::string part_two() { return ""; };
+    virtual std::string part_two() = 0;
+
 protected:
     std::string read_input(std::string path) {
         std::ifstream input(path);
