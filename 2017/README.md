@@ -1,6 +1,6 @@
 # [AoC 2017](https://adventofcode.com/2017)
 
-Using C++ 17
+Using C++ 20
 
 ## Calendar (Part One / Part Two)
 
