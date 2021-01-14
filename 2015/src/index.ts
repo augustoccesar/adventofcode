@@ -1,4 +1,5 @@
 import { Day01 } from "./day01";
+import { Day02 } from "./day02";
 import { Task } from "./Task";
 
 type NullableTask = Task | null;
@@ -14,6 +15,9 @@ let day: NullableTask = null;
 switch (dayInt) {
     case 1:
         day = new Day01();
+        break;
+    case 2:
+        day = new Day02();
         break;
 }
 
