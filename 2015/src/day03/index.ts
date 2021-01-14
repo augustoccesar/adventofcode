@@ -30,7 +30,7 @@ export class Day03 extends Task {
         let roboPos: [number, number] = [0, 0];
 
         let log: Map<String, number> = new Map();
-        log.set(toKey(pos), 1);
+        log.set(toKey(pos), 2);
 
         const inputItems = input.split("");
         for (let i = 0; i < inputItems.length; i++) {
