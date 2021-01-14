@@ -6,7 +6,7 @@
 
 class Day02 : public AbstractTask {
 public:
-    virtual std::string part_one() override {
+    std::string part_one() override {
         auto infile = input();
 
         int checksum = 0;
@@ -15,7 +15,7 @@ public:
             getline(infile, line);
 
             std::vector<int> lineItems;
-            for (auto itemStr : split(line, ' ')) {
+            for (const auto& itemStr : split(line, ' ')) {
                 lineItems.push_back(std::stoi(itemStr));
             }
 
@@ -27,7 +27,7 @@ public:
         return std::to_string(checksum);
     }
 
-    virtual std::string part_two() override {
+    std::string part_two() override {
         auto infile = input();
 
         int checksum = 0;
@@ -36,7 +36,7 @@ public:
             getline(infile, line);
 
             std::vector<int> lineItems;
-            for (auto itemStr : split(line, ' ')) {
+            for (const auto& itemStr : split(line, ' ')) {
                 auto item = std::stoi(itemStr);
                 lineItems.push_back(item);
             }
@@ -59,7 +59,7 @@ public:
     }
 
 private:
-    std::ifstream input() {
+    static std::ifstream input() {
         std::ifstream infile("inputs/day02_input.txt");
         return infile;
     }

@@ -1,16 +1,17 @@
 #include <map>
+#include <utility>
 
 #include "../Task.h"
 #include "../String.h"
 
 class Day04 : public AbstractTask {
 public:
-    virtual std::string part_one() override {
+    std::string part_one() override {
         auto input = read_input("inputs/day04_input.txt");
         auto passwords = split(input, '\n');
 
         int valid_count = 0;
-        for (auto password : passwords) {
+        for (const auto& password : passwords) {
             bool valid = true;
 
             if (contain_repeated_words(password))
@@ -23,12 +24,12 @@ public:
         return std::to_string(valid_count);
     }
 
-    virtual std::string part_two() override {
+    std::string part_two() override {
         auto input = read_input("inputs/day04_input.txt");
         auto passphrases = split(input, '\n');
 
         int valid_count = 0;
-        for (auto passphrase : passphrases) {
+        for (const auto& passphrase : passphrases) {
             bool valid = true;
 
             if (contain_repeated_words(passphrase) || contain_anagram(passphrase))
@@ -42,10 +43,10 @@ public:
     }
 
 private:
-    bool contain_repeated_words(std::string passphrase) {
+    static bool contain_repeated_words(const std::string& passphrase) {
         std::map<std::string, bool> seen_words;
         bool found_repeated = false;
-        for (auto word : split(passphrase, ' ')) {
+        for (const auto& word : split(passphrase, ' ')) {
             if (seen_words[word]) {
                 found_repeated = true;
                 break;
@@ -57,7 +58,7 @@ private:
         return found_repeated;
     }
 
-    bool contain_anagram(std::string passphrase) {
+    static bool contain_anagram(const std::string& passphrase) {
         auto words = split(passphrase, ' ');
         for (size_t i = 0; i < words.size(); i++) {
             for (size_t j = i + 1; j < words.size(); j++) {
@@ -70,7 +71,7 @@ private:
         return false;
     }
 
-    bool is_anagram(std::string str1, std::string str2) {
+    static bool is_anagram(std::string str1, std::string str2) {
         if (str1.length() != str2.length())
             return false;
 

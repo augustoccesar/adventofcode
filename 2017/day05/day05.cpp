@@ -3,7 +3,7 @@
 
 class Day05 : public AbstractTask {
 public:
-    virtual std::string part_one() override {
+    std::string part_one() override {
         auto arr = parse_input(input());
 
         size_t curr = 0;
@@ -20,13 +20,12 @@ public:
             }
 
             curr = next;
-            continue;
-        }
+       }
 
         return std::to_string(steps);
     }
 
-    virtual std::string part_two() override {
+    std::string part_two() override {
         auto arr = parse_input(input());
 
         size_t curr = 0;
@@ -47,8 +46,7 @@ public:
             }
 
             curr = next;
-            continue;
-        }
+       }
 
         return std::to_string(steps);
     }
@@ -58,10 +56,10 @@ private:
         return read_input("inputs/day05_input.txt");
     }
 
-    std::vector<int> parse_input(std::string input) {
+    static std::vector<int> parse_input(const std::string& input) {
         std::vector<int> vec;
 
-        for (auto item : split(input, '\n')) {
+        for (const auto& item : split(input, '\n')) {
             vec.push_back(std::stoi(item));
         }
 

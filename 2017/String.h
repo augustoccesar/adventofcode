@@ -6,6 +6,6 @@
 
 extern int c_to_digit(char c);
 
-extern std::vector<std::string> split(std::string str, char delimiter);
+extern std::vector<std::string> split(const std::string& str, char delimiter);
 
 #endif //AOC_STRING_H

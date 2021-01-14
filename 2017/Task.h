@@ -11,7 +11,7 @@ public:
     virtual std::string part_two() = 0;
 
 protected:
-    std::string read_input(std::string path) {
+    static std::string read_input(const std::string &path) {
         std::ifstream input(path);
         std::stringstream sstr;
 
