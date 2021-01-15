@@ -2,6 +2,7 @@ import { Day01 } from "./day01";
 import { Day02 } from "./day02";
 import { Day03 } from "./day03";
 import { Day04 } from "./day04";
+import { Day05 } from "./day05";
 import { Task } from "./Task";
 
 type NullableTask = Task | null;
@@ -19,6 +20,7 @@ switch (dayInt) {
     case 2: day = new Day02(); break;
     case 3: day = new Day03(); break;
     case 4: day = new Day04(); break;
+    case 5: day = new Day05(); break;
 }
 
 if (day == null) {
