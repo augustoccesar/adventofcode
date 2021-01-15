@@ -1,6 +1,6 @@
 package com.augustoccesar.adventofcode.day03;
 
-import com.augustoccesar.adventofcode.BaseDay;
+import com.augustoccesar.adventofcode.Task;
 import com.augustoccesar.adventofcode.utils.Pair;
 import com.augustoccesar.adventofcode.utils.Point2D;
 
@@ -11,9 +11,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class Day03 extends BaseDay {
+public class Day03 extends Task {
     @Override
-    public void partOne() throws IOException {
+    public String partOne() throws IOException {
         final List<HashMap<String, Pair<Point2D, Integer>>> wires = getWiresPaths();
 
         int shortest = Integer.MAX_VALUE;
@@ -26,11 +26,11 @@ public class Day03 extends BaseDay {
             }
         }
 
-        System.out.println("Part One: " + shortest);
+        return String.valueOf(shortest);
     }
 
     @Override
-    public void partTwo() throws IOException {
+    public String partTwo() throws IOException {
         final List<HashMap<String, Pair<Point2D, Integer>>> wires = getWiresPaths();
 
         int shortest = Integer.MAX_VALUE;
@@ -43,7 +43,7 @@ public class Day03 extends BaseDay {
             }
         }
 
-        System.out.println("Part Two: " + shortest);
+        return String.valueOf(shortest);
     }
 
     private List<HashMap<String, Pair<Point2D, Integer>>> getWiresPaths() throws IOException {

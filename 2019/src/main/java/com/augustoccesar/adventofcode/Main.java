@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class Main {
     public static void main(String[] args) {
-        Map<String, BaseDay> days = Map.of(
+        Map<String, Task> days = Map.of(
                 "01", new Day01(),
                 "02", new Day02(),
                 "03", new Day03(),
@@ -28,7 +28,7 @@ public class Main {
             dayString = "0" + dayString;
         }
 
-        final BaseDay day = days.get(dayString);
+        final Task day = days.get(dayString);
 
         if (day == null) {
             System.err.println("Day not found.");

@@ -5,15 +5,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-public abstract class BaseDay {
-    public abstract void partOne() throws IOException;
+public abstract class Task {
+    public abstract String partOne() throws IOException;
 
-    public abstract void partTwo() throws IOException;
+    public abstract String partTwo() throws IOException;
 
     public void run() {
         try {
-            this.partOne();
-            this.partTwo();
+            System.out.printf("Part One: %s\n", this.partOne());
+            System.out.printf("Part Two: %s\n", this.partTwo());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -29,7 +29,8 @@ public abstract class BaseDay {
 
     protected String readInput(final String name) throws IOException {
         final StringBuilder stringBuilder = new StringBuilder();
-        final InputStream input = this.getClass().getResourceAsStream(resourceFolder() + "/" + name + ".txt");
+        final String dayName = this.getClass().getSimpleName().toLowerCase();
+        final InputStream input = this.getClass().getResourceAsStream("/" + dayName + "_" + name + ".txt");
         final BufferedReader br = new BufferedReader(new InputStreamReader(input));
 
         while (br.ready()) {
@@ -40,15 +41,12 @@ public abstract class BaseDay {
     }
 
     protected void streamInput(StreamCallback streamCallback) throws IOException {
-        final InputStream input = this.getClass().getResourceAsStream(resourceFolder() + "/input.txt");
+        final String dayName = this.getClass().getSimpleName().toLowerCase();
+        final InputStream input = this.getClass().getResourceAsStream("/" + dayName + "_input.txt");
         final BufferedReader br = new BufferedReader(new InputStreamReader(input));
 
         while (br.ready()) {
             streamCallback.call(br.readLine());
         }
-    }
-
-    private String resourceFolder() {
-        return "/" + this.getClass().getSimpleName().toLowerCase();
     }
 }

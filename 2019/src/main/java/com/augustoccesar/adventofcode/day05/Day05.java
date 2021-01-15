@@ -1,6 +1,6 @@
 package com.augustoccesar.adventofcode.day05;
 
-import com.augustoccesar.adventofcode.BaseDay;
+import com.augustoccesar.adventofcode.Task;
 import com.augustoccesar.adventofcode.utils.Pair;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -8,27 +8,26 @@ import lombok.Getter;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class Day05 extends BaseDay {
+public class Day05 extends Task {
     @Override
-    public void partOne() throws IOException {
+    public String partOne() throws IOException {
         String program = this.readInput().strip();
         int result = runProgram(program, 1);
 
-        System.out.println("Part One: " + result);
+        return String.valueOf(result);
     }
 
     @Override
-    public void partTwo() throws IOException {
+    public String partTwo() throws IOException {
         String program = this.readInput().strip();
         int result = runProgram(program, 5);
 
-        System.out.println("Part Two: " + result);
+        return String.valueOf(result);
     }
 
     private int runProgram(final String program, final int input) {

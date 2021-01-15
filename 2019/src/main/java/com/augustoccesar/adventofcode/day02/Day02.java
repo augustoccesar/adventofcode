@@ -5,18 +5,18 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import com.augustoccesar.adventofcode.BaseDay;
+import com.augustoccesar.adventofcode.Task;
 
-public class Day02 extends BaseDay {
+public class Day02 extends Task {
     @Override
-    public void partOne() throws IOException {
+    public String partOne() throws IOException {
         int output = generateOutput(12, 2);
 
-        System.out.println("Part One: " + output);
+        return String.valueOf(output);
     }
 
     @Override
-    public void partTwo() throws IOException {
+    public String partTwo() throws IOException {
         boolean found = false;
         int expected = 19690720;
         int noun = -1;
@@ -34,7 +34,7 @@ public class Day02 extends BaseDay {
         }
 
         int result = 100 * noun + verb;
-        System.out.println("Part Two: " + result);
+        return String.valueOf(result);
     }
 
     public int generateOutput(int noun, int verb) throws IOException {

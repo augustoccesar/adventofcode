@@ -1,6 +1,6 @@
 package com.augustoccesar.adventofcode.day04;
 
-import com.augustoccesar.adventofcode.BaseDay;
+import com.augustoccesar.adventofcode.Task;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -10,15 +10,15 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class Day04 extends BaseDay {
+public class Day04 extends Task {
     @Override
-    public void partOne() throws IOException {
-        System.out.println("Part One: " + getValidCount(1));
+    public String partOne() throws IOException {
+        return String.valueOf(getValidCount(1));
     }
 
     @Override
-    public void partTwo() throws IOException {
-        System.out.println("Part One: " + getValidCount(2));
+    public String partTwo() throws IOException {
+        return String.valueOf(getValidCount(2));
     }
 
     private int getValidCount(int version) throws IOException {

@@ -3,11 +3,11 @@ package com.augustoccesar.adventofcode.day01;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import com.augustoccesar.adventofcode.BaseDay;
+import com.augustoccesar.adventofcode.Task;
 
-public class Day01 extends BaseDay {
+public class Day01 extends Task {
     @Override
-    public void partOne() throws IOException {
+    public String partOne() throws IOException {
         final AtomicInteger sum = new AtomicInteger(0);
         streamInput((s) -> {
             int mass = Integer.parseInt(s);
@@ -16,11 +16,11 @@ public class Day01 extends BaseDay {
             sum.set(value);
         });
 
-        System.out.println("Part One: " + sum.toString());
+        return sum.toString();
     }
 
     @Override
-    public void partTwo() throws IOException {
+    public String partTwo() throws IOException {
         final AtomicInteger sum = new AtomicInteger(0);
         streamInput((s) -> {
             int mass = Integer.parseInt(s);
@@ -39,7 +39,7 @@ public class Day01 extends BaseDay {
             sum.set(sum.get() + stageSum);
         });
 
-        System.out.println("Part Two: " + sum.toString());
+        return sum.toString();
     }
 
     private static int fuelRequired(int mass) {
