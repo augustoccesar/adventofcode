@@ -14,7 +14,7 @@ Using Java 15
 
 ## How to run
 ```
-gradle run --args="{day}"
+gradle run --args={day}
 ```
 
 ### Example:

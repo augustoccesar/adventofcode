@@ -14,7 +14,7 @@ Using Typescript 4.1
 
 ## How to run
 ```
-make day="{day}"
+make day={day}
 ```
 ### Example:
 

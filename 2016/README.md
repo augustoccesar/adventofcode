@@ -14,7 +14,7 @@ Using Rust 1.48
 
 ## How to run
 ```
-make day="{day}"
+make day={day}
 ```
 ### Example:
 

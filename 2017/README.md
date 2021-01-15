@@ -14,7 +14,7 @@ Using C++ 20
 
 ## How to run
 ```
-make day="{day}"
+make day={day}
 ```
 ### Example:
 

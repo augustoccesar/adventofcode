@@ -14,7 +14,7 @@ Using Python 3.8
 
 ## How to run
 ```
-make day="{day}"
+make day={day}
 ```
 ### Example:
 
