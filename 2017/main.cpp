@@ -3,7 +3,7 @@
 
 #include "day01/day01.cpp"
 #include "day02/day02.cpp"
-//#include "day03/day03.cpp"
+#include "day03/day03.cpp"
 #include "day04/day04.cpp"
 #include "day05/day05.cpp"
 
@@ -26,6 +26,11 @@ int main(int argc, char *argv[]) {
         case 2: {
             auto day02 = Day02{};
             day = &day02;
+            break;
+        }
+        case 3: {
+            auto day03 = Day03{};
+            day = &day03;
             break;
         }
         case 4: {
