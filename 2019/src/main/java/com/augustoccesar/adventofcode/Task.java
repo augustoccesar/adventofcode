@@ -27,6 +27,10 @@ public abstract class Task {
         return readInput("input");
     }
 
+    protected void streamInput(StreamCallback streamCallback) throws IOException {
+        streamInput("input", streamCallback);
+    }
+
     protected String readInput(final String name) throws IOException {
         final StringBuilder stringBuilder = new StringBuilder();
         final String dayName = this.getClass().getSimpleName().toLowerCase();
@@ -40,9 +44,9 @@ public abstract class Task {
         return stringBuilder.toString();
     }
 
-    protected void streamInput(StreamCallback streamCallback) throws IOException {
+    protected void streamInput(final String name, StreamCallback streamCallback) throws IOException {
         final String dayName = this.getClass().getSimpleName().toLowerCase();
-        final InputStream input = this.getClass().getResourceAsStream("/" + dayName + "_input.txt");
+        final InputStream input = this.getClass().getResourceAsStream("/" + dayName + "_" + name + ".txt");
         final BufferedReader br = new BufferedReader(new InputStreamReader(input));
 
         while (br.ready()) {

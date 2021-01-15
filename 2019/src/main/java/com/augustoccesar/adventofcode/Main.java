@@ -5,17 +5,19 @@ import com.augustoccesar.adventofcode.day02.Day02;
 import com.augustoccesar.adventofcode.day03.Day03;
 import com.augustoccesar.adventofcode.day04.Day04;
 import com.augustoccesar.adventofcode.day05.Day05;
+import com.augustoccesar.adventofcode.day06.Day06;
 
 import java.util.Map;
 
 public class Main {
     public static void main(String[] args) {
-        Map<String, Task> days = Map.of(
-                "01", new Day01(),
-                "02", new Day02(),
-                "03", new Day03(),
-                "04", new Day04(),
-                "05", new Day05()
+        Map<Integer, Task> days = Map.of(
+                1, new Day01(),
+                2, new Day02(),
+                3, new Day03(),
+                4, new Day04(),
+                5, new Day05(),
+                6, new Day06()
         );
 
         if (args.length < 1) {
@@ -23,12 +25,8 @@ public class Main {
             System.exit(1);
         }
 
-        String dayString = args[0];
-        if (dayString.length() < 2) {
-            dayString = "0" + dayString;
-        }
-
-        final Task day = days.get(dayString);
+        int dayInt = Integer.parseInt(args[0]);
+        final Task day = days.get(dayInt);
 
         if (day == null) {
             System.err.println("Day not found.");
