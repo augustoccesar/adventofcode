@@ -8,4 +8,4 @@ extern int c_to_digit(char c);
 
 extern std::vector<std::string> split(const std::string& str, char delimiter);
 
-#endif //AOC_STRING_H
+#endif  // AOC_STRING_H
