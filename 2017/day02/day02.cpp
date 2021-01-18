@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <fstream>
 
 #include "../String.h"
@@ -13,13 +14,14 @@ class Day02 : public AbstractTask {
       std::string line;
       getline(infile, line);
 
-      std::vector<int> lineItems;
-      for (const auto& itemStr : split(line, ' ')) {
-        lineItems.push_back(std::stoi(itemStr));
-      }
+      std::vector<std::string> lineItems = split(line, ' ');
+      std::vector<int> lineItemsInt;
+      std::transform(
+          lineItems.begin(), lineItems.end(), std::back_inserter(lineItemsInt),
+          [](const std::string& item) -> int { return std::stoi(item); });
 
-      auto max = *std::max_element(lineItems.begin(), lineItems.end());
-      auto min = *std::min_element(lineItems.begin(), lineItems.end());
+      auto max = *std::max_element(lineItemsInt.begin(), lineItemsInt.end());
+      auto min = *std::min_element(lineItemsInt.begin(), lineItemsInt.end());
       checksum += max - min;
     }
 

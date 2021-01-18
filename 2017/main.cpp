@@ -7,44 +7,35 @@
 #include "day04/day04.cpp"
 #include "day05/day05.cpp"
 
-int main(int argc, char *argv[]) {
+AbstractTask* getDay(int i_day) {
+  switch (i_day) {
+    case 1:
+      return new Day01;
+    case 2:
+      return new Day02;
+    case 3:
+      return new Day03;
+    case 4:
+      return new Day04;
+    case 5:
+      return new Day05;
+    default:
+      return NULL;
+  }
+}
+
+int main(int argc, char* argv[]) {
   if (argc < 2) {
     std::cerr << "Invalid amount of arguments" << std::endl;
     exit(1);
   }
 
   auto i_day = std::stoi(argv[1]);
-  AbstractTask *day;
+  AbstractTask* day = getDay(i_day);
 
-  switch (i_day) {
-    case 1: {
-      auto day01 = Day01{};
-      day = &day01;
-      break;
-    }
-    case 2: {
-      auto day02 = Day02{};
-      day = &day02;
-      break;
-    }
-    case 3: {
-      auto day03 = Day03{};
-      day = &day03;
-      break;
-    }
-    case 4: {
-      auto day04 = Day04{};
-      day = &day04;
-      break;
-    }
-    case 5: {
-      auto day05 = Day05{};
-      day = &day05;
-      break;
-    }
-    default:
-      std::cerr << "Day not found" << std::endl;
-      exit(1);
+  if (day == NULL) {
+    std::cerr << "Day not found" << std::endl;
+    exit(1);
   }
 
   std::cout << "Part One: " << day->part_one() << std::endl;

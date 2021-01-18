@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <iostream>
 #include <map>
+#include <numeric>
 #include <vector>
 
 #include "../Task.h"
@@ -71,7 +72,7 @@ class Day03 : public AbstractTask {
     // (-2, -1) (-1, -1) (0, -1) (1, -1) (2, -1)
     // (-2, -2) (-1, -2) (0, -2) (1, -2) (2, -2) ...
     int looking_for = std::stoi(input());
-    int result;
+    int result = -1;
 
     std::map<std::string, int> hist;
     point curr_point = {1, 0};
@@ -91,10 +92,11 @@ class Day03 : public AbstractTask {
       auto [curr_x, curr_y] = curr_point;
 
       auto neighbors = neighbors_from_hist(curr_point, hist);
-      int sum = 0;
-      for (auto& neighbor : neighbors) {
-        sum += neighbor.second;
-      }
+
+      int sum = std::accumulate(neighbors.begin(), neighbors.end(), 0,
+                                [](int sum, const std::pair<point, int>& curr) {
+                                  return sum + curr.second;
+                                });
 
       if (sum > looking_for) {
         result = sum;
@@ -171,7 +173,6 @@ class Day03 : public AbstractTask {
         line.push_back({x, start_y});
       }
     } else {
-      // Is diagonal TODO: Should I even care about this one for my use?
       throw "Diagonal line";
     }
 

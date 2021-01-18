@@ -15,7 +15,7 @@ class Day05 : public AbstractTask {
 
       arr[curr]++;
 
-      if (next >= arr.size() || next < 0) {
+      if (next >= arr.size()) {
         break;
       }
 
@@ -41,7 +41,7 @@ class Day05 : public AbstractTask {
         arr[curr]++;
       }
 
-      if (next >= arr.size() || next < 0) {
+      if (next >= arr.size()) {
         break;
       }
 
@@ -55,11 +55,12 @@ class Day05 : public AbstractTask {
   std::string input() { return read_input("inputs/day05_input.txt"); }
 
   static std::vector<int> parse_input(const std::string& input) {
-    std::vector<int> vec;
+    std::vector<std::string> lines = split(input, '\n');
 
-    for (const auto& item : split(input, '\n')) {
-      vec.push_back(std::stoi(item));
-    }
+    std::vector<int> vec;
+    std::transform(
+        lines.begin(), lines.end(), std::back_inserter(vec),
+        [](const std::string& line) -> int { return std::stoi(line); });
 
     return vec;
   }
