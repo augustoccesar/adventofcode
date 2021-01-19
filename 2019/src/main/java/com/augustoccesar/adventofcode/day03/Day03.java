@@ -3,7 +3,6 @@ package com.augustoccesar.adventofcode.day03;
 import com.augustoccesar.adventofcode.Task;
 import com.augustoccesar.adventofcode.utils.Pair;
 import com.augustoccesar.adventofcode.utils.Point2D;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,104 +11,107 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class Day03 extends Task {
-    @Override
-    public String partOne() throws IOException {
-        final List<HashMap<String, Pair<Point2D, Integer>>> wires = getWiresPaths();
+  @Override
+  public String partOne() throws IOException {
+    final List<HashMap<String, Pair<Point2D, Integer>>> wires = getWiresPaths();
 
-        int shortest = Integer.MAX_VALUE;
-        List<Pair<Point2D, Integer>> intersect = intersect(wires.get(0), wires.get(1));
+    int shortest = Integer.MAX_VALUE;
+    List<Pair<Point2D, Integer>> intersect = intersect(wires.get(0), wires.get(1));
 
-        for (Pair<Point2D, Integer> pointSteps : intersect) {
-            final int distance = pointSteps.getLeft().taxicab(Point2D.on(0, 0));
-            if (distance < shortest) {
-                shortest = distance;
-            }
-        }
-
-        return String.valueOf(shortest);
+    for (Pair<Point2D, Integer> pointSteps : intersect) {
+      final int distance = pointSteps.getLeft().taxicab(Point2D.on(0, 0));
+      if (distance < shortest) {
+        shortest = distance;
+      }
     }
 
-    @Override
-    public String partTwo() throws IOException {
-        final List<HashMap<String, Pair<Point2D, Integer>>> wires = getWiresPaths();
+    return String.valueOf(shortest);
+  }
 
-        int shortest = Integer.MAX_VALUE;
-        List<Pair<Point2D, Integer>> intersect = intersect(wires.get(0), wires.get(1));
+  @Override
+  public String partTwo() throws IOException {
+    final List<HashMap<String, Pair<Point2D, Integer>>> wires = getWiresPaths();
 
-        for (Pair<Point2D, Integer> pointSteps : intersect) {
-            final int distance = pointSteps.getRight();
-            if (distance < shortest) {
-                shortest = distance;
-            }
-        }
+    int shortest = Integer.MAX_VALUE;
+    List<Pair<Point2D, Integer>> intersect = intersect(wires.get(0), wires.get(1));
 
-        return String.valueOf(shortest);
+    for (Pair<Point2D, Integer> pointSteps : intersect) {
+      final int distance = pointSteps.getRight();
+      if (distance < shortest) {
+        shortest = distance;
+      }
     }
 
-    private List<HashMap<String, Pair<Point2D, Integer>>> getWiresPaths() throws IOException {
-        List<String> input = this.readInput().lines().collect(Collectors.toList());
-        List<HashMap<String, Pair<Point2D, Integer>>> wires = new ArrayList<>();
+    return String.valueOf(shortest);
+  }
 
-        for (String in : input) {
-            wires.add(generatePath(Point2D.on(0, 0), in));
-        }
+  private List<HashMap<String, Pair<Point2D, Integer>>> getWiresPaths() throws IOException {
+    List<String> input = this.readInput().lines().collect(Collectors.toList());
+    List<HashMap<String, Pair<Point2D, Integer>>> wires = new ArrayList<>();
 
-        return wires;
+    for (String in : input) {
+      wires.add(generatePath(Point2D.on(0, 0), in));
     }
 
-    private HashMap<String, Pair<Point2D, Integer>> generatePath(final Point2D basePoint, final String pathCommands) {
-        List<String> commands = List.of(pathCommands.split(","));
-        HashMap<String, Pair<Point2D, Integer>> path = new HashMap<>(commands.size());
+    return wires;
+  }
 
-        int steps = 0;
-        Point2D lastPoint = basePoint;
-        for (String command : commands) {
-            char direction = command.charAt(0);
-            int amount = Integer.parseInt(command.substring(1));
+  private HashMap<String, Pair<Point2D, Integer>> generatePath(
+      final Point2D basePoint, final String pathCommands) {
+    List<String> commands = List.of(pathCommands.split(","));
+    HashMap<String, Pair<Point2D, Integer>> path = new HashMap<>(commands.size());
 
-            for (int i = 0; i < amount; i++) {
-                steps++;
-                switch (direction) {
-                    case 'U' -> lastPoint = lastPoint.moveY(1);
-                    case 'R' -> lastPoint = lastPoint.moveX(1);
-                    case 'D' -> lastPoint = lastPoint.moveY(-1);
-                    case 'L' -> lastPoint = lastPoint.moveX(-1);
-                }
+    int steps = 0;
+    Point2D lastPoint = basePoint;
+    for (String command : commands) {
+      char direction = command.charAt(0);
+      int amount = Integer.parseInt(command.substring(1));
 
-                path.put(lastPoint.id(), Pair.of(lastPoint, steps));
-            }
+      for (int i = 0; i < amount; i++) {
+        steps++;
+        switch (direction) {
+          case 'U' -> lastPoint = lastPoint.moveY(1);
+          case 'R' -> lastPoint = lastPoint.moveX(1);
+          case 'D' -> lastPoint = lastPoint.moveY(-1);
+          case 'L' -> lastPoint = lastPoint.moveX(-1);
+          default -> {
+            continue;
+          }
         }
 
-        return path;
+        path.put(lastPoint.id(), Pair.of(lastPoint, steps));
+      }
     }
 
-    /**
-     * Generates the intersection of two wire paths.
-     *
-     * The input paths consists of: {@link HashMap} of {@link String} (Key of the {@link Point2D}) to
-     * a {@link Pair} of {@link Point2D} and {@link Integer} (steps taken to reach the {@link Point2D}).
-     *
-     * @param pathOne Path of the first wire.
-     * @param pathTwo Path of the second wire.
-     * @return The intersection of both paths paired with the summed steps to get to
-     * the {@link Point2D} by both wires.
-     */
-    private List<Pair<Point2D, Integer>> intersect(
-            final HashMap<String, Pair<Point2D, Integer>> pathOne,
-            final HashMap<String, Pair<Point2D, Integer>> pathTwo
-    ) {
-        List<Pair<Point2D, Integer>> intersection = new ArrayList<>();
+    return path;
+  }
 
-        for (Map.Entry<String, Pair<Point2D, Integer>> entry : pathOne.entrySet()) {
-            Pair<Point2D, Integer> pathTwoEntry = pathTwo.get(entry.getValue().getLeft().id());
-            if (pathTwoEntry != null) {
-                intersection.add(Pair.of(
-                        entry.getValue().getLeft(),
-                        entry.getValue().getRight() + pathTwoEntry.getRight()
-                ));
-            }
-        }
+  /**
+   * Generates the intersection of two wire paths.
+   *
+   * <p>The input paths consists of: {@link HashMap} of {@link String} (Key of the {@link Point2D})
+   * to a {@link Pair} of {@link Point2D} and {@link Integer} (steps taken to reach the {@link
+   * Point2D}).
+   *
+   * @param pathOne Path of the first wire.
+   * @param pathTwo Path of the second wire.
+   * @return The intersection of both paths paired with the summed steps to get to the {@link
+   *     Point2D} by both wires.
+   */
+  private List<Pair<Point2D, Integer>> intersect(
+      final HashMap<String, Pair<Point2D, Integer>> pathOne,
+      final HashMap<String, Pair<Point2D, Integer>> pathTwo) {
+    List<Pair<Point2D, Integer>> intersection = new ArrayList<>();
 
-        return intersection;
+    for (Map.Entry<String, Pair<Point2D, Integer>> entry : pathOne.entrySet()) {
+      Pair<Point2D, Integer> pathTwoEntry = pathTwo.get(entry.getValue().getLeft().id());
+      if (pathTwoEntry != null) {
+        intersection.add(
+            Pair.of(
+                entry.getValue().getLeft(), entry.getValue().getRight() + pathTwoEntry.getRight()));
+      }
     }
+
+    return intersection;
+  }
 }

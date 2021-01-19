@@ -14,3 +14,9 @@ dependencies {
 application {
     mainClass = 'com.augustoccesar.adventofcode.Main'
 }
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(15);
+    }
+}
