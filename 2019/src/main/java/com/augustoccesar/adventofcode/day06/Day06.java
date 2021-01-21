@@ -16,7 +16,15 @@ public class Day06 extends Task {
 
     int totalOrbits = 0;
     for (Entry<String, Planet> entry : planets.entrySet()) {
-      totalOrbits += countOrbits(entry.getValue(), 0);
+      Planet currPlanet = entry.getValue();
+
+      int orbits = 0;
+      while (currPlanet.getOrbit() != null) {
+        orbits++;
+        currPlanet = currPlanet.getOrbit();
+      }
+
+      totalOrbits += orbits;
     }
 
     return String.valueOf(totalOrbits);
@@ -57,14 +65,6 @@ public class Day06 extends Task {
             .count();
 
     return String.valueOf(res);
-  }
-
-  private int countOrbits(final Planet planet, int result) {
-    if (planet.getOrbit() != null) {
-      return countOrbits(planet.getOrbit(), result + 1);
-    }
-
-    return result;
   }
 
   private HashMap<String, Planet> buildPlanetsMap(final String input) {
