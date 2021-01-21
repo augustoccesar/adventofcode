@@ -3,13 +3,72 @@ package com.augustoccesar.adventofcode.day06;
 import com.augustoccesar.adventofcode.Task;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map.Entry;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Stream;
 
 public class Day06 extends Task {
   @Override
   public String partOne() throws IOException {
-    HashMap<String, Planet> planets = new HashMap<>();
     final String input = this.readInput();
+    HashMap<String, Planet> planets = buildPlanetsMap(input);
+
+    int totalOrbits = 0;
+    for (Entry<String, Planet> entry : planets.entrySet()) {
+      totalOrbits += countOrbits(entry.getValue(), 0);
+    }
+
+    return String.valueOf(totalOrbits);
+  }
+
+  @Override
+  public String partTwo() throws IOException {
+    final String input = this.readInput();
+    HashMap<String, Planet> planets = buildPlanetsMap(input);
+
+    Planet currSan = planets.get("SAN").getOrbit();
+    LinkedList<String> stepsSan = new LinkedList<>();
+
+    Planet currYou = planets.get("YOU").getOrbit();
+    LinkedList<String> stepsYou = new LinkedList<>();
+
+    AtomicReference<Planet> intersectPlanet = new AtomicReference<>();
+
+    while (currSan.getOrbit() != null) {
+      stepsSan.add(currSan.getName());
+      currSan = currSan.getOrbit();
+    }
+
+    while (currYou.getOrbit() != null) {
+      stepsYou.add(currYou.getName());
+
+      if (stepsSan.contains(currYou.getName()) && intersectPlanet.get() == null) {
+        intersectPlanet.set(currYou);
+      }
+
+      currYou = currYou.getOrbit();
+    }
+
+    long res =
+        Stream.concat(
+                stepsSan.stream().takeWhile(item -> item != intersectPlanet.get().getName()),
+                stepsYou.stream().takeWhile(item -> item != intersectPlanet.get().getName()))
+            .count();
+
+    return String.valueOf(res);
+  }
+
+  private int countOrbits(final Planet planet, int result) {
+    if (planet.getOrbit() != null) {
+      return countOrbits(planet.getOrbit(), result + 1);
+    }
+
+    return result;
+  }
+
+  private HashMap<String, Planet> buildPlanetsMap(final String input) {
+    HashMap<String, Planet> planets = new HashMap<>();
 
     input
         .lines()
@@ -34,24 +93,6 @@ public class Day06 extends Task {
               }
             });
 
-    int totalOrbits = 0;
-    for (Entry<String, Planet> entry : planets.entrySet()) {
-      totalOrbits += countOrbits(entry.getValue(), 0);
-    }
-
-    return String.valueOf(totalOrbits);
-  }
-
-  @Override
-  public String partTwo() throws IOException {
-    return null;
-  }
-
-  private int countOrbits(final Planet planet, int result) {
-    if (planet.getOrbit() != null) {
-      return countOrbits(planet.getOrbit(), result + 1);
-    }
-
-    return result;
+    return planets;
   }
 }
