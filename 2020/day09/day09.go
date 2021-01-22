@@ -1,21 +1,45 @@
 // TODO: This one is looking quite unoptimized. Need a revisit.
-package main
+package day09
 
 import (
-	"fmt"
-	"io/ioutil"
 	"sort"
 	"strconv"
 	"strings"
 )
 
-func readInput() string {
-	input, err := ioutil.ReadFile("./input.txt")
-	if err != nil {
-		panic(err)
+type Day09 struct{}
+
+func (d *Day09) InputFileName() string { return "input" }
+
+func (d *Day09) PartOne(input string) string {
+	lines := strings.Split(input, "\n")
+	items := make([]int, len(lines))
+
+	for i, item := range lines {
+		items[i], _ = strconv.Atoi(item)
 	}
 
-	return string(input)
+	invalid := findInvalid(25, items)
+
+	return strconv.Itoa(invalid)
+}
+
+func (d *Day09) PartTwo(input string) string {
+	lines := strings.Split(input, "\n")
+	items := make([]int, len(lines))
+
+	for i, item := range lines {
+		items[i], _ = strconv.Atoi(item)
+	}
+
+	invalid := findInvalid(25, items)
+	i, j := findSumRange(invalid, items)
+
+	sumRange := items[i:j]
+	sort.Ints(sumRange)
+	result := sumRange[0] + sumRange[len(sumRange)-1]
+
+	return strconv.Itoa(result)
 }
 
 func containBySum(contained int, possible []int) bool {
@@ -65,40 +89,4 @@ func findSumRange(lookup int, items []int) (int, int) {
 	}
 
 	return -1, -1
-}
-
-func partOne() {
-	input := strings.Split(readInput(), "\n")
-	items := make([]int, len(input))
-
-	for i, item := range input {
-		items[i], _ = strconv.Atoi(item)
-	}
-
-	invalid := findInvalid(25, items)
-
-	fmt.Printf("Part One: %d\n", invalid)
-}
-
-func partTwo() {
-	input := strings.Split(readInput(), "\n")
-	items := make([]int, len(input))
-
-	for i, item := range input {
-		items[i], _ = strconv.Atoi(item)
-	}
-
-	invalid := findInvalid(25, items)
-	i, j := findSumRange(invalid, items)
-
-	sumRange := items[i:j]
-	sort.Ints(sumRange)
-	result := sumRange[0] + sumRange[len(sumRange)-1]
-
-	fmt.Printf("Part Two: %d\n", result)
-}
-
-func main() {
-	partOne()
-	partTwo()
 }

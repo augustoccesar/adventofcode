@@ -1,19 +1,56 @@
-package main
+package day08
 
 import (
-	"fmt"
-	"io/ioutil"
 	"strconv"
 	"strings"
+
+	"github.com/augustoccesar/adventofcode/utils"
 )
 
-func readInput() string {
-	input, err := ioutil.ReadFile("./input.txt")
-	if err != nil {
-		panic(err)
+type Day08 struct{}
+
+func (d *Day08) InputFileName() string { return "input" }
+
+func (d *Day08) PartOne(input string) string {
+	lines := strings.Split(input, "\n")
+	instructions := [][]string{}
+
+	for _, line := range lines {
+		instructions = append(instructions, strings.Split(line, " "))
 	}
 
-	return string(input)
+	acc, _ := run(instructions)
+
+	return strconv.Itoa(acc)
+}
+
+func (d *Day08) PartTwo(input string) string {
+	lines := strings.Split(input, "\n")
+	instructions := [][]string{}
+
+	for _, line := range lines {
+		instructions = append(instructions, strings.Split(line, " "))
+	}
+
+	acc := 0
+	for i, inst := range instructions {
+		if inst[0] != "acc" {
+			cpyInst := utils.MatrixDeepCopy(instructions)
+
+			if inst[0] == "nop" {
+				cpyInst[i][0] = "jmp"
+			} else {
+				cpyInst[i][0] = "nop"
+			}
+
+			deepAcc, finished := run(cpyInst) // Brute forcing the sh*t out of it
+			if finished {
+				acc = deepAcc
+			}
+		}
+	}
+
+	return strconv.Itoa(acc)
 }
 
 func run(instructions [][]string) (int, bool) {
@@ -53,61 +90,4 @@ func run(instructions [][]string) (int, bool) {
 	}
 
 	return acc, i == len(instructions)
-}
-
-func deepCopy(in [][]string) [][]string {
-	out := make([][]string, len(in))
-	for i, v := range in {
-		out[i] = make([]string, len(v))
-		copy(out[i], v)
-	}
-
-	return out
-}
-
-func partOne() {
-	lines := strings.Split(readInput(), "\n")
-	instructions := [][]string{}
-
-	for _, line := range lines {
-		instructions = append(instructions, strings.Split(line, " "))
-	}
-
-	acc, _ := run(instructions)
-
-	fmt.Printf("Part One: %d\n", acc)
-}
-
-func partTwo() {
-	lines := strings.Split(readInput(), "\n")
-	instructions := [][]string{}
-
-	for _, line := range lines {
-		instructions = append(instructions, strings.Split(line, " "))
-	}
-
-	acc := 0
-	for i, inst := range instructions {
-		if inst[0] != "acc" {
-			cpyInst := deepCopy(instructions)
-
-			if inst[0] == "nop" {
-				cpyInst[i][0] = "jmp"
-			} else {
-				cpyInst[i][0] = "nop"
-			}
-
-			deepAcc, finished := run(cpyInst) // Brute forcing the sh*t out of it
-			if finished {
-				acc = deepAcc
-			}
-		}
-	}
-
-	fmt.Printf("Part Two: %d\n", acc)
-}
-
-func main() {
-	partOne()
-	partTwo()
 }

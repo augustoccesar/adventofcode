@@ -1,30 +1,42 @@
-package main
+package day07
 
 import (
-	"fmt"
-	"io/ioutil"
 	"regexp"
 	"strconv"
 	"strings"
 )
 
-func readInput() string {
-	input, err := ioutil.ReadFile("./input.txt")
-	if err != nil {
-		panic(err)
+type Day07 struct{}
+
+func (d *Day07) InputFileName() string { return "input" }
+
+func (d *Day07) PartOne(input string) string {
+	bagMap := generateBagMap(input)
+
+	sum := 0
+	for _, bag := range bagMap {
+		if bag.canFitBag(BagKeyShinyGold, bagMap) {
+			sum++
+		}
 	}
 
-	return string(input)
+	return strconv.Itoa(sum)
 }
 
-func generateBagMap() map[string]Bag {
-	in := readInput()
+func (d *Day07) PartTwo(input string) string {
+	bagMap := generateBagMap(input)
+
+	shinyGoldBag := bagMap[BagKeyShinyGold]
+	return strconv.Itoa(shinyGoldBag.totalCapacity(true, bagMap))
+}
+
+func generateBagMap(input string) map[string]Bag {
 	bagMap := map[string]Bag{}
 
 	rulePattern := regexp.MustCompile(`(\w+\s\w+)\sbags\scontain\s((?:(?:,\s)?\d\s\w+\s\w+\sbag(?:s)?)+|no other bags)`)
 	contentPattern := regexp.MustCompile(`(\d)\s(\w+\s\w+)\sbag(?:s)?`)
 
-	ruleMatches := rulePattern.FindAllStringSubmatch(in, -1)
+	ruleMatches := rulePattern.FindAllStringSubmatch(input, -1)
 
 	for _, ruleMatch := range ruleMatches {
 		key := ruleMatch[1]
@@ -51,9 +63,6 @@ func generateBagMap() map[string]Bag {
 	return bagMap
 }
 
-// Global Bags map to be used for the solutions
-var bagMap map[string]Bag = generateBagMap()
-
 const BagKeyShinyGold string = "shiny gold"
 
 type Bag struct {
@@ -61,7 +70,7 @@ type Bag struct {
 	Capacity map[string]int
 }
 
-func (b *Bag) canFitBag(bagKey string) bool {
+func (b *Bag) canFitBag(bagKey string, bagMap map[string]Bag) bool {
 	if _, ok := b.Capacity[bagKey]; ok {
 		return true
 	}
@@ -72,7 +81,7 @@ func (b *Bag) canFitBag(bagKey string) bool {
 
 	for nestedBagKey := range b.Capacity {
 		nestedBag := bagMap[nestedBagKey]
-		if nestedBag.canFitBag(bagKey) {
+		if nestedBag.canFitBag(bagKey, bagMap) {
 			return true
 		}
 	}
@@ -80,7 +89,7 @@ func (b *Bag) canFitBag(bagKey string) bool {
 	return false
 }
 
-func (b *Bag) totalCapacity(root bool) int {
+func (b *Bag) totalCapacity(root bool, bagMap map[string]Bag) int {
 	if len(b.Capacity) == 0 {
 		return 1
 	}
@@ -97,29 +106,8 @@ func (b *Bag) totalCapacity(root bool) int {
 	for k, v := range b.Capacity {
 		nestedBag := bagMap[k]
 
-		total += v * nestedBag.totalCapacity(false)
+		total += v * nestedBag.totalCapacity(false, bagMap)
 	}
 
 	return total
-}
-
-func partOne() {
-	sum := 0
-	for _, bag := range bagMap {
-		if bag.canFitBag(BagKeyShinyGold) {
-			sum++
-		}
-	}
-
-	fmt.Printf("Part One: %d\n", sum)
-}
-
-func partTwo() {
-	shinyGoldBag := bagMap[BagKeyShinyGold]
-	fmt.Printf("Part Two: %d\n", shinyGoldBag.totalCapacity(true))
-}
-
-func main() {
-	partOne()
-	partTwo()
 }

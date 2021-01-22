@@ -1,26 +1,19 @@
-package main
+package day10
 
 import (
-	"fmt"
 	"sort"
+	"strconv"
 	"strings"
 
 	"github.com/augustoccesar/adventofcode/utils"
 )
 
-func readIntSliceInput() []int {
-	input := strings.Split(utils.ReadFile("./input.txt"), "\n")
-	iInput := make([]int, len(input))
+type Day10 struct{}
 
-	for i, item := range input {
-		iInput[i] = utils.Atoi(item)
-	}
+func (d *Day10) InputFileName() string { return "input" }
 
-	return iInput
-}
-
-func partOne() {
-	adapters := readIntSliceInput()
+func (d *Day10) PartOne(input string) string {
+	adapters := readIntSliceInput(input)
 	sort.Ints(adapters)
 
 	largestJolts := adapters[len(adapters)-1]
@@ -55,10 +48,11 @@ func partOne() {
 	}
 
 	result := diffs[1] * diffs[3]
-	fmt.Printf("Part One: %d\n", result)
+
+	return strconv.Itoa(result)
 }
 
-func partTwo() {
+func (d *Day10) PartTwo(input string) string {
 	// Considering 1, 4, 5, 6, 7, 10, 11, 12, 15, 16, 19
 	// Basically count the total for the arrows leaving the number (paths).
 	// 19(8) -> 16(8) -> 15(8) -> 12(8)
@@ -90,7 +84,7 @@ func partTwo() {
 	// 16: 15       (8 -> 8 from the 15 + 0 from the 14 + 0 from the 13)
 	// 19: 16       (8 -> 0 from the 18 + 0 from the 17 + 8 from the 16)
 
-	adapters := readIntSliceInput()
+	adapters := readIntSliceInput(input)
 	sort.Ints(adapters)
 	largestJolts := adapters[len(adapters)-1]
 
@@ -105,10 +99,16 @@ func partTwo() {
 		}
 	}
 
-	fmt.Printf("Part Two: %d\n", counter[largestJolts])
+	return strconv.Itoa(counter[largestJolts])
 }
 
-func main() {
-	partOne()
-	partTwo()
+func readIntSliceInput(input string) []int {
+	lines := strings.Split(input, "\n")
+	iInput := make([]int, len(lines))
+
+	for i, item := range lines {
+		iInput[i] = utils.Atoi(item)
+	}
+
+	return iInput
 }

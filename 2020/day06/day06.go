@@ -1,25 +1,17 @@
-package main
+package day06
 
 import (
-	"fmt"
-	"io/ioutil"
+	"strconv"
 	"strings"
 )
 
-func readInput() string {
-	input, err := ioutil.ReadFile("./input.txt")
-	if err != nil {
-		panic(err)
-	}
+type Day06 struct{}
 
-	return string(input)
-}
+func (d *Day06) InputFileName() string { return "input" }
 
-func partOne() {
-	in := readInput()
-
+func (d *Day06) PartOne(input string) string {
 	total := 0
-	groups := strings.Split(in, "\n\n")
+	groups := strings.Split(input, "\n\n")
 	for _, g := range groups {
 		groupSet := map[rune]bool{}
 		group := strings.Replace(g, "\n", "", -1)
@@ -30,14 +22,12 @@ func partOne() {
 		total += len(groupSet)
 	}
 
-	fmt.Printf("Part One: %d\n", total)
+	return strconv.Itoa(total)
 }
 
-func partTwo() {
-	in := readInput()
-
+func (d *Day06) PartTwo(input string) string {
 	total := 0
-	groups := strings.Split(in, "\n\n")
+	groups := strings.Split(input, "\n\n")
 	for _, g := range groups {
 		nInGroup := len(strings.Split(g, "\n")) // People in the group
 		totalInGroup := 0                       // Items everyone in the group answered "yes"
@@ -62,10 +52,5 @@ func partTwo() {
 		total += totalInGroup
 	}
 
-	fmt.Printf("Part Two: %d\n", total)
-}
-
-func main() {
-	partOne()
-	partTwo()
+	return strconv.Itoa(total)
 }
