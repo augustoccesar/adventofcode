@@ -2,8 +2,10 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
 	"os"
 	"strconv"
+	"strings"
 
 	"github.com/augustoccesar/adventofcode/day01"
 	"github.com/augustoccesar/adventofcode/day02"
@@ -38,6 +40,11 @@ func main() {
 
 	if len(os.Args) < 2 {
 		panic("Invalid amount of arguments")
+	}
+
+	if os.Args[1] == "check" {
+		exportResults()
+		os.Exit(0)
 	}
 
 	dayInt, err := strconv.Atoi(os.Args[1])
@@ -108,5 +115,23 @@ func getDayTask(day int) *utils.TaskRunner {
 		return utils.NewTaskRunner(&day25.Day25{})
 	default:
 		return nil
+	}
+}
+
+// {day};{part one};{part two};
+func exportResults() {
+	daysRange := utils.MakeRange(1, 25)
+	result := strings.Builder{}
+
+	for _, val := range daysRange {
+		taskRunner := getDayTask(val)
+
+		result.WriteString(taskRunner.Export())
+		result.WriteRune('\n')
+	}
+
+	err := ioutil.WriteFile("./results", []byte(strings.TrimSuffix(result.String(), "\n")), 0644)
+	if err != nil {
+		panic(err)
 	}
 }
