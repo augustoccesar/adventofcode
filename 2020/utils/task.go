@@ -22,7 +22,7 @@ func NewTaskRunner(task Task) *TaskRunner {
 }
 
 func (tr *TaskRunner) Run() {
-	inputPath := fmt.Sprintf("./%s/%s.txt", strings.ToLower(GetType(tr.task)), tr.task.InputFileName())
+	inputPath := fmt.Sprintf("./inputs/%s_%s.txt", strings.ToLower(GetType(tr.task)), tr.task.InputFileName())
 	input := ReadFile(inputPath)
 
 	fmt.Printf("Part One: %s\n", tr.task.PartOne(input))

@@ -6,6 +6,10 @@ import (
 	"strconv"
 
 	"github.com/augustoccesar/adventofcode/day01"
+	"github.com/augustoccesar/adventofcode/day02"
+	"github.com/augustoccesar/adventofcode/day03"
+	"github.com/augustoccesar/adventofcode/day04"
+	"github.com/augustoccesar/adventofcode/day05"
 	"github.com/augustoccesar/adventofcode/utils"
 )
 
@@ -25,6 +29,14 @@ func main() {
 	switch dayInt {
 	case 1:
 		taskRunner = utils.NewTaskRunner(&day01.Day01{})
+	case 2:
+		taskRunner = utils.NewTaskRunner(&day02.Day02{})
+	case 3:
+		taskRunner = utils.NewTaskRunner(&day03.Day03{})
+	case 4:
+		taskRunner = utils.NewTaskRunner(&day04.Day04{})
+	case 5:
+		taskRunner = utils.NewTaskRunner(&day05.Day05{})
 	}
 
 	if taskRunner == nil {

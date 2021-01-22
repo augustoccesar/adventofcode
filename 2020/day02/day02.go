@@ -1,8 +1,6 @@
-package main
+package day02
 
 import (
-	"fmt"
-	"io/ioutil"
 	"regexp"
 	"strconv"
 	"strings"
@@ -10,18 +8,13 @@ import (
 
 var pattern = regexp.MustCompile(`(\d{1,2})-(\d{1,2})\s(\w{1}):\s(\w*)`)
 
-func readInput() string {
-	input, err := ioutil.ReadFile("./input.txt")
-	if err != nil {
-		panic(err)
-	}
+type Day02 struct{}
 
-	return string(input)
-}
+func (d *Day02) InputFileName() string { return "input" }
 
-func partOne() {
+func (d *Day02) PartOne(input string) string {
 	valid := 0
-	rows := strings.Split(readInput(), "\n")
+	rows := strings.Split(input, "\n")
 	for _, row := range rows {
 		match := pattern.FindAllStringSubmatch(row, -1)[0]
 
@@ -42,12 +35,12 @@ func partOne() {
 		}
 	}
 
-	fmt.Printf("Part One: %d\n", valid)
+	return strconv.Itoa(valid)
 }
 
-func partTwo() {
+func (d *Day02) PartTwo(input string) string {
 	valid := 0
-	rows := strings.Split(readInput(), "\n")
+	rows := strings.Split(input, "\n")
 	for _, row := range rows {
 		match := pattern.FindAllStringSubmatch(row, -1)[0]
 
@@ -72,10 +65,5 @@ func partTwo() {
 
 	}
 
-	fmt.Printf("Part Two: %d\n", valid)
-}
-
-func main() {
-	partOne()
-	partTwo()
+	return strconv.Itoa(valid)
 }

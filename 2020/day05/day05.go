@@ -1,19 +1,49 @@
-package main
+package day05
 
 import (
-	"fmt"
-	"io/ioutil"
 	"sort"
+	"strconv"
 	"strings"
 )
 
-func readInput() string {
-	input, err := ioutil.ReadFile("./input.txt")
-	if err != nil {
-		panic(err)
+type Day05 struct{}
+
+func (d *Day05) InputFileName() string { return "input" }
+
+func (d *Day05) PartOne(input string) string {
+	highestID := -1
+
+	for _, pass := range strings.Split(input, "\n") {
+		id := calculateBoardpassID(pass)
+		if id > highestID {
+			highestID = id
+		}
 	}
 
-	return string(input)
+	return strconv.Itoa(highestID)
+}
+
+func (d *Day05) PartTwo(input string) string {
+	passIDs := []int{}
+
+	for _, pass := range strings.Split(input, "\n") {
+		id := calculateBoardpassID(pass)
+		passIDs = append(passIDs, id)
+	}
+
+	sort.Ints(passIDs)
+
+	myPassID := -1
+	for i, id := range passIDs {
+		if passIDs[i+1] == id+1 {
+			continue
+		}
+
+		myPassID = id + 1
+		break
+	}
+
+	return strconv.Itoa(myPassID)
 }
 
 func getHighAndLow(low int, high int, command string) (int, int) {
@@ -50,47 +80,4 @@ func calculateBoardpassID(boardpass string) int {
 	}
 
 	return (lowRow * 8) + lowCol
-}
-
-func partOne() {
-	in := readInput()
-	highestID := -1
-
-	for _, pass := range strings.Split(in, "\n") {
-		id := calculateBoardpassID(pass)
-		if id > highestID {
-			highestID = id
-		}
-	}
-
-	fmt.Printf("Part one: %d\n", highestID)
-}
-
-func partTwo() {
-	in := readInput()
-	passIDs := []int{}
-
-	for _, pass := range strings.Split(in, "\n") {
-		id := calculateBoardpassID(pass)
-		passIDs = append(passIDs, id)
-	}
-
-	sort.Ints(passIDs)
-
-	myPassID := -1
-	for i, id := range passIDs {
-		if passIDs[i+1] == id+1 {
-			continue
-		}
-
-		myPassID = id + 1
-		break
-	}
-
-	fmt.Printf("Part Two: %d\n", myPassID)
-}
-
-func main() {
-	partOne()
-	partTwo()
 }

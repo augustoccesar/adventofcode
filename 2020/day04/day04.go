@@ -1,21 +1,40 @@
-package main
+package day04
 
 import (
 	"encoding/json"
-	"fmt"
-	"io/ioutil"
 	"regexp"
 	"strconv"
 	"strings"
 )
 
-func readInput() string {
-	input, err := ioutil.ReadFile("./input.txt")
-	if err != nil {
-		panic(err)
+type Day04 struct{}
+
+func (d *Day04) InputFileName() string { return "input" }
+
+func (d *Day04) PartOne(input string) string {
+	passports := parsePassports(input)
+	valid := 0
+
+	for _, pass := range passports {
+		if validatePassportV1(pass) {
+			valid++
+		}
 	}
 
-	return string(input)
+	return strconv.Itoa(valid)
+}
+
+func (d *Day04) PartTwo(input string) string {
+	passports := parsePassports(input)
+	valid := 0
+
+	for _, pass := range passports {
+		if validatePassportV2(pass) {
+			valid++
+		}
+	}
+
+	return strconv.Itoa(valid)
 }
 
 func isValid(s *string) bool {
@@ -64,7 +83,6 @@ func parsePassports(input string) []passport {
 		sanitizedPassportRaw := strings.ReplaceAll(passportRaw, "\n", " ")
 		passport := buildPassport(sanitizedPassportRaw)
 
-		// fmt.Printf("P%d\n%+v\n\n", i, sanitizedPassportRaw)
 		passports[i] = passport
 	}
 
@@ -154,41 +172,4 @@ func validatePassportV2(p passport) bool {
 	}
 
 	return true
-}
-
-func partOne() {
-	input := readInput()
-	passports := parsePassports(input)
-	valid := 0
-
-	for _, pass := range passports {
-		// fmt.Printf("---- Valid: %v ----\n", validatePassportV1(pass))
-		// m, _ := json.MarshalIndent(pass, "", "\t")
-		// fmt.Printf("%+v\n\n", string(m))
-
-		if validatePassportV1(pass) {
-			valid++
-		}
-	}
-
-	fmt.Printf("Part One: %d\n", valid)
-}
-
-func partTwo() {
-	input := readInput()
-	passports := parsePassports(input)
-	valid := 0
-
-	for _, pass := range passports {
-		if validatePassportV2(pass) {
-			valid++
-		}
-	}
-
-	fmt.Printf("Part Two: %d\n", valid)
-}
-
-func main() {
-	partOne()
-	partTwo()
 }
