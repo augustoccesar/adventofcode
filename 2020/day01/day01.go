@@ -1,15 +1,20 @@
-package main
+package day01
 
 import (
-	"fmt"
 	"sort"
+	"strconv"
 	"strings"
 
 	"github.com/augustoccesar/adventofcode/utils"
 )
 
-func partOne() {
-	report := getReport()
+type Day01 struct{}
+
+func (d *Day01) InputFileName() string { return "input" }
+
+func (d *Day01) PartOne(input string) string {
+	var result int
+	report := getReport(input)
 	lookupTable := make(map[int]int)
 
 	for _, item := range report {
@@ -18,14 +23,17 @@ func partOne() {
 
 	for _, item := range report {
 		if value, ok := lookupTable[item]; ok {
-			fmt.Printf("Part One: %d\n", item*value)
+			result = item * value
 			break
 		}
 	}
+
+	return strconv.Itoa(result)
 }
 
-func partTwo() {
-	report := getReport()
+func (d *Day01) PartTwo(input string) string {
+	var result int
+	report := getReport(input)
 	sort.Ints(report)
 
 	maximumThird := 2020 - (report[0] + report[1])
@@ -61,15 +69,12 @@ func partTwo() {
 		}
 	}
 
-	fmt.Printf(
-		"Part Two: %d\n",
-		possibleNumbers[pin1]*possibleNumbers[pin2]*possibleNumbers[pin3],
-	)
+	result = possibleNumbers[pin1] * possibleNumbers[pin2] * possibleNumbers[pin3]
+
+	return strconv.Itoa(result)
 }
 
-func getReport() []int {
-	input := utils.ReadFile("./input.txt")
-
+func getReport(input string) []int {
 	report := strings.Split(string(input), "\n")
 	intReport := make([]int, len(report))
 
@@ -80,11 +85,4 @@ func getReport() []int {
 	}
 
 	return intReport
-}
-
-// --------------------------------------------------------------------------------------------------------------------
-
-func main() {
-	partOne()
-	partTwo()
 }
