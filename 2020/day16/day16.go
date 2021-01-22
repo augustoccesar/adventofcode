@@ -1,12 +1,84 @@
-package main
+package day16
 
 import (
-	"fmt"
 	"regexp"
+	"strconv"
 	"strings"
 
 	"github.com/augustoccesar/adventofcode/utils"
 )
+
+type Day16 struct{}
+
+func (d *Day16) InputFileName() string { return "input" }
+
+func (d *Day16) PartOne(input string) string {
+	rules, _, nearbyTickets := parseInput(input)
+	_, invalidValues := getValidTickets(rules, nearbyTickets)
+
+	sum := 0
+	for _, val := range invalidValues {
+		sum += val
+	}
+
+	return strconv.Itoa(sum)
+}
+
+func (d *Day16) PartTwo(input string) string {
+	rules, myTicket, nearbyTickets := parseInput(input)
+	validTickets, _ := getValidTickets(rules, nearbyTickets)
+
+	// Group the ticket values by index
+	// For example, for tickets:
+	//   - 5, 6, 7
+	//   - 10, 15, 16
+	// Will generate groups:
+	//   [0] -> 5, 10
+	//   [1] -> 6, 15
+	//   [2] -> 7, 16
+	groups := make([][]int, len(rules))
+	for _, ticket := range validTickets {
+		for j, val := range ticket {
+			groups[j] = append(groups[j], val)
+		}
+	}
+
+	// Aggregate the valid fields per group defined above
+	groupsValidFields := make([][]string, len(groups))
+	for i, v := range groups {
+		for _, rule := range rules {
+			// If for all values in group the rule is valid, add the rule as valid field for group
+			if rule.IsAllValid(v) {
+				groupsValidFields[i] = append(groupsValidFields[i], rule.Name)
+			}
+		}
+	}
+
+	departure := []int{} // To store index of fields that start with "departure"
+	setAmount := 0       // Amount of fields that are assigned to group index
+	for setAmount < len(groups) {
+		for groupIdx, validFields := range groupsValidFields {
+			if len(validFields) == 1 {
+				if strings.HasPrefix(validFields[0], "departure") {
+					departure = append(departure, groupIdx)
+				}
+
+				// Since the field is now assigned to a group index, remove it from all the other
+				// groups
+				utils.MatrixRemove(groupsValidFields, validFields[0])
+
+				setAmount++
+			}
+		}
+	}
+
+	mult := 1
+	for _, val := range departure {
+		mult *= myTicket[val]
+	}
+
+	return strconv.Itoa(mult)
+}
 
 var rulePattern = regexp.MustCompile(`(.+):\s(\d+)-(\d+)\sor\s(\d+)-(\d+)`)
 
@@ -100,78 +172,8 @@ func getValidTickets(rules []Rule, tickets [][]int) (validTickets [][]int, inval
 	return validTickets, invalidValues
 }
 
-func partOne() {
-	rules, _, nearbyTickets := parseInput()
-	_, invalidValues := getValidTickets(rules, nearbyTickets)
-
-	sum := 0
-	for _, val := range invalidValues {
-		sum += val
-	}
-
-	fmt.Printf("Part One: %d\n", sum)
-}
-
-func partTwo() {
-	rules, myTicket, nearbyTickets := parseInput()
-	validTickets, _ := getValidTickets(rules, nearbyTickets)
-
-	// Group the ticket values by index
-	// For example, for tickets:
-	//   - 5, 6, 7
-	//   - 10, 15, 16
-	// Will generate groups:
-	//   [0] -> 5, 10
-	//   [1] -> 6, 15
-	//   [2] -> 7, 16
-	groups := make([][]int, len(rules))
-	for _, ticket := range validTickets {
-		for j, val := range ticket {
-			groups[j] = append(groups[j], val)
-		}
-	}
-
-	// Aggregate the valid fields per group defined above
-	groupsValidFields := make([][]string, len(groups))
-	for i, v := range groups {
-		for _, rule := range rules {
-			// If for all values in group the rule is valid, add the rule as valid field for group
-			if rule.IsAllValid(v) {
-				groupsValidFields[i] = append(groupsValidFields[i], rule.Name)
-			}
-		}
-	}
-
-	departure := []int{} // To store index of fields that start with "departure"
-	setAmount := 0       // Amount of fields that are assigned to group index
-	for setAmount < len(groups) {
-		for groupIdx, validFields := range groupsValidFields {
-			if len(validFields) == 1 {
-				if strings.HasPrefix(validFields[0], "departure") {
-					departure = append(departure, groupIdx)
-				}
-
-				// Since the field is now assigned to a group index, remove it from all the other
-				// groups
-				utils.MatrixRemove(groupsValidFields, validFields[0])
-
-				setAmount++
-			}
-		}
-	}
-
-	mult := 1
-	for _, val := range departure {
-		mult *= myTicket[val]
-	}
-
-	fmt.Printf("Part Two: %d\n", mult)
-}
-
-// --------------------------------------------------------------------------------------------------------------------
-
-func parseInput() (rules []Rule, myTicket []int, nearbyTickets [][]int) {
-	inputParts := strings.Split(utils.ReadFile("./input.txt"), "\n\n")
+func parseInput(input string) (rules []Rule, myTicket []int, nearbyTickets [][]int) {
+	inputParts := strings.Split(input, "\n\n")
 	ruleLines := strings.Split(inputParts[0], "\n")
 	myTicketLine := strings.Replace(inputParts[1], "your ticket:\n", "", -1)
 	nearbyTicketsLines := strings.Split(strings.Replace(inputParts[2], "nearby tickets:\n", "", -1), "\n")
@@ -196,11 +198,4 @@ func parseInput() (rules []Rule, myTicket []int, nearbyTickets [][]int) {
 	}
 
 	return rules, myTicket, nearbyTickets
-}
-
-// --------------------------------------------------------------------------------------------------------------------
-
-func main() {
-	partOne()
-	partTwo()
 }

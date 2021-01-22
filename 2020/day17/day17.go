@@ -1,11 +1,65 @@
-package main
+package day17
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
-
-	"github.com/augustoccesar/adventofcode/utils"
 )
+
+type Day17 struct{}
+
+func (d *Day17) InputFileName() string { return "input" }
+
+func (d *Day17) PartOne(input string) string {
+	activeCubes, length, height := parseInput(input)
+	currentDimension := dimension{activeCubes: activeCubes}
+
+	for i := 1; i <= 6; i++ {
+		nextDimension := newDimension()
+
+		// Using the cycle count to expand the dimension on every cycle
+		for z := -i; z <= i; z++ {
+			for x := -i; x <= length+i; x++ {
+				for y := -i; y <= height+i; y++ {
+					newStatus := currentDimension.defineNewStatus(x, y, z, 0)
+					if newStatus == statusActive {
+						nextDimension.addActiveCube(x, y, z, 0)
+					}
+				}
+			}
+		}
+
+		currentDimension = nextDimension
+	}
+
+	return strconv.Itoa(len(currentDimension.activeCubes))
+}
+
+func (d *Day17) PartTwo(input string) string {
+	activeCubes, length, height := parseInput(input)
+	currentDimension := dimension{activeCubes: activeCubes}
+
+	for i := 1; i <= 6; i++ {
+		nextDimension := newDimension()
+
+		for w := -i; w <= i; w++ {
+			for z := -i; z <= i; z++ {
+				for x := -i; x <= length+i; x++ {
+					for y := -i; y <= height+i; y++ {
+						newStatus := currentDimension.defineNewStatus(x, y, z, w)
+						if newStatus == statusActive {
+							nextDimension.addActiveCube(x, y, z, w)
+						}
+					}
+				}
+			}
+		}
+
+		currentDimension = nextDimension
+	}
+
+	return strconv.Itoa(len(currentDimension.activeCubes))
+}
 
 type status = int
 
@@ -68,64 +122,6 @@ func (d *dimension) defineNewStatus(x, y, z, w int) status {
 
 	// If doesn't match the above, mean it will be inactive
 	return statusInactive
-}
-
-func partOne() {
-	activeCubes, length, height := parseInput(utils.ReadFile("./input.txt"))
-	currentDimension := dimension{activeCubes: activeCubes}
-
-	for i := 1; i <= 6; i++ {
-		nextDimension := newDimension()
-
-		// Using the cycle count to expand the dimension on every cycle
-		for z := -i; z <= i; z++ {
-			for x := -i; x <= length+i; x++ {
-				for y := -i; y <= height+i; y++ {
-					newStatus := currentDimension.defineNewStatus(x, y, z, 0)
-					if newStatus == statusActive {
-						nextDimension.addActiveCube(x, y, z, 0)
-					}
-				}
-			}
-		}
-
-		currentDimension = nextDimension
-	}
-
-	fmt.Printf("Part One: %d\n", len(currentDimension.activeCubes))
-}
-
-func partTwo() {
-	activeCubes, length, height := parseInput(utils.ReadFile("./input.txt"))
-	currentDimension := dimension{activeCubes: activeCubes}
-
-	for i := 1; i <= 6; i++ {
-		nextDimension := newDimension()
-
-		for w := -i; w <= i; w++ {
-			for z := -i; z <= i; z++ {
-				for x := -i; x <= length+i; x++ {
-					for y := -i; y <= height+i; y++ {
-						newStatus := currentDimension.defineNewStatus(x, y, z, w)
-						if newStatus == statusActive {
-							nextDimension.addActiveCube(x, y, z, w)
-						}
-					}
-				}
-			}
-		}
-
-		currentDimension = nextDimension
-	}
-
-	fmt.Printf("Part Two: %d\n", len(currentDimension.activeCubes))
-}
-
-// --------------------------------------------------------------------------------------------------------------------
-
-func main() {
-	partOne()
-	partTwo()
 }
 
 func parseInput(input string) (activeCubes map[string]bool, length, height int) {

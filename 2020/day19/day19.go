@@ -1,35 +1,26 @@
-package main
+package day19
 
 import (
-	"fmt"
 	"regexp"
+	"strconv"
 	"strings"
 
 	"github.com/augustoccesar/adventofcode/utils"
 )
 
-var numberPattern = regexp.MustCompile(`\d+`)
+type Day19 struct{}
 
-type loopedRule struct {
-	rule     string
-	fallback string
-}
+func (d *Day19) InputFileName() string { return "input" }
 
-type visitLimiter struct {
-	currentVisits   int
-	maxVisits       int
-	replaceAfterMax string
-}
-
-func partOne() {
-	rules, messages := parseInput()
+func (d *Day19) PartOne(input string) string {
+	rules, messages := parseInput(input)
 
 	res := execute(rules, messages, map[int]*visitLimiter{})
 
-	fmt.Printf("Part One: %d\n", res)
+	return strconv.Itoa(res)
 }
 
-func partTwo() {
+func (d *Day19) PartTwo(input string) string {
 	newRules := map[int]loopedRule{
 		8:  {"(42 | 42 8)", "(42)"},
 		11: {"(42 31 | 42 11 31)", "(42 31)"},
@@ -43,7 +34,7 @@ func partTwo() {
 	sequentialResult := 0
 	// If the same result happens more than 2 times on a row, consider it the answer
 	for sequentialResult <= 2 {
-		rules, messages := parseInput()
+		rules, messages := parseInput(input)
 		rules[8] = newRules[8].rule
 		rules[11] = newRules[11].rule
 
@@ -63,7 +54,20 @@ func partTwo() {
 		}
 	}
 
-	fmt.Printf("Part Two: %d\n", lastResult)
+	return strconv.Itoa(lastResult)
+}
+
+var numberPattern = regexp.MustCompile(`\d+`)
+
+type loopedRule struct {
+	rule     string
+	fallback string
+}
+
+type visitLimiter struct {
+	currentVisits   int
+	maxVisits       int
+	replaceAfterMax string
 }
 
 func execute(rules map[int]string, messages []string, visitLimiters map[int]*visitLimiter) int {
@@ -116,9 +120,9 @@ func cleanRule(rule string) string {
 	return rule
 }
 
-func parseInput() (rules map[int]string, messages []string) {
+func parseInput(input string) (rules map[int]string, messages []string) {
 	rules = map[int]string{}
-	parts := strings.Split(utils.ReadFile("./input.txt"), "\n\n")
+	parts := strings.Split(input, "\n\n")
 
 	for _, rule := range strings.Split(parts[0], "\n") {
 		ruleParts := strings.Split(rule, ": ")
@@ -131,11 +135,4 @@ func parseInput() (rules map[int]string, messages []string) {
 	messages = strings.Split(parts[1], "\n")
 
 	return rules, messages
-}
-
-// --------------------------------------------------------------------------------------------------------------------
-
-func main() {
-	partOne()
-	partTwo()
 }

@@ -1,13 +1,38 @@
-package main
+package day18
 
 import (
-	"fmt"
 	"regexp"
 	"strconv"
 	"strings"
 
 	"github.com/augustoccesar/adventofcode/utils"
 )
+
+type Day18 struct{}
+
+func (d *Day18) InputFileName() string { return "input" }
+
+func (d *Day18) PartOne(input string) string {
+	expressions := strings.Split(input, "\n")
+
+	sum := 0
+	for _, exp := range expressions {
+		sum += calculate(exp, false)
+	}
+
+	return strconv.Itoa(sum)
+}
+
+func (d *Day18) PartTwo(input string) string {
+	expressions := strings.Split(input, "\n")
+
+	sum := 0
+	for _, exp := range expressions {
+		sum += calculate(exp, true)
+	}
+
+	return strconv.Itoa(sum)
+}
 
 var deepestOperationPattern = regexp.MustCompile(`\([^\(\)]+\)`) // Parenthesis that don't contain other parenthesis inside
 var sumPattern = regexp.MustCompile(`\d+\s\+\s\d+`)
@@ -56,33 +81,4 @@ func calculate(str string, inverse bool) int {
 	}
 
 	return calcResult
-}
-
-func partOne() {
-	expressions := strings.Split(utils.ReadFile("./input.txt"), "\n")
-
-	sum := 0
-	for _, exp := range expressions {
-		sum += calculate(exp, false)
-	}
-
-	fmt.Printf("Part One: %d\n", sum)
-}
-
-func partTwo() {
-	expressions := strings.Split(utils.ReadFile("./input.txt"), "\n")
-
-	sum := 0
-	for _, exp := range expressions {
-		sum += calculate(exp, true)
-	}
-
-	fmt.Printf("Part Two: %d\n", sum)
-}
-
-// --------------------------------------------------------------------------------------------------------------------
-
-func main() {
-	partOne()
-	partTwo()
 }

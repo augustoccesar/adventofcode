@@ -1,13 +1,65 @@
-package main
+package day20
 
 import (
 	"fmt"
 	"math"
 	"regexp"
+	"strconv"
 	"strings"
 
 	"github.com/augustoccesar/adventofcode/utils"
 )
+
+type Day20 struct{}
+
+func (d *Day20) InputFileName() string { return "input" }
+
+func (d *Day20) PartOne(input string) string {
+	tiles := puzzleTogether(parseInput(input))
+
+	mult := 1
+	for _, tile := range tiles {
+		if tile.isCorner() {
+			mult *= tile.id
+		}
+	}
+
+	return strconv.Itoa(mult)
+}
+
+func (d *Day20) PartTwo(input string) string {
+	tiles := puzzleTogether(parseInput(input))
+
+	for _, tile := range tiles {
+		*tile = *tile.removeBorders()
+	}
+
+	combinedTiles := combineTiles(tiles)
+
+	mutations := [][][]string{
+		combinedTiles,
+		utils.MatrixRotate(combinedTiles),
+		utils.MatrixRotate(utils.MatrixRotate(combinedTiles)),
+		utils.MatrixRotate(utils.MatrixRotate(utils.MatrixRotate(combinedTiles))),
+		utils.MatrixFlip(combinedTiles),
+		utils.MatrixRotate(utils.MatrixFlip(combinedTiles)),
+		utils.MatrixRotate(utils.MatrixRotate(utils.MatrixFlip(combinedTiles))),
+		utils.MatrixRotate(utils.MatrixRotate(utils.MatrixRotate(utils.MatrixFlip(combinedTiles)))),
+	}
+
+	amount := 0
+	for _, possibleData := range mutations {
+		amount = lookForSeamonsters(possibleData)
+		if amount > 0 {
+			break
+		}
+	}
+
+	total := utils.MatrixCountItem(combinedTiles, "#")
+	occupiedBySeamonsters := amount * 15
+
+	return strconv.Itoa(total - occupiedBySeamonsters)
+}
 
 type side = string
 
@@ -272,53 +324,6 @@ func combineTiles(tiles []*tile) [][]string {
 	return fullData
 }
 
-func partOne() {
-	tiles := puzzleTogether(parseInput())
-
-	mult := 1
-	for _, tile := range tiles {
-		if tile.isCorner() {
-			mult *= tile.id
-		}
-	}
-
-	fmt.Printf("Part One: %d\n", mult)
-}
-
-func partTwo() {
-	tiles := puzzleTogether(parseInput())
-
-	for _, tile := range tiles {
-		*tile = *tile.removeBorders()
-	}
-
-	combinedTiles := combineTiles(tiles)
-
-	mutations := [][][]string{
-		combinedTiles,
-		utils.MatrixRotate(combinedTiles),
-		utils.MatrixRotate(utils.MatrixRotate(combinedTiles)),
-		utils.MatrixRotate(utils.MatrixRotate(utils.MatrixRotate(combinedTiles))),
-		utils.MatrixFlip(combinedTiles),
-		utils.MatrixRotate(utils.MatrixFlip(combinedTiles)),
-		utils.MatrixRotate(utils.MatrixRotate(utils.MatrixFlip(combinedTiles))),
-		utils.MatrixRotate(utils.MatrixRotate(utils.MatrixRotate(utils.MatrixFlip(combinedTiles)))),
-	}
-
-	amount := 0
-	for _, possibleData := range mutations {
-		amount = lookForSeamonsters(possibleData)
-		if amount > 0 {
-			break
-		}
-	}
-
-	total := utils.MatrixCountItem(combinedTiles, "#")
-	occupiedBySeamonsters := amount * 15
-
-	fmt.Printf("Part Two: %d\n", total-occupiedBySeamonsters)
-}
-
 //                   #
 // #    ##    ##    ###
 //  #  #  #  #  #  #
@@ -378,12 +383,9 @@ func lookForSeamonsters(data [][]string) int {
 	return monsters
 }
 
-// --------------------------------------------------------------------------------------------------------------------
-
-func parseInput() []*tile {
+func parseInput(input string) []*tile {
 	reg := regexp.MustCompile(`Tile\s(\d+):`)
 
-	input := utils.ReadFile("./input.txt")
 	tiles := []*tile{}
 
 	for _, tileData := range strings.Split(input, "\n\n") {
@@ -403,11 +405,4 @@ func parseInput() []*tile {
 	}
 
 	return tiles
-}
-
-// --------------------------------------------------------------------------------------------------------------------
-
-func main() {
-	partOne()
-	partTwo()
 }
