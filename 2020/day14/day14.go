@@ -1,7 +1,6 @@
-package main
+package day14
 
 import (
-	"fmt"
 	"regexp"
 	"strconv"
 	"strings"
@@ -9,15 +8,16 @@ import (
 	"github.com/augustoccesar/adventofcode/utils"
 )
 
-var memInputPattern = regexp.MustCompile(`mem\[(\d+)\] = (\d+)`)
-var maskPattern = regexp.MustCompile(`mask = (.+)`)
+type Day14 struct{}
 
-func partOne() {
-	input := strings.Split(utils.ReadFile("./input.txt"), "\n")
+func (d *Day14) InputFileName() string { return "input" }
+
+func (d *Day14) PartOne(input string) string {
+	lines := strings.Split(input, "\n")
 
 	currentMask := ""
 	mem := map[int]int64{}
-	for _, item := range input {
+	for _, item := range lines {
 		matchMask := matchMask(item)
 		if matchMask != "" {
 			currentMask = matchMask
@@ -38,15 +38,16 @@ func partOne() {
 	for _, v := range mem {
 		sum += v
 	}
-	fmt.Printf("Part One: %d\n", sum)
+
+	return strconv.FormatInt(sum, 10)
 }
 
-func partTwo() {
-	input := strings.Split(utils.ReadFile("./input.txt"), "\n")
+func (d *Day14) PartTwo(input string) string {
+	lines := strings.Split(input, "\n")
 
 	currentMask := ""
 	mem := map[int64]int{}
-	for _, item := range input {
+	for _, item := range lines {
 		matchMask := matchMask(item)
 		if matchMask != "" {
 			currentMask = matchMask
@@ -70,8 +71,12 @@ func partTwo() {
 	for _, v := range mem {
 		sum += v
 	}
-	fmt.Printf("Part Two: %d\n", sum)
+
+	return strconv.Itoa(sum)
 }
+
+var memInputPattern = regexp.MustCompile(`mem\[(\d+)\] = (\d+)`)
+var maskPattern = regexp.MustCompile(`mask = (.+)`)
 
 func applyMask(mask string, bin string, version int) string {
 	// If the binary is smaller than the mask, pad it with zeroes
@@ -146,11 +151,4 @@ func matchMemOverride(input string) (int, int) {
 	value, _ := strconv.Atoi(match[0][2])
 
 	return memPos, value
-}
-
-// --------------------------------------------------------------------------------------------------------------------
-
-func main() {
-	partOne()
-	partTwo()
 }

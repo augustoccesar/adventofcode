@@ -1,25 +1,35 @@
-package main
+package day15
 
 import (
-	"fmt"
 	"strconv"
 	"strings"
-
-	"github.com/augustoccesar/adventofcode/utils"
 )
 
-func resolve(lastTurn int) int {
+type Day15 struct{}
+
+func (d *Day15) InputFileName() string { return "input" }
+
+func (d *Day15) PartOne(input string) string {
+	return strconv.Itoa(resolve(input, 2020))
+}
+
+func (d *Day15) PartTwo(input string) string {
+	// Well... it works
+	return strconv.Itoa(resolve(input, 30000000))
+}
+
+func resolve(input string, lastTurn int) int {
 	mem := map[int][2]int{}
-	input := []int{}
-	for i, item := range strings.Split(utils.ReadFile("./input.txt"), ",") {
+	inputIntArr := []int{}
+	for i, item := range strings.Split(input, ",") {
 		iItem, _ := strconv.Atoi(item)
-		input = append(input, iItem)
+		inputIntArr = append(inputIntArr, iItem)
 
 		mem[iItem] = [2]int{-1, i}
 	}
 
-	turn := len(input)
-	lastSpoken := input[len(input)-1]
+	turn := len(inputIntArr)
+	lastSpoken := inputIntArr[len(inputIntArr)-1]
 
 	for turn < lastTurn {
 		say := 0
@@ -40,22 +50,4 @@ func resolve(lastTurn int) int {
 	}
 
 	return lastSpoken
-}
-
-func partOne() {
-	res := resolve(2020)
-	fmt.Printf("Part One: %d\n", res)
-}
-
-func partTwo() {
-	// Well... it works
-	res := resolve(30000000)
-	fmt.Printf("Part Two: %d\n", res)
-}
-
-// --------------------------------------------------------------------------------------------------------------------
-
-func main() {
-	partOne()
-	partTwo()
 }

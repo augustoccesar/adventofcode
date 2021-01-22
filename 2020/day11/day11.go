@@ -1,11 +1,31 @@
-package main
+package day11
 
 import (
-	"fmt"
+	"strconv"
 	"strings"
 
 	"github.com/augustoccesar/adventofcode/utils"
 )
+
+type Day11 struct{}
+
+func (d *Day11) InputFileName() string { return "input" }
+
+func (d *Day11) PartOne(input string) string {
+	sMap := buildMap(input)
+
+	runIterations(&sMap, 4, 1)
+
+	return strconv.Itoa(utils.MatrixCount(sMap)["#"])
+}
+
+func (d *Day11) PartTwo(input string) string {
+	sMap := buildMap(input)
+
+	runIterations(&sMap, 5, -1)
+
+	return strconv.Itoa(utils.MatrixCount(sMap)["#"])
+}
 
 // row, col
 var directionModifiers = [][]int{
@@ -19,9 +39,7 @@ var directionModifiers = [][]int{
 	{1, -1},  // Down Left
 }
 
-func buildMap() [][]string {
-	input := utils.ReadFile("./input.txt")
-
+func buildMap(input string) [][]string {
 	rows := strings.Split(input, "\n")
 	sMap := make([][]string, len(rows))
 
@@ -106,27 +124,4 @@ func runIterations(sMap *[][]string, maxOccupied int, sightLen int) {
 			hadChanges = false
 		}
 	}
-}
-
-func partOne() {
-	sMap := buildMap()
-
-	runIterations(&sMap, 4, 1)
-
-	fmt.Printf("Part One: %d\n", utils.MatrixCount(sMap)["#"])
-}
-
-func partTwo() {
-	sMap := buildMap()
-
-	runIterations(&sMap, 5, -1)
-
-	fmt.Printf("Part Two: %d\n", utils.MatrixCount(sMap)["#"])
-}
-
-// --------------------------------------------------------------------------------------------------------------------
-
-func main() {
-	partOne()
-	partTwo()
 }

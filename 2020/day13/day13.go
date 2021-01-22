@@ -1,15 +1,18 @@
-package main
+package day13
 
 import (
-	"fmt"
 	"math"
+	"strconv"
 	"strings"
 
 	"github.com/augustoccesar/adventofcode/utils"
 )
 
-func partOne() {
-	input := utils.ReadFile("./input.txt")
+type Day13 struct{}
+
+func (d *Day13) InputFileName() string { return "input" }
+
+func (d *Day13) PartOne(input string) string {
 	data := strings.Split(input, "\n")
 
 	earliestOnPort := utils.Atoi(data[0])
@@ -39,12 +42,12 @@ func partOne() {
 	}
 
 	res := (shortestTime - earliestOnPort) * shortestID
-	fmt.Printf("Part One: %d\n", res)
+
+	return strconv.Itoa(res)
 }
 
-func partTwo() {
-	input := strings.Split(utils.ReadFile("./input.txt"), "\n")[1]
-	busIDs := strings.Split(input, ",")
+func (d *Day13) PartTwo(input string) string {
+	busIDs := strings.Split(strings.Split(input, "\n")[1], ",")
 
 	time := 0
 	inc := utils.Atoi(busIDs[0]) // Initial increment is by the first bus time
@@ -66,12 +69,5 @@ func partTwo() {
 		}
 	}
 
-	fmt.Printf("Part Two: %d\n", time)
-}
-
-// --------------------------------------------------------------------------------------------------------------------
-
-func main() {
-	partOne()
-	partTwo()
+	return strconv.Itoa(time)
 }
