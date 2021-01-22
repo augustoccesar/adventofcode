@@ -1,25 +1,29 @@
-package main
+package day25
 
 import (
-	"fmt"
+	"strconv"
 	"strings"
 
 	"github.com/augustoccesar/adventofcode/utils"
 )
 
-func partOne() {
-	input := strings.Split(utils.ReadFile("./input.txt"), "\n")
-	cardPublicKey := utils.Atoi(input[0])
-	doorPublicKey := utils.Atoi(input[1])
+type Day25 struct{}
+
+func (d *Day25) InputFileName() string { return "input" }
+
+func (d *Day25) PartOne(input string) string {
+	lines := strings.Split(input, "\n")
+	cardPublicKey := utils.Atoi(lines[0])
+	doorPublicKey := utils.Atoi(lines[1])
 
 	cardLoopSize := getLoopSize(cardPublicKey)
 	encryption := getEncryption(doorPublicKey, cardLoopSize)
 
-	fmt.Printf("Part One: %d\n", encryption)
+	return strconv.Itoa(encryption)
 }
 
-func partTwo() {
-	fmt.Printf("Part Two: Nothing 🎉\n")
+func (d *Day25) PartTwo(input string) string {
+	return ""
 }
 
 func getLoopSize(publicKey int) int {
@@ -41,11 +45,4 @@ func getEncryption(publicKey, loopSize int) int {
 
 func transform(value, subjectNumber int) int {
 	return (value * subjectNumber) % 20201227
-}
-
-// --------------------------------------------------------------------------------------------------------------------
-
-func main() {
-	partOne()
-	partTwo()
 }

@@ -25,6 +25,11 @@ import (
 	"github.com/augustoccesar/adventofcode/day18"
 	"github.com/augustoccesar/adventofcode/day19"
 	"github.com/augustoccesar/adventofcode/day20"
+	"github.com/augustoccesar/adventofcode/day21"
+	"github.com/augustoccesar/adventofcode/day22"
+	"github.com/augustoccesar/adventofcode/day23"
+	"github.com/augustoccesar/adventofcode/day24"
+	"github.com/augustoccesar/adventofcode/day25"
 	"github.com/augustoccesar/adventofcode/utils"
 )
 
@@ -82,6 +87,16 @@ func main() {
 		taskRunner = utils.NewTaskRunner(&day19.Day19{})
 	case 20:
 		taskRunner = utils.NewTaskRunner(&day20.Day20{})
+	case 21:
+		taskRunner = utils.NewTaskRunner(&day21.Day21{})
+	case 22:
+		taskRunner = utils.NewTaskRunner(&day22.Day22{})
+	case 23:
+		taskRunner = utils.NewTaskRunner(&day23.Day23{})
+	case 24:
+		taskRunner = utils.NewTaskRunner(&day24.Day24{})
+	case 25:
+		taskRunner = utils.NewTaskRunner(&day25.Day25{})
 	}
 
 	if taskRunner == nil {

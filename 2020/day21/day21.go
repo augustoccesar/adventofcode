@@ -1,23 +1,20 @@
-package main
+package day21
 
 import (
-	"fmt"
 	"regexp"
 	"sort"
+	"strconv"
 	"strings"
 
 	"github.com/augustoccesar/adventofcode/utils"
 )
 
-type recipe struct {
-	ingredients []string
-	allergens   []string
-}
+type Day21 struct{}
 
-var lineRegex = regexp.MustCompile(`(.*)\s\(contains\s(.*)\)`)
+func (d *Day21) InputFileName() string { return "input" }
 
-func partOne() {
-	recipes := parseInput()
+func (d *Day21) PartOne(input string) string {
+	recipes := parseInput(input)
 	ingredients, _, ingredientAllergen := processRecipes(recipes)
 
 	sum := 0
@@ -29,11 +26,11 @@ func partOne() {
 		sum++
 	}
 
-	fmt.Printf("Part One: %d\n", sum)
+	return strconv.Itoa(sum)
 }
 
-func partTwo() {
-	recipes := parseInput()
+func (d *Day21) PartTwo(input string) string {
+	recipes := parseInput(input)
 	_, _, ingredientAllergen := processRecipes(recipes)
 
 	allergenIngredient := map[string]string{}
@@ -49,8 +46,15 @@ func partTwo() {
 		result = append(result, allergenIngredient[key])
 	}
 
-	fmt.Printf("Part Two: %s\n", strings.Join(result, ","))
+	return strings.Join(result, ",")
 }
+
+type recipe struct {
+	ingredients []string
+	allergens   []string
+}
+
+var lineRegex = regexp.MustCompile(`(.*)\s\(contains\s(.*)\)`)
 
 func processRecipes(recipes []recipe) (ingredients []string, allergens []string, ingredientAllergen map[string]string) {
 	// Allergen -> []Ingredient
@@ -88,8 +92,8 @@ func processRecipes(recipes []recipe) (ingredients []string, allergens []string,
 	return
 }
 
-func parseInput() []recipe {
-	lines := strings.Split(utils.ReadFile("./input.txt"), "\n")
+func parseInput(input string) []recipe {
+	lines := strings.Split(input, "\n")
 	recipes := make([]recipe, len(lines))
 
 	for i, line := range lines {
@@ -100,11 +104,4 @@ func parseInput() []recipe {
 	}
 
 	return recipes
-}
-
-// --------------------------------------------------------------------------------------------------------------------
-
-func main() {
-	partOne()
-	partTwo()
 }

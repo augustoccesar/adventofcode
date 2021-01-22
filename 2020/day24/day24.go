@@ -1,21 +1,26 @@
-package main
+package day24
 
 import (
 	"fmt"
 	"regexp"
+	"strconv"
 	"strings"
 
 	"github.com/augustoccesar/adventofcode/utils"
 )
 
-func partOne() {
-	blackTiles := parseInput()
+type Day24 struct{}
 
-	fmt.Printf("Part One: %d\n", len(blackTiles))
+func (d *Day24) InputFileName() string { return "input" }
+
+func (d *Day24) PartOne(input string) string {
+	blackTiles := parseInput(input)
+
+	return strconv.Itoa(len(blackTiles))
 }
 
-func partTwo() {
-	blackTiles := parseInput()
+func (d *Day24) PartTwo(input string) string {
+	blackTiles := parseInput(input)
 
 	for i := 0; i < 100; i++ {
 		blackNeighborsCount := make(map[string]int)
@@ -45,13 +50,11 @@ func partTwo() {
 		blackTiles = newBlacks
 	}
 
-	fmt.Printf("Day Two: %d\n", len(blackTiles))
+	return strconv.Itoa(len(blackTiles))
 }
 
-// --------------------------------------------------------------------------------------------------------------------
-
-func parseInput() map[string]*Tile {
-	inputLines := strings.Split(utils.ReadFile("./input.txt"), "\n")
+func parseInput(input string) map[string]*Tile {
+	inputLines := strings.Split(input, "\n")
 
 	blackTiles := map[string]*Tile{}
 	for _, line := range inputLines {
@@ -145,11 +148,4 @@ func tileIDToCoords(id string) (x, y, z int) {
 	coord := strings.Split(id, ",")
 	x, y, z = utils.Atoi(coord[0]), utils.Atoi(coord[1]), utils.Atoi(coord[2])
 	return
-}
-
-// --------------------------------------------------------------------------------------------------------------------
-
-func main() {
-	partOne()
-	partTwo()
 }

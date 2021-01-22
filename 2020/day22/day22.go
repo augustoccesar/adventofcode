@@ -1,12 +1,55 @@
-package main
+package day22
 
 import (
 	"fmt"
 	"regexp"
+	"strconv"
 	"strings"
 
 	"github.com/augustoccesar/adventofcode/utils"
 )
+
+type Day22 struct{}
+
+func (d *Day22) InputFileName() string { return "input" }
+
+func (d *Day22) PartOne(input string) string {
+	players := parseInput(input)
+
+	p1 := players[0]
+	p2 := players[1]
+
+	var winner player
+	for len(p1.deck) > 0 && len(p2.deck) > 0 {
+		c1 := p1.pop()
+		c2 := p2.pop()
+
+		if utils.Atoi(c1) > utils.Atoi(c2) {
+			p1.add(c1, c2)
+		} else {
+			p2.add(c2, c1)
+		}
+
+		if len(p1.deck) == 0 {
+			winner = p2
+			break
+		}
+
+		if len(p2.deck) == 0 {
+			winner = p1
+			break
+		}
+	}
+
+	return strconv.Itoa(winner.deckScore())
+}
+
+func (d *Day22) PartTwo(input string) string {
+	players := parseInput(input)
+	winner := playRecursive(players)
+
+	return strconv.Itoa(winner.deckScore())
+}
 
 var playerPattern = regexp.MustCompile(`Player\s(\d+):`)
 
@@ -40,44 +83,6 @@ func (p *player) deckScore() int {
 
 func (p *player) String() string {
 	return fmt.Sprintf("Player %d's deck: %s", p.id, strings.Join(p.deck, ", "))
-}
-
-func partOne() {
-	players := parseInput()
-
-	p1 := players[0]
-	p2 := players[1]
-
-	var winner player
-	for len(p1.deck) > 0 && len(p2.deck) > 0 {
-		c1 := p1.pop()
-		c2 := p2.pop()
-
-		if utils.Atoi(c1) > utils.Atoi(c2) {
-			p1.add(c1, c2)
-		} else {
-			p2.add(c2, c1)
-		}
-
-		if len(p1.deck) == 0 {
-			winner = p2
-			break
-		}
-
-		if len(p2.deck) == 0 {
-			winner = p1
-			break
-		}
-	}
-
-	fmt.Printf("Part One: %d\n", winner.deckScore())
-}
-
-func partTwo() {
-	players := parseInput()
-	winner := playRecursive(players)
-
-	fmt.Printf("Part Two: %d\n", winner.deckScore())
 }
 
 func hasDecksHappened(history [][]string, deckHash1, deckHash2 string) bool {
@@ -170,8 +175,7 @@ func playRecursive(players []player) (gameWinner player) {
 	return
 }
 
-func parseInput() []player {
-	input := utils.ReadFile("./input.txt")
+func parseInput(input string) []player {
 	players := []player{}
 
 	for _, playerData := range strings.Split(input, "\n\n") {
@@ -188,11 +192,4 @@ func parseInput() []player {
 	}
 
 	return players
-}
-
-// --------------------------------------------------------------------------------------------------------------------
-
-func main() {
-	partOne()
-	partTwo()
 }

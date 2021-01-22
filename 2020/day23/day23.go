@@ -1,18 +1,21 @@
-package main
+package day23
 
 import (
-	"fmt"
 	"strconv"
 	"strings"
 
 	"github.com/augustoccesar/adventofcode/utils"
 )
 
-func partOne() {
-	input := strings.Split(utils.ReadFile("./input.txt"), "")
-	cups := make([]int, len(input))
+type Day23 struct{}
 
-	for i, item := range input {
+func (d *Day23) InputFileName() string { return "input" }
+
+func (d *Day23) PartOne(input string) string {
+	inputItems := strings.Split(input, "")
+	cups := make([]int, len(inputItems))
+
+	for i, item := range inputItems {
 		cups[i] = utils.Atoi(item)
 	}
 
@@ -23,22 +26,22 @@ func partOne() {
 		result.WriteString(strconv.Itoa(cup.Label))
 	}
 
-	fmt.Printf("Part One: %s\n", result.String())
+	return result.String()
 }
 
-func partTwo() {
-	input := strings.Split(utils.ReadFile("./input.txt"), "")
+func (d *Day23) PartTwo(input string) string {
+	inputItems := strings.Split(input, "")
 	cupsAmount := 1_000_000
 	moves := 10_000_000
 
 	cups := make([]int, cupsAmount)
 
-	for i := 0; i < len(input); i++ {
-		cups[i] = utils.Atoi(input[i])
+	for i := 0; i < len(inputItems); i++ {
+		cups[i] = utils.Atoi(inputItems[i])
 	}
 	maxCupLabel, _ := utils.SliceIntMaxMin(cups)
 
-	for i, j := len(input), maxCupLabel+1; i < cupsAmount; i, j = i+1, j+1 {
+	for i, j := len(inputItems), maxCupLabel+1; i < cupsAmount; i, j = i+1, j+1 {
 		cups[i] = j
 	}
 
@@ -47,7 +50,7 @@ func partTwo() {
 	cupOne := circle.Find(1)
 	resCups := []*Cup{cupOne.Next, cupOne.Next.Next}
 
-	fmt.Printf("Part Two: %d\n", resCups[0].Label*resCups[1].Label)
+	return strconv.Itoa(resCups[0].Label * resCups[1].Label)
 }
 
 func playGame(cupLabels []int, moves int) *Circle {
@@ -205,11 +208,4 @@ func (c *Circle) Tail(fromLabel int) []*Cup {
 	}
 
 	return tail
-}
-
-// --------------------------------------------------------------------------------------------------------------------
-
-func main() {
-	partOne()
-	partTwo()
 }
