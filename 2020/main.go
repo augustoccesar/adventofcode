@@ -45,63 +45,68 @@ func main() {
 		panic("Invalid argument value for day")
 	}
 
-	var taskRunner *utils.TaskRunner
-	switch dayInt {
-	case 1:
-		taskRunner = utils.NewTaskRunner(&day01.Day01{})
-	case 2:
-		taskRunner = utils.NewTaskRunner(&day02.Day02{})
-	case 3:
-		taskRunner = utils.NewTaskRunner(&day03.Day03{})
-	case 4:
-		taskRunner = utils.NewTaskRunner(&day04.Day04{})
-	case 5:
-		taskRunner = utils.NewTaskRunner(&day05.Day05{})
-	case 6:
-		taskRunner = utils.NewTaskRunner(&day06.Day06{})
-	case 7:
-		taskRunner = utils.NewTaskRunner(&day07.Day07{})
-	case 8:
-		taskRunner = utils.NewTaskRunner(&day08.Day08{})
-	case 9:
-		taskRunner = utils.NewTaskRunner(&day09.Day09{})
-	case 10:
-		taskRunner = utils.NewTaskRunner(&day10.Day10{})
-	case 11:
-		taskRunner = utils.NewTaskRunner(&day11.Day11{})
-	case 12:
-		taskRunner = utils.NewTaskRunner(&day12.Day12{})
-	case 13:
-		taskRunner = utils.NewTaskRunner(&day13.Day13{})
-	case 14:
-		taskRunner = utils.NewTaskRunner(&day14.Day14{})
-	case 15:
-		taskRunner = utils.NewTaskRunner(&day15.Day15{})
-	case 16:
-		taskRunner = utils.NewTaskRunner(&day16.Day16{})
-	case 17:
-		taskRunner = utils.NewTaskRunner(&day17.Day17{})
-	case 18:
-		taskRunner = utils.NewTaskRunner(&day18.Day18{})
-	case 19:
-		taskRunner = utils.NewTaskRunner(&day19.Day19{})
-	case 20:
-		taskRunner = utils.NewTaskRunner(&day20.Day20{})
-	case 21:
-		taskRunner = utils.NewTaskRunner(&day21.Day21{})
-	case 22:
-		taskRunner = utils.NewTaskRunner(&day22.Day22{})
-	case 23:
-		taskRunner = utils.NewTaskRunner(&day23.Day23{})
-	case 24:
-		taskRunner = utils.NewTaskRunner(&day24.Day24{})
-	case 25:
-		taskRunner = utils.NewTaskRunner(&day25.Day25{})
-	}
+	taskRunner := getDayTask(dayInt)
 
 	if taskRunner == nil {
 		panic("Day not found")
 	}
 
 	taskRunner.Run()
+}
+
+func getDayTask(day int) *utils.TaskRunner {
+	switch day {
+	case 1:
+		return utils.NewTaskRunner(&day01.Day01{})
+	case 2:
+		return utils.NewTaskRunner(&day02.Day02{})
+	case 3:
+		return utils.NewTaskRunner(&day03.Day03{})
+	case 4:
+		return utils.NewTaskRunner(&day04.Day04{})
+	case 5:
+		return utils.NewTaskRunner(&day05.Day05{})
+	case 6:
+		return utils.NewTaskRunner(&day06.Day06{})
+	case 7:
+		return utils.NewTaskRunner(&day07.Day07{})
+	case 8:
+		return utils.NewTaskRunner(&day08.Day08{})
+	case 9:
+		return utils.NewTaskRunner(&day09.Day09{})
+	case 10:
+		return utils.NewTaskRunner(&day10.Day10{})
+	case 11:
+		return utils.NewTaskRunner(&day11.Day11{})
+	case 12:
+		return utils.NewTaskRunner(&day12.Day12{})
+	case 13:
+		return utils.NewTaskRunner(&day13.Day13{})
+	case 14:
+		return utils.NewTaskRunner(&day14.Day14{})
+	case 15:
+		return utils.NewTaskRunner(&day15.Day15{})
+	case 16:
+		return utils.NewTaskRunner(&day16.Day16{})
+	case 17:
+		return utils.NewTaskRunner(&day17.Day17{})
+	case 18:
+		return utils.NewTaskRunner(&day18.Day18{})
+	case 19:
+		return utils.NewTaskRunner(&day19.Day19{})
+	case 20:
+		return utils.NewTaskRunner(&day20.Day20{})
+	case 21:
+		return utils.NewTaskRunner(&day21.Day21{})
+	case 22:
+		return utils.NewTaskRunner(&day22.Day22{})
+	case 23:
+		return utils.NewTaskRunner(&day23.Day23{})
+	case 24:
+		return utils.NewTaskRunner(&day24.Day24{})
+	case 25:
+		return utils.NewTaskRunner(&day25.Day25{})
+	default:
+		return nil
+	}
 }
