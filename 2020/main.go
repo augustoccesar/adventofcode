@@ -2,10 +2,8 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"strconv"
-	"strings"
 
 	"github.com/augustoccesar/adventofcode/day01"
 	"github.com/augustoccesar/adventofcode/day02"
@@ -42,11 +40,6 @@ func main() {
 		panic("Invalid amount of arguments")
 	}
 
-	if os.Args[1] == "check" {
-		exportResults()
-		os.Exit(0)
-	}
-
 	dayInt, err := strconv.Atoi(os.Args[1])
 	if err != nil {
 		panic("Invalid argument value for day")
@@ -62,76 +55,40 @@ func main() {
 }
 
 func getDayTask(day int) *utils.TaskRunner {
-	switch day {
-	case 1:
-		return utils.NewTaskRunner(&day01.Day01{})
-	case 2:
-		return utils.NewTaskRunner(&day02.Day02{})
-	case 3:
-		return utils.NewTaskRunner(&day03.Day03{})
-	case 4:
-		return utils.NewTaskRunner(&day04.Day04{})
-	case 5:
-		return utils.NewTaskRunner(&day05.Day05{})
-	case 6:
-		return utils.NewTaskRunner(&day06.Day06{})
-	case 7:
-		return utils.NewTaskRunner(&day07.Day07{})
-	case 8:
-		return utils.NewTaskRunner(&day08.Day08{})
-	case 9:
-		return utils.NewTaskRunner(&day09.Day09{})
-	case 10:
-		return utils.NewTaskRunner(&day10.Day10{})
-	case 11:
-		return utils.NewTaskRunner(&day11.Day11{})
-	case 12:
-		return utils.NewTaskRunner(&day12.Day12{})
-	case 13:
-		return utils.NewTaskRunner(&day13.Day13{})
-	case 14:
-		return utils.NewTaskRunner(&day14.Day14{})
-	case 15:
-		return utils.NewTaskRunner(&day15.Day15{})
-	case 16:
-		return utils.NewTaskRunner(&day16.Day16{})
-	case 17:
-		return utils.NewTaskRunner(&day17.Day17{})
-	case 18:
-		return utils.NewTaskRunner(&day18.Day18{})
-	case 19:
-		return utils.NewTaskRunner(&day19.Day19{})
-	case 20:
-		return utils.NewTaskRunner(&day20.Day20{})
-	case 21:
-		return utils.NewTaskRunner(&day21.Day21{})
-	case 22:
-		return utils.NewTaskRunner(&day22.Day22{})
-	case 23:
-		return utils.NewTaskRunner(&day23.Day23{})
-	case 24:
-		return utils.NewTaskRunner(&day24.Day24{})
-	case 25:
-		return utils.NewTaskRunner(&day25.Day25{})
-	default:
+	task, found := getAvailableDays()[day]
+	if !found {
 		return nil
 	}
+
+	return utils.NewTaskRunner(task)
 }
 
-// {day};{part one};{part two};
-func exportResults() {
-	daysRange := utils.MakeRange(1, 25)
-	result := strings.Builder{}
-
-	for _, val := range daysRange {
-		taskRunner := getDayTask(val)
-
-		result.WriteString(taskRunner.Export())
-		result.WriteRune('\n')
-	}
-
-	err := ioutil.WriteFile("./results", []byte(strings.TrimSuffix(result.String(), "\n")), 0644)
-	if err != nil {
-		panic(err)
+func getAvailableDays() map[int]utils.Task {
+	return map[int]utils.Task{
+		1:  &day01.Day01{},
+		2:  &day02.Day02{},
+		3:  &day03.Day03{},
+		4:  &day04.Day04{},
+		5:  &day05.Day05{},
+		6:  &day06.Day06{},
+		7:  &day07.Day07{},
+		8:  &day08.Day08{},
+		9:  &day09.Day09{},
+		10: &day10.Day10{},
+		11: &day11.Day11{},
+		12: &day12.Day12{},
+		13: &day13.Day13{},
+		14: &day14.Day14{},
+		15: &day15.Day15{},
+		16: &day16.Day16{},
+		17: &day17.Day17{},
+		18: &day18.Day18{},
+		19: &day19.Day19{},
+		20: &day20.Day20{},
+		21: &day21.Day21{},
+		22: &day22.Day22{},
+		23: &day23.Day23{},
+		24: &day24.Day24{},
+		25: &day25.Day25{},
 	}
 }

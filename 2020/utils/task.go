@@ -29,6 +29,13 @@ func (tr *TaskRunner) Run() {
 	fmt.Printf("Part Two: %s\n", tr.task.PartTwo(input))
 }
 
+func (tr *TaskRunner) RunReturn() (string, string) {
+	inputPath := fmt.Sprintf("./inputs/%s_%s.txt", strings.ToLower(GetType(tr.task)), tr.task.InputFileName())
+	input := ReadFile(inputPath)
+
+	return tr.task.PartOne(input), tr.task.PartTwo(input)
+}
+
 func (tr *TaskRunner) Export() string {
 	dayStr := strings.ToLower(GetType(tr.task))
 	inputPath := fmt.Sprintf("./inputs/%s_%s.txt", dayStr, tr.task.InputFileName())
