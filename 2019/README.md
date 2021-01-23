@@ -14,12 +14,12 @@ Using Java 15
 
 ## How to run
 ```
-gradle run --args={day}
+make day={day}
 ```
 
 ### Example:
 
 For running Day 1:
 ```
-gradle run --args="1"
+make day=1
 ```
