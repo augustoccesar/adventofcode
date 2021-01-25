@@ -1,4 +1,5 @@
 # [AoC 2020](https://adventofcode.com/2020)
+![2020](https://github.com/augustoccesar/adventofcode/workflows/2020/badge.svg)
 
 Using Golang 1.15
 

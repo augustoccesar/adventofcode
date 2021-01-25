@@ -1,4 +1,5 @@
 # [AoC 2019](https://adventofcode.com/2019)
+![2019](https://github.com/augustoccesar/adventofcode/workflows/2019/badge.svg)
 
 Using Java 15
 
