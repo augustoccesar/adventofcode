@@ -12,10 +12,15 @@ jobs:
     runs-on: "ubuntu-latest"
     steps:
       - uses: actions/checkout@v2
+      - name: Decrypt results
+        run: ./.github/scripts/decrypt_secret.sh
+        env:
+          VAULT_PASS: ${{ secrets.VaultPass }}
+        with:
+          input: ./2020/expected_results.gpg
+          output: ./2020/expected_results
       - uses: actions/setup-go@v2
         with:
           go-version: '1.15'
       - run: go test main.go main_test.go -v
         working-directory: ./2020
-        env:
-          VAULT_PASS: ${{ secrets.VaultPass }}

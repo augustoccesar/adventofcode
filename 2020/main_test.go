@@ -3,14 +3,13 @@ package main
 import (
 	"encoding/csv"
 	"io"
+	"io/ioutil"
 	"log"
-	"os"
 	"strconv"
 	"strings"
 	"testing"
 
 	"github.com/augustoccesar/adventofcode/utils"
-	vault "github.com/sosedoff/ansible-vault-go"
 )
 
 type FailureType string
@@ -27,18 +26,13 @@ type Failure struct {
 }
 
 func TestMain(t *testing.T) {
-	vaultPass, found := os.LookupEnv("VAULT_PASS")
-	if !found {
-		t.Fatalf("Failed to find VAULT_PASS on the environment")
-	}
-
-	str, err := vault.DecryptFile("expected_results", vaultPass)
+	str, err := ioutil.ReadFile("expected_results")
 	if err != nil {
 		t.Fatal("Failed to load the expected results file")
 	}
 
 	taskMap := getAvailableDays()
-	reader := csv.NewReader(strings.NewReader(str))
+	reader := csv.NewReader(strings.NewReader(string(str)))
 	reader.Comma = ';'
 
 	failures := []Failure{}

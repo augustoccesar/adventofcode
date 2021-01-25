@@ -19,4 +19,4 @@
 **/build
 **/cmake-build*
 **/target
-**/results
+**/expected_results
