@@ -1,0 +1,28 @@
+name: Check 2019 results
+
+on:
+  push:
+    branches: 
+      - master
+    paths: 
+      - '2019/**'
+
+jobs:
+  test:
+    runs-on: "ubuntu-latest"
+    steps:
+      - uses: actions/checkout@v2
+      - name: Decrypt results
+        run: ./.github/scripts/decrypt_secret.sh
+        env:
+          VAULT_PASS: ${{ secrets.VaultPass }}
+          RESULTS_INPUT: ./2019/expected_results.gpg
+          RESULTS_OUTPUT: ./2019/src/test/resources/expected_results
+          
+      - name: Set up JDK 15
+        uses: actions/setup-java@v1
+        with:
+          java-version: 15
+      - name: Test with Gradle
+        run: ./gradlew test --tests com.augustoccesar.adventofcode.MainTest
+        working-directory: ./2019

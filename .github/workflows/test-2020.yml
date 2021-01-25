@@ -16,9 +16,8 @@ jobs:
         run: ./.github/scripts/decrypt_secret.sh
         env:
           VAULT_PASS: ${{ secrets.VaultPass }}
-        with:
-          input: ./2020/expected_results.gpg
-          output: ./2020/expected_results
+          RESULTS_INPUT: ./2020/expected_results.gpg
+          RESULTS_OUTPUT: ./2020/expected_results
       - uses: actions/setup-go@v2
         with:
           go-version: '1.15'
