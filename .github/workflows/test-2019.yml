@@ -1,4 +1,4 @@
-name: Check 2019 results
+name: "2019"
 
 on:
   push:
