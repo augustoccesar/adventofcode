@@ -6,6 +6,7 @@ import com.augustoccesar.adventofcode.day03.Day03;
 import com.augustoccesar.adventofcode.day04.Day04;
 import com.augustoccesar.adventofcode.day05.Day05;
 import com.augustoccesar.adventofcode.day06.Day06;
+import com.augustoccesar.adventofcode.day07.Day07;
 import java.util.Optional;
 
 public class Main {
@@ -35,6 +36,7 @@ public class Main {
       case 4 -> Optional.of(new Day04());
       case 5 -> Optional.of(new Day05());
       case 6 -> Optional.of(new Day06());
+      case 7 -> Optional.of(new Day07());
       default -> Optional.empty();
     };
   }
