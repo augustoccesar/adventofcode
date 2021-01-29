@@ -2,6 +2,7 @@ package com.augustoccesar.adventofcode.day05;
 
 import com.augustoccesar.adventofcode.utils.Pair;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -39,8 +40,8 @@ public class IntComputer {
     return new IntComputer(memory);
   }
 
-  public void addInput(int value) {
-    this.input.offer(value);
+  public void addInput(int... values) {
+    Arrays.stream(values).forEach(this.input::offer);
   }
 
   public Integer lastOutput() {
