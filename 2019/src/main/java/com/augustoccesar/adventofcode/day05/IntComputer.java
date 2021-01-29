@@ -2,6 +2,7 @@ package com.augustoccesar.adventofcode.day05;
 
 import com.augustoccesar.adventofcode.utils.Pair;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -12,7 +13,22 @@ import lombok.Getter;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class IntComputer {
+
+  private int cursor = 0;
+  @Getter
+  private boolean halted;
+  private boolean paused;
   private ArrayList<Integer> memory;
+  private LinkedList<Integer> input;
+  private LinkedList<Integer> output;
+
+  private IntComputer(ArrayList<Integer> memory) {
+    this.halted = false;
+    this.paused = false;
+    this.memory = memory;
+    this.input = new LinkedList<>();
+    this.output = new LinkedList<>();
+  }
 
   public static IntComputer load(final String program) {
     ArrayList<Integer> memory =
@@ -23,26 +39,39 @@ public class IntComputer {
     return new IntComputer(memory);
   }
 
-  public int run(final ArrayList<Integer> input) {
-    int lastOutput = Integer.MIN_VALUE;
+  public void addInput(int value) {
+    this.input.offer(value);
+  }
 
-    for (int i = 0; ; ) {
-      Operation op = Operation.from(this.memory.get(i));
+  public Integer lastOutput() {
+    return this.output.peekLast();
+  }
+
+  public void run() {
+    this.paused = false;
+    while (!this.paused && !this.halted) {
+      Operation op = Operation.from(this.memory.get(this.cursor));
 
       if (op == Operation.EXIT) {
+        this.halted = true;
         break;
       }
 
-      Instruction instruction = Instruction.from(this.memory.subList(i, i + op.getParamSize() + 1));
+      List<Integer> rawSubInstruction = this.memory
+          .subList(this.cursor, this.cursor + op.getParamSize() + 1);
+      Instruction instruction = Instruction.from(rawSubInstruction);
 
       Optional<Pair<Instruction.ApplyResult, Integer>> output =
-          instruction.apply(input, this.memory);
+          instruction.apply(this.input, this.memory);
       if (output.isPresent()) {
         final Pair<Instruction.ApplyResult, Integer> pair = output.get();
         switch (output.get().getLeft()) {
-          case Output -> lastOutput = pair.getRight();
+          case Output -> {
+            this.output.offer(pair.getRight());
+            this.paused = true;
+          }
           case ModifyInstructorPointer -> {
-            i = pair.getRight();
+            this.cursor = pair.getRight();
             continue;
           }
           default -> {
@@ -51,15 +80,14 @@ public class IntComputer {
         }
       }
 
-      i += op.getParamSize() + 1;
+      this.cursor += op.getParamSize() + 1;
     }
-
-    return lastOutput;
   }
 
   @AllArgsConstructor(access = AccessLevel.PRIVATE)
   @Getter
   static class Instruction {
+
     enum ApplyResult {
       Output,
       ModifyInstructorPointer
@@ -99,7 +127,7 @@ public class IntComputer {
     }
 
     public Optional<Pair<ApplyResult, Integer>> apply(
-        ArrayList<Integer> input, ArrayList<Integer> memory) {
+        LinkedList<Integer> input, ArrayList<Integer> memory) {
       if (!this.isValid()) {
         throw new RuntimeException(String.format("Applying invalid instruction: %s", this));
       }
@@ -109,7 +137,11 @@ public class IntComputer {
       }
 
       if (this.operation == Operation.READ) {
-        int currInput = input.remove(0);
+        Integer currInput = input.pollFirst();
+        if (currInput == null) {
+          // It shouldn't reach here
+          throw new RuntimeException("Unexpected empty input list");
+        }
         memory.set(this.parameters.get(0).getValue(), currInput);
         return Optional.empty();
       }
@@ -227,6 +259,7 @@ public class IntComputer {
   @AllArgsConstructor(access = AccessLevel.PRIVATE)
   @Getter
   static class Parameter {
+
     private final ParameterMode mode;
     private final int value;
 

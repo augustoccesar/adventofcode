@@ -6,21 +6,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Day05 extends Task {
+
   @Override
   public String partOne() throws IOException {
     String program = this.readInput().strip();
-    ArrayList<Integer> input = new ArrayList<>(List.of(1));
-    int result = IntComputer.load(program).run(input);
+    IntComputer computer = IntComputer.load(program);
+    computer.addInput(1);
 
-    return String.valueOf(result);
+    while (!computer.isHalted()) {
+      computer.run();
+    }
+
+    return String.valueOf(computer.lastOutput());
   }
 
   @Override
   public String partTwo() throws IOException {
     String program = this.readInput().strip();
-    ArrayList<Integer> input = new ArrayList<>(List.of(5));
-    int result = IntComputer.load(program).run(input);
+    IntComputer computer = IntComputer.load(program);
+    computer.addInput(5);
 
-    return String.valueOf(result);
+    while (!computer.isHalted()) {
+      computer.run();
+    }
+
+    return String.valueOf(computer.lastOutput());
   }
 }
