@@ -3,8 +3,6 @@ package com.augustoccesar.adventofcode.day07;
 import com.augustoccesar.adventofcode.Task;
 import com.augustoccesar.adventofcode.day05.IntComputer;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Day07 extends Task {
@@ -22,8 +20,12 @@ public class Day07 extends Task {
           int lastOutput = 0;
           for (final int phase : phaseSettings) {
             IntComputer computer = IntComputer.load(program);
-            ArrayList<Integer> input = new ArrayList<>(List.of(phase, lastOutput));
-            lastOutput = computer.run(input);
+            computer.addInput(phase, lastOutput);
+            while (!computer.isHalted()) {
+              computer.run();
+            }
+
+            lastOutput = computer.lastOutput();
           }
 
           if (lastOutput > maxOut.get()) {
