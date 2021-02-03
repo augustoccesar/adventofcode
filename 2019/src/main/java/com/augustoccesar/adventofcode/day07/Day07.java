@@ -3,7 +3,6 @@ package com.augustoccesar.adventofcode.day07;
 import com.augustoccesar.adventofcode.Task;
 import com.augustoccesar.adventofcode.day05.IntComputer;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Day07 extends Task {

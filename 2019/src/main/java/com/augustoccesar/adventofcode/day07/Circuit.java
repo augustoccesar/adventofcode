@@ -6,7 +6,7 @@ import java.util.stream.IntStream;
 
 public class Circuit {
 
-  private ArrayList<IntComputer> amplifiers;
+  private final ArrayList<IntComputer> amplifiers;
   private int currentAmplifier = 0;
 
   public Circuit(final String program, final int[] phaseSettings) {

@@ -19,9 +19,9 @@ public class IntComputer {
   @Getter
   private boolean halted;
   private boolean paused;
-  private ArrayList<Integer> memory;
-  private LinkedList<Integer> input;
-  private LinkedList<Integer> output;
+  private final ArrayList<Integer> memory;
+  private final LinkedList<Integer> input;
+  private final LinkedList<Integer> output;
 
   private IntComputer(ArrayList<Integer> memory) {
     this.halted = false;
@@ -263,10 +263,6 @@ public class IntComputer {
 
     private final ParameterMode mode;
     private final int value;
-
-    public static Parameter from(final ParameterMode mode, final char charValue) {
-      return new Parameter(mode, Character.getNumericValue(charValue));
-    }
 
     public static Parameter from(final ParameterMode mode, final int value) {
       return new Parameter(mode, value);
