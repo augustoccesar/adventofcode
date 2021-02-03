@@ -11,7 +11,7 @@ public class Circuit {
 
   public Circuit(final String program, final int[] phaseSettings) {
     this.amplifiers = new ArrayList<>();
-    
+
     IntStream.range(0, phaseSettings.length)
         .forEach(idx -> {
           IntComputer amplifier = IntComputer.load(program);
@@ -25,7 +25,7 @@ public class Circuit {
   }
 
   public int run() {
-    while (true) { // TODO: Define exit logic
+    while (true) {
       IntComputer currentAmplifier = this.amplifiers.get(this.currentAmplifier);
       currentAmplifier.run();
 
