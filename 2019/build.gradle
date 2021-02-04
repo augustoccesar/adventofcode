@@ -27,4 +27,8 @@ java {
 
 test {
     useJUnit()
+    testLogging {
+		events "failed"
+		exceptionFormat "full"
+	}
 }
