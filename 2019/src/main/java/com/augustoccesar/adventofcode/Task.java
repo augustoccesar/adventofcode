@@ -38,7 +38,7 @@ public abstract class Task {
       stringBuilder.append(br.readLine()).append("\n");
     }
 
-    return stringBuilder.toString();
+    return stringBuilder.toString().strip();
   }
 
   protected void streamInput(StreamCallback streamCallback) throws IOException {
