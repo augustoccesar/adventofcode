@@ -60,10 +60,15 @@ public class IntComputer {
         instruction.getParameters().stream()
             .map(
                 item -> {
+                  if (item.isTarget) {
+                    if (item.getMode() == ParameterMode.POSITION) {
+                      return item.getValue();
+                    }
+                  }
+
                   if (item.getMode() == ParameterMode.POSITION) {
                     return memory.get(item.getValue());
-                  } else if (item.getMode() == ParameterMode.IMMEDIATE
-                      || item.getMode() == ParameterMode.IO) {
+                  } else if (item.getMode() == ParameterMode.IMMEDIATE) {
                     return item.getValue();
                   } else {
                     throw new RuntimeException(
@@ -173,13 +178,10 @@ public class IntComputer {
       ArrayList<Parameter> parameters = new ArrayList<>();
       int startingPos = opString.length() - 3; // First value that is not part of the operation
       for (int i = startingPos, j = 1; i >= 0; i--, j++) {
-        if (i == 0 && op.writeToMemory) { // If it writes, the last loop is a IO parameter
-          parameters.add(Parameter.from(ParameterMode.IO, rawInstruction.get(j)));
-          continue;
-        }
-
+        boolean isTarget = i == 0 && op.writeToMemory;
         parameters.add(
-            Parameter.from(ParameterMode.from(opString.charAt(i)), rawInstruction.get(j)));
+            Parameter.from(
+                ParameterMode.from(opString.charAt(i)), rawInstruction.get(j), isTarget));
       }
 
       return new Instruction(operation, parameters);
@@ -241,9 +243,11 @@ public class IntComputer {
 
     private final ParameterMode mode;
     private final int value;
+    private final boolean isTarget;
 
-    public static Parameter from(final ParameterMode mode, final int value) {
-      return new Parameter(mode, value);
+    public static Parameter from(
+        final ParameterMode mode, final int value, final boolean isTarget) {
+      return new Parameter(mode, value, isTarget);
     }
   }
 
@@ -251,7 +255,6 @@ public class IntComputer {
   @Getter
   enum ParameterMode {
     UNKNOWN(Integer.MIN_VALUE),
-    IO(-1),
     POSITION(0),
     IMMEDIATE(1);
 
