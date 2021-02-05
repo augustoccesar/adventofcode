@@ -3,6 +3,7 @@ package com.augustoccesar.adventofcode.day05;
 import com.augustoccesar.adventofcode.utils.Pair;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -16,19 +17,22 @@ import lombok.Getter;
 public class IntComputer {
 
   private int cursor = 0;
-  @Getter
-  private boolean halted;
+  @Getter private boolean halted;
   private boolean paused;
-  private final ArrayList<Integer> memory;
+  @Getter private final HashMap<Integer, Integer> memory;
   private final LinkedList<Integer> input;
   private final LinkedList<Integer> output;
 
   private IntComputer(ArrayList<Integer> memory) {
     this.halted = false;
     this.paused = false;
-    this.memory = memory;
+    this.memory = new HashMap<>();
     this.input = new LinkedList<>();
     this.output = new LinkedList<>();
+
+    for (int i = 0; i < memory.size(); i++) {
+      this.memory.put(i, memory.get(i));
+    }
   }
 
   public static IntComputer load(final String program) {
@@ -58,8 +62,10 @@ public class IntComputer {
         break;
       }
 
-      List<Integer> rawSubInstruction = this.memory
-          .subList(this.cursor, this.cursor + op.getParamSize() + 1);
+      ArrayList<Integer> rawSubInstruction = new ArrayList<>();
+      for (int i = this.cursor; i < this.cursor + op.getParamSize() + 1; i++) {
+        rawSubInstruction.add(this.memory.get(i));
+      }
       Instruction instruction = Instruction.from(rawSubInstruction);
 
       Optional<Pair<Instruction.ApplyResult, Integer>> output =
@@ -128,7 +134,7 @@ public class IntComputer {
     }
 
     public Optional<Pair<ApplyResult, Integer>> apply(
-        LinkedList<Integer> input, ArrayList<Integer> memory) {
+        LinkedList<Integer> input, HashMap<Integer, Integer> memory) {
       if (!this.isValid()) {
         throw new RuntimeException(String.format("Applying invalid instruction: %s", this));
       }
@@ -143,7 +149,7 @@ public class IntComputer {
           // It shouldn't reach here
           throw new RuntimeException("Unexpected empty input list");
         }
-        memory.set(this.parameters.get(0).getValue(), currInput);
+        memory.put(this.parameters.get(0).getValue(), currInput);
         return Optional.empty();
       }
 
@@ -170,10 +176,10 @@ public class IntComputer {
       int lastIndex = paramValues.size() - 1;
 
       switch (this.operation) {
-        case SUM -> memory.set(
+        case SUM -> memory.put(
             paramValues.get(lastIndex),
             paramValues.stream().limit(lastIndex).reduce(0, Integer::sum));
-        case MULTIPLY -> memory.set(
+        case MULTIPLY -> memory.put(
             paramValues.get(lastIndex),
             paramValues.stream().limit(lastIndex).reduce(1, Math::multiplyExact));
         case JUMP_IF_TRUE -> {
@@ -188,16 +194,16 @@ public class IntComputer {
         }
         case LESS_THAN -> {
           if (paramValues.get(0) < paramValues.get(1)) {
-            memory.set(paramValues.get(2), 1);
+            memory.put(paramValues.get(2), 1);
           } else {
-            memory.set(paramValues.get(2), 0);
+            memory.put(paramValues.get(2), 0);
           }
         }
         case EQUALS -> {
           if (paramValues.get(0).equals(paramValues.get(1))) {
-            memory.set(paramValues.get(2), 1);
+            memory.put(paramValues.get(2), 1);
           } else {
-            memory.set(paramValues.get(2), 0);
+            memory.put(paramValues.get(2), 0);
           }
         }
         default -> {
