@@ -2,8 +2,6 @@ package com.augustoccesar.adventofcode.day05;
 
 import com.augustoccesar.adventofcode.Task;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Day05 extends Task {
 
