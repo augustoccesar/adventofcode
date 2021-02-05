@@ -24,7 +24,7 @@ public class Circuit {
         });
   }
 
-  public int run() {
+  public long run() {
     while (true) {
       IntComputer currentAmplifier = this.amplifiers.get(this.currentAmplifier);
       currentAmplifier.run();

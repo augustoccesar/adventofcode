@@ -15,39 +15,41 @@ import lombok.Getter;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class IntComputer {
 
-  private int cursor = 0;
+  private long relativeBase = 0L;
+  private long cursor = 0L;
+
   @Getter private boolean halted;
   private boolean paused;
-  @Getter private final HashMap<Integer, Integer> memory;
-  private final LinkedList<Integer> input;
-  private final LinkedList<Integer> output;
+  private final HashMap<Long, Long> memory;
+  private final LinkedList<Long> input;
+  private final LinkedList<Long> output;
 
-  private IntComputer(ArrayList<Integer> memory) {
+  private IntComputer(ArrayList<Long> memory) {
     this.halted = false;
     this.paused = false;
     this.memory = new HashMap<>();
     this.input = new LinkedList<>();
     this.output = new LinkedList<>();
 
-    for (int i = 0; i < memory.size(); i++) {
-      this.memory.put(i, memory.get(i));
+    for (Long i = 0L; i < memory.size(); i++) {
+      this.memory.put(i, memory.get(i.intValue()));
     }
   }
 
   public static IntComputer load(final String program) {
-    ArrayList<Integer> memory =
+    ArrayList<Long> memory =
         Stream.of(program.split(","))
-            .map(Integer::parseInt)
+            .map(Long::parseLong)
             .collect(Collectors.toCollection(ArrayList::new));
 
     return new IntComputer(memory);
   }
 
-  public void addInput(int... values) {
+  public void addInput(long... values) {
     Arrays.stream(values).forEach(this.input::offer);
   }
 
-  public Integer lastOutput() {
+  public Long lastOutput() {
     return this.output.peekLast();
   }
 
@@ -56,20 +58,34 @@ public class IntComputer {
       throw new RuntimeException(String.format("Applying invalid instruction: %s", this));
     }
 
-    List<Integer> paramValues =
+    List<Long> paramValues =
         instruction.getParameters().stream()
             .map(
                 item -> {
                   if (item.isTarget) {
                     if (item.getMode() == ParameterMode.POSITION) {
                       return item.getValue();
+                    } else if (item.getMode() == ParameterMode.RELATIVE) {
+                      return item.getValue() + this.relativeBase;
                     }
                   }
 
                   if (item.getMode() == ParameterMode.POSITION) {
-                    return memory.get(item.getValue());
+                    final long key = item.getValue();
+                    if (!this.memory.containsKey(key)) {
+                      this.memory.put(key, 0L);
+                    }
+
+                    return memory.get(key);
                   } else if (item.getMode() == ParameterMode.IMMEDIATE) {
                     return item.getValue();
+                  } else if (item.getMode() == ParameterMode.RELATIVE) {
+                    final long key = item.getValue() + this.relativeBase;
+                    if (!this.memory.containsKey(key)) {
+                      this.memory.put(key, 0L);
+                    }
+
+                    return memory.get(key);
                   } else {
                     throw new RuntimeException(
                         String.format("Invalid mode for parameter: %s", item.getMode()));
@@ -81,8 +97,8 @@ public class IntComputer {
     boolean cursorJumped = false;
     switch (instruction.getOperation()) {
       case READ -> {
-        final int key = paramValues.get(0);
-        Integer currInput = input.pollFirst();
+        final long key = paramValues.get(0);
+        Long currInput = input.pollFirst();
         if (currInput == null) {
           // It shouldn't reach here
           throw new RuntimeException("Unexpected empty input list");
@@ -90,16 +106,16 @@ public class IntComputer {
         this.memory.put(key, currInput);
       }
       case WRITE -> {
-        final int key = paramValues.get(0);
+        final long key = paramValues.get(0);
         this.output.offer(this.memory.get(key));
         this.paused = true;
       }
       case SUM -> memory.put(
           paramValues.get(lastIndex),
-          paramValues.stream().limit(lastIndex).reduce(0, Integer::sum));
+          paramValues.stream().limit(lastIndex).reduce(0L, Long::sum));
       case MULTIPLY -> memory.put(
           paramValues.get(lastIndex),
-          paramValues.stream().limit(lastIndex).reduce(1, Math::multiplyExact));
+          paramValues.stream().limit(lastIndex).reduce(1L, Math::multiplyExact));
       case JUMP_IF_TRUE -> {
         if (paramValues.get(0) != 0) {
           this.cursor = paramValues.get(1);
@@ -114,23 +130,26 @@ public class IntComputer {
       }
       case LESS_THAN -> {
         if (paramValues.get(0) < paramValues.get(1)) {
-          memory.put(paramValues.get(2), 1);
+          memory.put(paramValues.get(2), 1L);
         } else {
-          memory.put(paramValues.get(2), 0);
+          memory.put(paramValues.get(2), 0L);
         }
       }
       case EQUALS -> {
         if (paramValues.get(0).equals(paramValues.get(1))) {
-          memory.put(paramValues.get(2), 1);
+          memory.put(paramValues.get(2), 1L);
         } else {
-          memory.put(paramValues.get(2), 0);
+          memory.put(paramValues.get(2), 0L);
         }
+      }
+      case ADJUST_RELATIVE_BASE -> {
+        this.relativeBase += paramValues.get(0);
       }
       case EXIT -> {
         this.halted = true;
       }
       default -> {
-        // TODO: Maybe exhaust all the cases for operation. Move from the guards above.
+        throw new RuntimeException("Trying to apply invalid operation.");
       }
     }
 
@@ -144,8 +163,8 @@ public class IntComputer {
     while (!this.paused && !this.halted) {
       Operation op = Operation.from(this.memory.get(this.cursor));
 
-      ArrayList<Integer> rawSubInstruction = new ArrayList<>();
-      for (int i = this.cursor; i < this.cursor + op.getParamSize() + 1; i++) {
+      ArrayList<Long> rawSubInstruction = new ArrayList<>();
+      for (long i = this.cursor; i < this.cursor + op.getParamSize() + 1; i++) {
         rawSubInstruction.add(this.memory.get(i));
       }
       Instruction instruction = Instruction.from(rawSubInstruction);
@@ -160,7 +179,7 @@ public class IntComputer {
     private final Operation operation;
     private final List<Parameter> parameters;
 
-    public static Instruction from(final List<Integer> rawInstruction) {
+    public static Instruction from(final List<Long> rawInstruction) {
       Operation op = Operation.from(rawInstruction.get(0));
 
       if (rawInstruction.size() == 1) { // Doesn't contain ant parameters
@@ -203,6 +222,7 @@ public class IntComputer {
     JUMP_IF_FALSE(6, 2, false),
     LESS_THAN(7, 3, true),
     EQUALS(8, 3, true),
+    ADJUST_RELATIVE_BASE(9, 1, false),
     EXIT(99, 0, false);
 
     private final int repr;
@@ -213,14 +233,14 @@ public class IntComputer {
       return from(Character.getNumericValue(charRepr));
     }
 
-    public static Operation from(final int intRepr) {
-      int parsedInput = intRepr;
+    public static Operation from(final long intRepr) {
+      long parsedInput = intRepr;
       String opString = String.valueOf(intRepr);
       if (opString.length() > 1 && !opString.equals("99")) {
         parsedInput = Character.getNumericValue(opString.charAt(opString.length() - 1));
       }
 
-      return switch (parsedInput) {
+      return switch (Long.valueOf(parsedInput).intValue()) {
         case 1 -> SUM;
         case 2 -> MULTIPLY;
         case 3 -> READ;
@@ -229,6 +249,7 @@ public class IntComputer {
         case 6 -> JUMP_IF_FALSE;
         case 7 -> LESS_THAN;
         case 8 -> EQUALS;
+        case 9 -> ADJUST_RELATIVE_BASE;
         case 99 -> EXIT;
         default -> {
           throw new RuntimeException("Received invalid Operation: " + parsedInput);
@@ -242,11 +263,11 @@ public class IntComputer {
   static class Parameter {
 
     private final ParameterMode mode;
-    private final int value;
+    private final long value;
     private final boolean isTarget;
 
     public static Parameter from(
-        final ParameterMode mode, final int value, final boolean isTarget) {
+        final ParameterMode mode, final long value, final boolean isTarget) {
       return new Parameter(mode, value, isTarget);
     }
   }
@@ -256,7 +277,8 @@ public class IntComputer {
   enum ParameterMode {
     UNKNOWN(Integer.MIN_VALUE),
     POSITION(0),
-    IMMEDIATE(1);
+    IMMEDIATE(1),
+    RELATIVE(2);
 
     private final int repr;
 
@@ -268,6 +290,7 @@ public class IntComputer {
       return switch (intRepr) {
         case 0 -> POSITION;
         case 1 -> IMMEDIATE;
+        case 2 -> RELATIVE;
         default -> {
           throw new RuntimeException("Received invalid ParameterMode: " + intRepr);
         }

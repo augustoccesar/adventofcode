@@ -3,21 +3,21 @@ package com.augustoccesar.adventofcode.day07;
 import com.augustoccesar.adventofcode.Task;
 import com.augustoccesar.adventofcode.day05.IntComputer;
 import java.io.IOException;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class Day07 extends Task {
 
   @Override
   public String partOne() throws IOException {
     final String program = this.readInput().strip();
-    final int[] phaseList = new int[]{0, 1, 2, 3, 4};
-    final AtomicInteger maxOut = new AtomicInteger(Integer.MIN_VALUE);
+    final int[] phaseList = new int[] {0, 1, 2, 3, 4};
+    final AtomicLong maxOut = new AtomicLong(Integer.MIN_VALUE);
 
     execPermute(
         phaseList,
         0,
         phaseSettings -> {
-          int lastOutput = 0;
+          long lastOutput = 0;
           for (final int phase : phaseSettings) {
             IntComputer computer = IntComputer.load(program);
             computer.addInput(phase, lastOutput);
@@ -39,15 +39,15 @@ public class Day07 extends Task {
   @Override
   public String partTwo() throws IOException {
     final String program = this.readInput().strip();
-    final int[] phaseList = new int[]{5, 6, 7, 8, 9};
-    final AtomicInteger maxOut = new AtomicInteger(Integer.MIN_VALUE);
+    final int[] phaseList = new int[] {5, 6, 7, 8, 9};
+    final AtomicLong maxOut = new AtomicLong(Long.MIN_VALUE);
 
     execPermute(
         phaseList,
         0,
         phaseSettings -> {
           Circuit circuit = new Circuit(program, phaseSettings);
-          int circuitRunResult = circuit.run();
+          long circuitRunResult = circuit.run();
           if (circuitRunResult > maxOut.get()) {
             maxOut.set(circuitRunResult);
           }
