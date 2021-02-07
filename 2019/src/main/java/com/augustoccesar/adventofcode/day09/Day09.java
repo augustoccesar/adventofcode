@@ -21,6 +21,14 @@ public class Day09 extends Task {
 
   @Override
   public String partTwo() throws IOException {
-    return "-";
+    String program = this.readInput();
+    IntComputer computer = IntComputer.load(program);
+    computer.addInput(2);
+
+    while (!computer.isHalted()) {
+      computer.run();
+    }
+
+    return String.valueOf(computer.lastOutput());
   }
 }
