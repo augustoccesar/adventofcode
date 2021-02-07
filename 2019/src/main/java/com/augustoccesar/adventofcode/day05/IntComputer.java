@@ -62,7 +62,7 @@ public class IntComputer {
         instruction.getParameters().stream()
             .map(
                 item -> {
-                  if (item.isTarget) {
+                  if (item.isTarget()) {
                     if (item.getMode() == ParameterMode.POSITION) {
                       return item.getValue();
                     } else if (item.getMode() == ParameterMode.RELATIVE) {
