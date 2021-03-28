@@ -9,6 +9,7 @@ import lombok.Getter;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @EqualsAndHashCode
 public class Point2D {
+
   private final int x;
   private final int y;
 
@@ -43,8 +44,6 @@ public class Point2D {
    * var newPoint = point.move(1, -1);
    * assert newPoint.equals(Point2D.on(1, -1));
    * }</pre>
-   *
-   * </p>
    *
    * @param x Change to apply to this {@link Point2D} {@code x} when creating the new one.
    * @param y Change to apply to this {@link Point2D} {@code y} when creating the new one.
@@ -82,5 +81,46 @@ public class Point2D {
    */
   public int taxicab(final Point2D other) {
     return Math.abs(this.x - other.x) + Math.abs(this.y - other.y);
+  }
+
+  /**
+   * Calculate the angle between this {@link Point2D} and another one.
+   *
+   * @param other The other {@link Point2D} to calculate the angle between.
+   * @return The angle between the two {@link Point2D}.
+   */
+  public double angleBetween(final Point2D other) {
+    double angle = Math.atan2(
+        other.getY() - this.getY(),
+        other.getX() - this.getX()
+    ) * 180 / Math.PI;
+
+    if (angle < 0) {
+      return 360 + angle;
+    }
+
+    if (angle >= 360) {
+      return angle - 360 * (angle % 360);
+    }
+
+    return angle;
+  }
+
+  /**
+   * Calculate the geometric distance between this {@link Point2D} and another one.
+   *
+   * @param other The other {@link Point2D} to calculate the distance to.
+   * @return The distance between the two {@link Point2D}.
+   */
+  public int distance(final Point2D other) {
+    int x = Math.abs(other.getX() - this.getX());
+    double a = Math.pow(x, 2);
+
+    int y = Math.abs(other.getY() - this.getY());
+    double b = Math.pow(y, 2);
+
+    double res = Math.sqrt(a + b);
+
+    return (int) res;
   }
 }
