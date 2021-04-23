@@ -1,5 +1,4 @@
 use crate::task::Task;
-use regex::Regex;
 
 pub struct Day07 {}
 
@@ -27,39 +26,29 @@ impl Task for Day07 {
 
 // --------------------------------------------------------------------------------------------------------------------
 
-// TODO: Rethink this solution. This is extremelly unoptimized. Should be able to do with a single scan of the ip,
-//       and keeping track if is currently inside brackets
 fn support_tls(ip: &str) -> bool {
-    let brackets_reg = Regex::new(r"\[(\w+)\]").unwrap();
     let mut contains_inside_brackets = false;
     let mut contains_outside_brackets = false;
+    let mut current_inside_brackets = false;
 
-    let mut in_brackets = vec!();
-    for item in brackets_reg.captures_iter(ip) {
-        in_brackets.push(String::from(&item[1]));
-    }
-
-    for item in in_brackets {
-        let item_chars: Vec<_> = item.chars().collect();
-        for (i, c) in item_chars.iter().enumerate() {
-            if i+1 >= item_chars.len() || i+2 >= item_chars.len() || i+3 >= item_chars.len() {
-                break;
-            }
-            if (item_chars[i + 3] == *c && item_chars[i + 1] == item_chars[i + 2]) && item_chars[i+1] != *c{
-                contains_inside_brackets = true;
-            }
+    let chars: Vec<_> = ip.chars().collect();
+    for (i, c) in chars.iter().enumerate() {
+        if *c == '[' {
+            current_inside_brackets = true;
+            continue;
+        } else if *c == ']' {
+            current_inside_brackets = false;
+            continue;
         }
-    }
 
-    let out_of_brackets = brackets_reg.replace_all(ip, ";");
-    for item in out_of_brackets.split(";") {
-        let item_chars: Vec<_> = item.chars().collect();
-        for (i, c) in item_chars.iter().enumerate() {
-            if i+1 >= item_chars.len() || i+2 >= item_chars.len() || i+3 >= item_chars.len() {
-                break;
-            }
-            if (item_chars[i + 3] == *c && item_chars[i + 1] == item_chars[i + 2]) && item_chars[i+1] != *c {
-                contains_outside_brackets = true;
+        if i + 3 >= ip.len() {
+            break;
+        }
+
+        if (chars[i + 3] == *c && chars[i + 1] == chars[i + 2]) && chars[i + 1] != *c {
+            match current_inside_brackets {
+                true => contains_inside_brackets = true,
+                false => contains_outside_brackets = true
             }
         }
     }
