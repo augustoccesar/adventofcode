@@ -1,4 +1,5 @@
 [package]
+rust = "1.51"
 name = "aoc2016"
 version = "0.1.0"
 authors = ["Augusto Cesar <augusto.acfs@gmail.com>"]
