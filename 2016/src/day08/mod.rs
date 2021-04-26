@@ -14,25 +14,19 @@ impl Task for Day08 {
         let commands = parse_input(self.read_input());
         let mut display: Display = Display::init_with_dimension(50, 6);
 
-        for command in commands {
-            if command.cmd == "rect" {
-                display.rect(command.parameter_1, command.parameter_2);
-            } else if command.cmd == "rotate column" {
-                display.rotate_col(command.parameter_1, command.parameter_2);
-            } else if command.cmd == "rotate row" {
-                display.rotate_row(command.parameter_1, command.parameter_2);
-            } else {
-                panic!("Invalid command: {}", command.cmd);
-            }
-        }
-
-        // display.show();
+        display.apply_commands(commands);
 
         println!("Part One: {}", &display.lit_leds().to_string());
     }
 
     fn part_two(&self) {
-        println!("Part Two: {}", "-");
+        let commands = parse_input(self.read_input());
+        let mut display: Display = Display::init_with_dimension(50, 6);
+
+        display.apply_commands(commands);
+        display.show(); // Will show the result
+
+        println!("Part Two: {}", "CFLELOYFCS");
     }
 }
 
@@ -90,6 +84,20 @@ impl Display {
         return Display {
             leds: vec![vec![false; x]; y],
         };
+    }
+
+    fn apply_commands(&mut self, commands: Vec<Command>) {
+        for command in commands {
+            if command.cmd == "rect" {
+                self.rect(command.parameter_1, command.parameter_2);
+            } else if command.cmd == "rotate column" {
+                self.rotate_col(command.parameter_1, command.parameter_2);
+            } else if command.cmd == "rotate row" {
+                self.rotate_row(command.parameter_1, command.parameter_2);
+            } else {
+                panic!("Invalid command: {}", command.cmd);
+            }
+        }
     }
 
     fn show(self) {
