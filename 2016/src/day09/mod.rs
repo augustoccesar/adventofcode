@@ -13,13 +13,16 @@ impl Task for Day09 {
 
     fn part_one(&self) {
         let input = self.read_input();
-        let output = decompress(input);
+        let output = decompress(input, false);
 
-        println!("Part One: {}", output.len().to_string());
+        println!("Part One: {}", output);
     }
 
     fn part_two(&self) {
-        println!("Part Two: {}", "-");
+        let input = self.read_input();
+        let output = decompress(input, true);
+
+        println!("Part Two: {}", output);
     }
 }
 
@@ -29,14 +32,13 @@ lazy_static! {
     static ref RE_RANGE: Regex = Regex::new(r"\((\d+)x(\d+)\)").unwrap();
 }
 
-fn decompress(string: String) -> String {
+fn decompress(string: String, nested: bool) -> usize {
     let chars: Vec<_> = string.chars().collect();
-    let mut output: Vec<char> = vec![];
+    let mut size = 0;
 
     let mut i = 0;
     while i < chars.len() {
-        let c = chars[i];
-        if c == '(' {
+        if chars[i] == '(' {
             let mut end: usize = 0;
             let mut repeat_size: usize = 0;
             let mut repeat_count: usize = 0;
@@ -54,17 +56,20 @@ fn decompress(string: String) -> String {
                 repeat_count = cap[2].parse::<usize>().unwrap();
             }
 
-            let repeat_str = String::from_iter(&chars[(end + 1)..((end + 1) + repeat_size)]);
-            for _ in 0..repeat_count {
-                output.extend(repeat_str.chars());
+            let repeat_str = String::from_iter(&chars[end + 1..=end + repeat_size]);
+            if repeat_str.contains("(") && nested {
+                let deep_size = decompress(repeat_str, nested);
+                size += deep_size * repeat_count;
+            } else {
+                size += repeat_str.len() * repeat_count;
             }
 
             i = end + 1 + repeat_size;
         } else {
-            output.push(c);
+            size += 1;
             i += 1;
         }
     }
 
-    return String::from_iter(output);
+    return size;
 }
