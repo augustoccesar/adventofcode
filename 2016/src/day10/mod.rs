@@ -21,8 +21,10 @@ impl Task for Day10 {
     fn part_two(&self) {
         let (_, output_map) = execute(self.read_input(), [0, 0]);
         let mut result: i16 = 1;
+        let lookup_bins = ["0", "1", "2"];
+
         for (k, v) in output_map.iter() {
-            if ["0", "1", "2"].contains(&k.as_str()) {
+            if lookup_bins.contains(&k.as_str()) {
                 result = result * v[0] as i16;
             }
         }
@@ -51,38 +53,33 @@ fn execute(input: String, watch_pair: [i8; 2]) -> (String, HashMap<String, Vec<i
     }
 
     while operations.iter().any(|(_, v)| !*v) {
-        for (operation, executed) in operations.iter_mut() {
-            if *executed {
-                continue;
-            }
-    
+        // While there are any non executed operation
+        for (operation, executed) in operations.iter_mut().filter(|(_, v)| !**v) {
             match REG_BOT_VALUE.captures(operation) {
                 Some(c) => {
                     let bot_key: &str = &c[2];
                     let value: i8 = c[1].parse().unwrap();
-    
+
                     match bot_map.get_mut(bot_key) {
                         Some(b) => b.push(value),
                         None => {
                             bot_map.insert(String::from_str(bot_key).unwrap(), [value].to_vec());
                         }
                     }
-    
+
                     *executed = true;
                     continue;
                 }
                 None => {}
             }
-    
             match REG_BOT_TRANSFER.captures(operation) {
                 Some(c) => {
                     let bot_key: &str = &c[1];
-    
                     let target_type_1: &str = &c[2];
                     let target_key_1: &str = &c[3];
                     let target_type_2: &str = &c[4];
                     let target_key_2: &str = &c[5];
-    
+
                     let bot_chips: Vec<i8> = match bot_map.get(bot_key) {
                         Some(chips) if chips.len() == 2 => chips.to_vec(),
                         Some(_) => {
@@ -100,50 +97,22 @@ fn execute(input: String, watch_pair: [i8; 2]) -> (String, HashMap<String, Vec<i
                     if watch_pair.contains(max_chip) && watch_pair.contains(min_chip) {
                         watched_bot = String::from_str(bot_key).unwrap();
                     }
-    
-                    match target_type_1 {
-                        // TODO: Can probably create a generic for this
-                        "output" => {
-                            match output_map.get_mut(target_key_1) {
-                                Some(chips) => chips.push(*min_chip),
-                                None => {
-                                    output_map.insert(target_key_1.to_string(), [*min_chip].to_vec());
-                                }
-                            };
-    
-                        }
-                        "bot" => {
-                            match bot_map.get_mut(target_key_1) {
-                                Some(chips) => chips.push(*min_chip),
-                                None => {
-                                    bot_map.insert(target_key_1.to_string(), [*min_chip].to_vec());
-                                }
-                            };
-                        }
-                        _ => panic!("Received invalid target: {}", target_type_1),
-                    }
-    
-                    match target_type_2 {
-                        "output" => {
-                            match output_map.get_mut(target_key_2) {
-                                Some(chips) => chips.push(*max_chip),
-                                None => {
-                                    output_map.insert(target_key_2.to_string(), [*max_chip].to_vec());
-                                }
-                            };
-    
-                        }
-                        "bot" => {
-                            match bot_map.get_mut(target_key_2) {
-                                Some(chips) => chips.push(*max_chip),
-                                None => {
-                                    bot_map.insert(target_key_2.to_string(), [*max_chip].to_vec());
-                                }
-                            };
-                        }
-                        _ => panic!("Received invalid target: {}", target_type_2),
-                    }
-    
+
+                    evaluate_target(
+                        target_type_1,
+                        target_key_1,
+                        &mut bot_map,
+                        &mut output_map,
+                        *min_chip,
+                    );
+                    evaluate_target(
+                        target_type_2,
+                        target_key_2,
+                        &mut bot_map,
+                        &mut output_map,
+                        *max_chip,
+                    );
+
                     *executed = true;
                     continue;
                 }
@@ -153,4 +122,32 @@ fn execute(input: String, watch_pair: [i8; 2]) -> (String, HashMap<String, Vec<i
     }
 
     return (watched_bot.to_string(), output_map);
+}
+
+fn evaluate_target(
+    target_type: &str,
+    target_key: &str,
+    bot_map: &mut HashMap<String, Vec<i8>>,
+    output_map: &mut HashMap<String, Vec<i8>>,
+    chip: i8,
+) {
+    match target_type {
+        "output" => {
+            match output_map.get_mut(target_key) {
+                Some(chips) => chips.push(chip),
+                None => {
+                    output_map.insert(target_key.to_string(), [chip].to_vec());
+                }
+            };
+        }
+        "bot" => {
+            match bot_map.get_mut(target_key) {
+                Some(chips) => chips.push(chip),
+                None => {
+                    bot_map.insert(target_key.to_string(), [chip].to_vec());
+                }
+            };
+        }
+        _ => panic!("Received invalid target: {}", target_type),
+    }
 }
