@@ -14,12 +14,20 @@ impl Task for Day10 {
     }
 
     fn part_one(&self) {
-        let result = execute(self.read_input(), [61, 17]);
-        println!("Part One: {}", result);
+        let (exec_bot, _) = execute(self.read_input(), [61, 17]);
+        println!("Part One: {}", exec_bot);
     }
 
     fn part_two(&self) {
-        println!("Part Two: {}", "-");
+        let (_, output_map) = execute(self.read_input(), [0, 0]);
+        let mut result: i16 = 1;
+        for (k, v) in output_map.iter() {
+            if ["0", "1", "2"].contains(&k.as_str()) {
+                result = result * v[0] as i16;
+            }
+        }
+
+        println!("Part Two: {}", result);
     }
 }
 
@@ -32,7 +40,7 @@ lazy_static! {
             .unwrap();
 }
 
-fn execute(input: String, watch_pair: [i8; 2]) -> String {
+fn execute(input: String, watch_pair: [i8; 2]) -> (String, HashMap<String, Vec<i8>>) {
     let mut watched_bot: String = String::new();
     let mut bot_map: HashMap<String, Vec<i8>> = HashMap::new();
     let mut output_map: HashMap<String, Vec<i8>> = HashMap::new();
@@ -144,5 +152,5 @@ fn execute(input: String, watch_pair: [i8; 2]) -> String {
         }
     }
 
-    return watched_bot.to_string();
+    return (watched_bot.to_string(), output_map);
 }
