@@ -7,6 +7,7 @@ mod day06;
 mod day07;
 mod day08;
 mod day09;
+mod day10;
 
 mod task;
 
@@ -23,6 +24,7 @@ use day06::Day06;
 use day07::Day07;
 use day08::Day08;
 use day09::Day09;
+use day10::Day10;
 use task::Task;
 
 fn days<'a>() -> HashMap<String, &'a dyn Task> {
@@ -37,6 +39,7 @@ fn days<'a>() -> HashMap<String, &'a dyn Task> {
         &Day07 {},
         &Day08 {},
         &Day09 {},
+        &Day10 {},
     ];
     for task in tasks {
         days.insert(task.day(), task);
