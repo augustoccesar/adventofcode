@@ -1,7 +1,8 @@
 package com.augustoccesar.adventofcode.day07;
 
 import com.augustoccesar.adventofcode.Task;
-import com.augustoccesar.adventofcode.day05.IntComputer;
+import com.augustoccesar.adventofcode.shared.intcomputer.InputAccessMode;
+import com.augustoccesar.adventofcode.shared.intcomputer.IntComputer;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -19,13 +20,12 @@ public class Day07 extends Task {
         phaseSettings -> {
           long lastOutput = 0;
           for (final int phase : phaseSettings) {
-            IntComputer computer = IntComputer.load(program);
-            computer.addInput(phase, lastOutput);
-            while (!computer.isHalted()) {
-              computer.run();
-            }
+            IntComputer computer = IntComputer.load(program, InputAccessMode.POOL_FIRST);
+            computer.inputWrite(phase);
+            computer.inputWrite(lastOutput);
+            computer.runUntilHalted();
 
-            lastOutput = computer.lastOutput();
+            lastOutput = computer.outputRead();
           }
 
           if (lastOutput > maxOut.get()) {

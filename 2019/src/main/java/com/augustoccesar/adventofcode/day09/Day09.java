@@ -1,7 +1,7 @@
 package com.augustoccesar.adventofcode.day09;
 
 import com.augustoccesar.adventofcode.Task;
-import com.augustoccesar.adventofcode.day05.IntComputer;
+import com.augustoccesar.adventofcode.shared.intcomputer.IntComputer;
 import java.io.IOException;
 
 public class Day09 extends Task {
@@ -10,25 +10,19 @@ public class Day09 extends Task {
   public String partOne() throws IOException {
     String program = this.readInput();
     IntComputer computer = IntComputer.load(program);
-    computer.addInput(1);
+    computer.inputWrite(1);
+    computer.runUntilHalted();
 
-    while (!computer.isHalted()) {
-      computer.run();
-    }
-
-    return String.valueOf(computer.lastOutput());
+    return String.valueOf(computer.outputRead());
   }
 
   @Override
   public String partTwo() throws IOException {
     String program = this.readInput();
     IntComputer computer = IntComputer.load(program);
-    computer.addInput(2);
+    computer.inputWrite(2);
+    computer.runUntilHalted();
 
-    while (!computer.isHalted()) {
-      computer.run();
-    }
-
-    return String.valueOf(computer.lastOutput());
+    return String.valueOf(computer.outputRead());
   }
 }
