@@ -6,13 +6,19 @@ repositories {
     mavenCentral()
 }
 
-dependencies {
-    compileOnly 'org.projectlombok:lombok:1.18.16'
-    annotationProcessor 'org.projectlombok:lombok:1.18.16'
+ext {
+    JAVA_VERSION = 16
+    LOMBOK_VERSION = '1.18.20'
+    JUNIT_VERSION = '4.13'
+}
 
-    testImplementation 'junit:junit:4.13'
-    testCompileOnly 'org.projectlombok:lombok:1.18.16'
-	testAnnotationProcessor 'org.projectlombok:lombok:1.18.16'
+dependencies {
+    compileOnly "org.projectlombok:lombok:${LOMBOK_VERSION}"
+    annotationProcessor "org.projectlombok:lombok:${LOMBOK_VERSION}"
+
+    testImplementation "junit:junit:${JUNIT_VERSION}"
+    testCompileOnly "org.projectlombok:lombok:${LOMBOK_VERSION}"
+	testAnnotationProcessor "org.projectlombok:lombok:${LOMBOK_VERSION}"
 }
 
 application {
@@ -21,7 +27,7 @@ application {
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(15);
+        languageVersion = JavaLanguageVersion.of(JAVA_VERSION);
     }
 }
 
