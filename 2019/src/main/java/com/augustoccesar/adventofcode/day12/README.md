@@ -1,4 +1,5 @@
---- Day 12: The N-Body Problem --- The space near Jupiter is not a very safe place; you need to be
+# Day 12: The N-Body Problem  
+The space near Jupiter is not a very safe place; you need to be
 careful of a big distracting red spot, extreme radiation, and a whole lot of moons swirling around.
 You decide to start by tracking the four largest moons: Io, Europa, Ganymede, and Callisto.
 
