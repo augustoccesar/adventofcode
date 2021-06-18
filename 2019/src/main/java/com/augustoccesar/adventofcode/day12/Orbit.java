@@ -41,8 +41,4 @@ public class Orbit {
         .reduce(Integer::sum)
         .orElseThrow(() -> new RuntimeException("Failed to sum total energy of the moons"));
   }
-
-  public String moonHashState(final int moonIdx) {
-    return this.moons.get(moonIdx).hashState();
-  }
 }
