@@ -41,10 +41,10 @@ class Robot {
 
     while (!this.internalComputer.isHalted()) {
       if (firstLoop && firstCameraInput != null) {
-        this.internalComputer.inputWrite(firstCameraInput.getIntRepr());
+        this.internalComputer.getInputSource().write(firstCameraInput.getIntRepr());
         firstLoop = false;
       } else {
-        this.internalComputer.inputWrite(this.cameraInput().getIntRepr());
+        this.internalComputer.getInputSource().write(this.cameraInput().getIntRepr());
       }
 
       this.internalComputer.runUntilHaltedOrPaused();

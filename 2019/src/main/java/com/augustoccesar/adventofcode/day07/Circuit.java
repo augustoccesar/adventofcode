@@ -1,24 +1,26 @@
 package com.augustoccesar.adventofcode.day07;
 
-import com.augustoccesar.adventofcode.shared.intcomputer.InputAccessMode;
+import com.augustoccesar.adventofcode.shared.intcomputer.MemoryInputAccessMode;
 import com.augustoccesar.adventofcode.shared.intcomputer.IntComputer;
+import com.augustoccesar.adventofcode.shared.intcomputer.MemoryInputSource;
 import java.util.ArrayList;
 import java.util.stream.IntStream;
 
 public class Circuit {
 
   private final ArrayList<IntComputer> amplifiers;
-  private int currentAmplifier = 0;
+  private int currentAmplifierIdx = 0;
 
   public Circuit(final String program, final int[] phaseSettings) {
     this.amplifiers = new ArrayList<>();
 
     IntStream.range(0, phaseSettings.length)
         .forEach(idx -> {
-          IntComputer amplifier = IntComputer.load(program, InputAccessMode.POOL_FIRST);
-          amplifier.inputWrite(phaseSettings[idx]);
+          IntComputer amplifier = IntComputer
+              .load(program, MemoryInputSource.with(MemoryInputAccessMode.POOL_FIRST));
+          amplifier.getInputSource().write(phaseSettings[idx]);
           if (idx == 0) {
-            amplifier.inputWrite(0);
+            amplifier.getInputSource().write(0);
           }
 
           this.amplifiers.add(amplifier);
@@ -27,7 +29,7 @@ public class Circuit {
 
   public long run() {
     while (true) {
-      IntComputer currentAmplifier = this.amplifiers.get(this.currentAmplifier);
+      IntComputer currentAmplifier = this.amplifiers.get(this.currentAmplifierIdx);
       currentAmplifier.runUntilHaltedOrPaused();
 
       if (currentAmplifier.isHalted()) {
@@ -35,15 +37,15 @@ public class Circuit {
       }
 
       int nextIdx;
-      if (this.currentAmplifier + 1 == this.amplifiers.size()) {
+      if (this.currentAmplifierIdx + 1 == this.amplifiers.size()) {
         nextIdx = 0;
       } else {
-        nextIdx = this.currentAmplifier + 1;
+        nextIdx = this.currentAmplifierIdx + 1;
       }
 
       IntComputer nextAmplifier = this.amplifiers.get(nextIdx);
-      nextAmplifier.inputWrite(currentAmplifier.outputRead());
-      this.currentAmplifier = nextIdx;
+      nextAmplifier.getInputSource().write(currentAmplifier.outputRead());
+      this.currentAmplifierIdx = nextIdx;
     }
   }
 }

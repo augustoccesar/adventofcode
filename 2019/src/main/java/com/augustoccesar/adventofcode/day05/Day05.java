@@ -10,7 +10,7 @@ public class Day05 extends Task {
   public String partOne() throws IOException {
     String program = this.readInput().strip();
     IntComputer computer = IntComputer.load(program);
-    computer.inputWrite(1);
+    computer.getInputSource().write(1);
     computer.runUntilHalted();
 
     return String.valueOf(computer.outputRead());
@@ -20,7 +20,7 @@ public class Day05 extends Task {
   public String partTwo() throws IOException {
     String program = this.readInput().strip();
     IntComputer computer = IntComputer.load(program);
-    computer.inputWrite(5);
+    computer.getInputSource().write(5);
     computer.runUntilHalted();
 
     return String.valueOf(computer.outputRead());

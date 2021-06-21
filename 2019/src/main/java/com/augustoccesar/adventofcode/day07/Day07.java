@@ -1,8 +1,9 @@
 package com.augustoccesar.adventofcode.day07;
 
 import com.augustoccesar.adventofcode.Task;
-import com.augustoccesar.adventofcode.shared.intcomputer.InputAccessMode;
+import com.augustoccesar.adventofcode.shared.intcomputer.MemoryInputAccessMode;
 import com.augustoccesar.adventofcode.shared.intcomputer.IntComputer;
+import com.augustoccesar.adventofcode.shared.intcomputer.MemoryInputSource;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -11,7 +12,7 @@ public class Day07 extends Task {
   @Override
   public String partOne() throws IOException {
     final String program = this.readInput().strip();
-    final int[] phaseList = new int[] {0, 1, 2, 3, 4};
+    final int[] phaseList = new int[]{0, 1, 2, 3, 4};
     final AtomicLong maxOut = new AtomicLong(Integer.MIN_VALUE);
 
     execPermute(
@@ -20,9 +21,12 @@ public class Day07 extends Task {
         phaseSettings -> {
           long lastOutput = 0;
           for (final int phase : phaseSettings) {
-            IntComputer computer = IntComputer.load(program, InputAccessMode.POOL_FIRST);
-            computer.inputWrite(phase);
-            computer.inputWrite(lastOutput);
+            IntComputer computer = IntComputer.load(
+                program,
+                MemoryInputSource.with(MemoryInputAccessMode.POOL_FIRST)
+            );
+            computer.getInputSource().write(phase);
+            computer.getInputSource().write(lastOutput);
             computer.runUntilHalted();
 
             lastOutput = computer.outputRead();
@@ -39,7 +43,7 @@ public class Day07 extends Task {
   @Override
   public String partTwo() throws IOException {
     final String program = this.readInput().strip();
-    final int[] phaseList = new int[] {5, 6, 7, 8, 9};
+    final int[] phaseList = new int[]{5, 6, 7, 8, 9};
     final AtomicLong maxOut = new AtomicLong(Long.MIN_VALUE);
 
     execPermute(

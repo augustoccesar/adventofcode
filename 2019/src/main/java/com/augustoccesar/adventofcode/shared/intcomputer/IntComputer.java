@@ -3,22 +3,21 @@ package com.augustoccesar.adventofcode.shared.intcomputer;
 import com.augustoccesar.adventofcode.shared.intcomputer.exceptions.UnsupportedOpCode;
 import com.augustoccesar.adventofcode.shared.intcomputer.exceptions.UnsupportedParameterMode;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class IntComputer {
 
-  private @NonNull String program;
+  private String program;
 
   @Getter
-  private @NonNull Memory memory;
+  private Memory memory;
 
   @Getter
   private long instructionPointer = 0;
@@ -33,9 +32,7 @@ public class IntComputer {
   private boolean paused = false;
 
   @Getter
-  private final LinkedList<Long> input = new LinkedList<>();
-
-  private @NonNull InputAccessMode inputAccessMode;
+  private InputSource inputSource;
 
   @Getter
   private final LinkedList<Long> output = new LinkedList<>();
@@ -43,19 +40,29 @@ public class IntComputer {
   @Getter
   private final List<Instruction> ranInstructionsLog = new ArrayList<>();
 
-  public static IntComputer load(final String program) {
-    return new IntComputer(program, Memory.initialize(program), InputAccessMode.PEEK_LAST);
+  public IntComputer(String program, Memory memory, InputSource inputSource) {
+    this.program = program;
+    this.memory = memory;
+    this.inputSource = inputSource;
   }
 
-  public static IntComputer load(final String program, final InputAccessMode inputAccessMode) {
-    return new IntComputer(program, Memory.initialize(program), inputAccessMode);
+  public static IntComputer load(final String program) {
+    return new IntComputer(
+        program,
+        Memory.initialize(program),
+        MemoryInputSource.with(MemoryInputAccessMode.PEEK_LAST)
+    );
+  }
+
+  public static IntComputer load(final String program, final InputSource inputSource) {
+    return new IntComputer(program, Memory.initialize(program), inputSource);
   }
 
   public void reset() {
     this.instructionPointer = 0;
     this.halted = false;
     this.memory.reset();
-    this.input.clear();
+    this.inputSource.clear();
     this.output.clear();
     this.ranInstructionsLog.clear();
 
@@ -124,7 +131,7 @@ public class IntComputer {
       case READ_INPUT -> {
         final List<Long> params = this.extractParameters(instruction);
 
-        this.memory.write(params.get(0), this.inputRead());
+        this.memory.write(params.get(0), this.inputSource.read());
       }
 
       case WRITE_OUTPUT -> {
@@ -220,19 +227,19 @@ public class IntComputer {
     return parameters;
   }
 
-  public void inputWrite(final long value) {
-    this.input.add(value);
-  }
-
-  private long inputRead() {
-    return switch (this.inputAccessMode) {
-      case PEEK_LAST -> this.input.peekLast();
-      case POOL_FIRST -> this.input.pollFirst();
-    };
-  }
-
   public long outputRead() {
     return this.output.peekLast();
+  }
+
+  public List<Long> outputRead(int lastN) {
+    List<Long> output = new ArrayList<>();
+    Iterator<Long> iter = this.getOutput().descendingIterator();
+    for (int i = 0; i < lastN; i++) {
+      output.add(iter.next());
+    }
+    Collections.reverse(output);
+
+    return output;
   }
 
   private void stepInstructionPointer(final long steps) {

@@ -112,7 +112,7 @@ public class IntComputerTest {
     final long expectedOutput = 1;
 
     final IntComputer intComputer = IntComputer.load(program);
-    intComputer.inputWrite(input);
+    intComputer.getInputSource().write(input);
     intComputer.runUntilHalted();
 
     final long output = intComputer.outputRead();
@@ -170,7 +170,7 @@ public class IntComputerTest {
     final long expectedOutput = 13978427;
 
     final IntComputer intComputer = IntComputer.load(program);
-    intComputer.inputWrite(input);
+    intComputer.getInputSource().write(input);
     intComputer.runUntilHalted();
 
     assertEquals(expectedOutput, intComputer.outputRead());
@@ -186,13 +186,13 @@ public class IntComputerTest {
     final long expected2 = 0;
 
     final IntComputer intComputer = IntComputer.load(program);
-    intComputer.inputWrite(input1);
+    intComputer.getInputSource().write(input1);
     intComputer.runUntilHalted();
 
     assertEquals(expected1, intComputer.outputRead());
 
     intComputer.reset();
-    intComputer.inputWrite(input2);
+    intComputer.getInputSource().write(input2);
     intComputer.runUntilHalted();
 
     assertEquals(expected2, intComputer.outputRead());
@@ -208,13 +208,13 @@ public class IntComputerTest {
     final long expected2 = 0;
 
     final IntComputer intComputer = IntComputer.load(program);
-    intComputer.inputWrite(input1);
+    intComputer.getInputSource().write(input1);
     intComputer.runUntilHalted();
 
     assertEquals(expected1, intComputer.outputRead());
 
     intComputer.reset();
-    intComputer.inputWrite(input2);
+    intComputer.getInputSource().write(input2);
     intComputer.runUntilHalted();
 
     assertEquals(expected2, intComputer.outputRead());
@@ -230,13 +230,13 @@ public class IntComputerTest {
     final long expected2 = 0;
 
     final IntComputer intComputer = IntComputer.load(program);
-    intComputer.inputWrite(input1);
+    intComputer.getInputSource().write(input1);
     intComputer.runUntilHalted();
 
     assertEquals(expected1, intComputer.outputRead());
 
     intComputer.reset();
-    intComputer.inputWrite(input2);
+    intComputer.getInputSource().write(input2);
     intComputer.runUntilHalted();
 
     assertEquals(expected2, intComputer.outputRead());
@@ -252,13 +252,13 @@ public class IntComputerTest {
     final long expected2 = 0;
 
     final IntComputer intComputer = IntComputer.load(program);
-    intComputer.inputWrite(input1);
+    intComputer.getInputSource().write(input1);
     intComputer.runUntilHalted();
 
     assertEquals(expected1, intComputer.outputRead());
 
     intComputer.reset();
-    intComputer.inputWrite(input2);
+    intComputer.getInputSource().write(input2);
     intComputer.runUntilHalted();
 
     assertEquals(expected2, intComputer.outputRead());
@@ -274,13 +274,13 @@ public class IntComputerTest {
     final long expected2 = 1;
 
     final IntComputer intComputer = IntComputer.load(program);
-    intComputer.inputWrite(input1);
+    intComputer.getInputSource().write(input1);
     intComputer.runUntilHalted();
 
     assertEquals(expected1, intComputer.outputRead());
 
     intComputer.reset();
-    intComputer.inputWrite(input2);
+    intComputer.getInputSource().write(input2);
     intComputer.runUntilHalted();
 
     assertEquals(expected2, intComputer.outputRead());
@@ -296,13 +296,13 @@ public class IntComputerTest {
     final long expected2 = 1;
 
     final IntComputer intComputer = IntComputer.load(program);
-    intComputer.inputWrite(input1);
+    intComputer.getInputSource().write(input1);
     intComputer.runUntilHalted();
 
     assertEquals(expected1, intComputer.outputRead());
 
     intComputer.reset();
-    intComputer.inputWrite(input2);
+    intComputer.getInputSource().write(input2);
     intComputer.runUntilHalted();
 
     assertEquals(expected2, intComputer.outputRead());
@@ -321,7 +321,7 @@ public class IntComputerTest {
     final IntComputer intComputer = IntComputer.load(program);
     for (int i = 0; i < inputs.length; i++) {
       intComputer.reset();
-      intComputer.inputWrite(inputs[i]);
+      intComputer.getInputSource().write(inputs[i]);
       intComputer.runUntilHalted();
 
       assertEquals(expectedOutputs[i], intComputer.outputRead());
@@ -333,29 +333,44 @@ public class IntComputerTest {
     final String program = "3,15,3,16,1002,16,10,16,1,16,15,15,4,15,99,0,0";
     final int[] phaseSequence = new int[]{4, 3, 2, 1, 0};
 
-    final IntComputer computerA = IntComputer.load(program, InputAccessMode.POOL_FIRST);
-    computerA.inputWrite(phaseSequence[0]);
-    computerA.inputWrite(0);
+    final IntComputer computerA = IntComputer.load(
+        program,
+        MemoryInputSource.with(MemoryInputAccessMode.POOL_FIRST)
+    );
+    computerA.getInputSource().write(phaseSequence[0]);
+    computerA.getInputSource().write(0);
     computerA.runUntilHalted();
 
-    final IntComputer computerB = IntComputer.load(program, InputAccessMode.POOL_FIRST);
-    computerB.inputWrite(phaseSequence[1]);
-    computerB.inputWrite(computerA.outputRead());
+    final IntComputer computerB = IntComputer.load(
+        program,
+        MemoryInputSource.with(MemoryInputAccessMode.POOL_FIRST)
+    );
+    computerB.getInputSource().write(phaseSequence[1]);
+    computerB.getInputSource().write(computerA.outputRead());
     computerB.runUntilHalted();
 
-    final IntComputer computerC = IntComputer.load(program, InputAccessMode.POOL_FIRST);
-    computerC.inputWrite(phaseSequence[2]);
-    computerC.inputWrite(computerB.outputRead());
+    final IntComputer computerC = IntComputer.load(
+        program,
+        MemoryInputSource.with(MemoryInputAccessMode.POOL_FIRST)
+    );
+    computerC.getInputSource().write(phaseSequence[2]);
+    computerC.getInputSource().write(computerB.outputRead());
     computerC.runUntilHalted();
 
-    final IntComputer computerD = IntComputer.load(program, InputAccessMode.POOL_FIRST);
-    computerD.inputWrite(phaseSequence[3]);
-    computerD.inputWrite(computerC.outputRead());
+    final IntComputer computerD = IntComputer.load(
+        program,
+        MemoryInputSource.with(MemoryInputAccessMode.POOL_FIRST)
+    );
+    computerD.getInputSource().write(phaseSequence[3]);
+    computerD.getInputSource().write(computerC.outputRead());
     computerD.runUntilHalted();
 
-    final IntComputer computerE = IntComputer.load(program, InputAccessMode.POOL_FIRST);
-    computerE.inputWrite(phaseSequence[4]);
-    computerE.inputWrite(computerD.outputRead());
+    final IntComputer computerE = IntComputer.load(
+        program,
+        MemoryInputSource.with(MemoryInputAccessMode.POOL_FIRST)
+    );
+    computerE.getInputSource().write(phaseSequence[4]);
+    computerE.getInputSource().write(computerD.outputRead());
     computerE.runUntilHalted();
 
     assertEquals(43210, computerE.outputRead());
