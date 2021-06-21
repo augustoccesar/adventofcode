@@ -13,6 +13,7 @@ import com.augustoccesar.adventofcode.day10.Day10;
 import com.augustoccesar.adventofcode.day11.Day11;
 import com.augustoccesar.adventofcode.day12.Day12;
 import com.augustoccesar.adventofcode.day13.Day13;
+import com.augustoccesar.adventofcode.day14.Day14;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -55,6 +56,7 @@ public class Main {
     availableDays.put(11, Day11::new);
     availableDays.put(12, Day12::new);
     availableDays.put(13, Day13::new);
+    availableDays.put(14, Day14::new);
     return availableDays;
   }
 
