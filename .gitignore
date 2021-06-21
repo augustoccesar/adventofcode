@@ -1,6 +1,7 @@
 **/.vscode/*
 .idea
 
+**/.env
 *example*.txt
 
 **/.settings

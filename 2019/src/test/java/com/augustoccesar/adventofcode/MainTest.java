@@ -2,28 +2,37 @@ package com.augustoccesar.adventofcode;
 
 import static org.junit.Assert.fail;
 
+import com.augustoccesar.adventofcode.utils.Pair;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Optional;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Supplier;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.junit.Test;
 
 public class MainTest {
+
   private enum FailureType {
-    NOT_FOUND,
-    WRONG_VALUE
+    IMPLEMENTATION_NOT_FOUND,
+    EXPECTED_RESULT_NOT_FOUND,
+    RESULT_MISMATCH,
   }
 
   @Getter
   @AllArgsConstructor
-  private class Failure {
-    private int day;
-    private int part;
-    private FailureType type;
+  private static class Failure {
+
+    private final int day;
+    private final int part;
+    private final FailureType type;
   }
 
   @Test
@@ -32,29 +41,46 @@ public class MainTest {
     final InputStream input = this.getClass().getResourceAsStream("/expected_results");
     final BufferedReader br = new BufferedReader(new InputStreamReader(input));
 
+    final Map<Integer, Supplier<Task>> implementedDays = Main.availableDays;
+    final Map<Integer, Pair<String, String>> expectedResults = new HashMap<>();
+
     while (br.ready()) {
       final String line = br.readLine();
-
       final String[] items = line.split(";");
-      final int dayInt = Integer.parseInt(items[0]);
-      final String partOne = items[1];
-      final String partTwo = items[2];
+      expectedResults.put(Integer.parseInt(items[0]), Pair.of(items[1], items[2]));
+    }
 
-      final Optional<Task> optDay = Main.getDay(dayInt);
-      if (optDay.isEmpty()) {
-        failures.add(new Failure(dayInt, 1, FailureType.NOT_FOUND));
-        failures.add(new Failure(dayInt, 2, FailureType.NOT_FOUND));
+    final Set<Integer> days = new HashSet<>();
+    days.addAll(implementedDays.keySet());
+    days.addAll(expectedResults.keySet());
+
+    for (final Integer day : days) {
+      final List<Failure> preRunFailures = new ArrayList<>();
+      final Supplier<Task> implementation = implementedDays.get(day);
+      final Pair<String, String> expectedResult = expectedResults.get(day);
+
+      if (implementation == null) {
+        preRunFailures.add(new Failure(day, 1, FailureType.IMPLEMENTATION_NOT_FOUND));
+        preRunFailures.add(new Failure(day, 2, FailureType.IMPLEMENTATION_NOT_FOUND));
+      }
+
+      if (expectedResult == null) {
+        preRunFailures.add(new Failure(day, 1, FailureType.EXPECTED_RESULT_NOT_FOUND));
+        preRunFailures.add(new Failure(day, 2, FailureType.EXPECTED_RESULT_NOT_FOUND));
+      }
+
+      if (preRunFailures.size() > 0) {
+        failures.addAll(preRunFailures);
         continue;
       }
 
-      final Task day = optDay.get();
-
-      if (!partOne.equals(day.partOne())) {
-        failures.add(new Failure(dayInt, 1, FailureType.WRONG_VALUE));
+      final Task task = implementation.get();
+      if (!expectedResult.getLeft().equals(task.partOne())) {
+        failures.add(new Failure(day, 1, FailureType.RESULT_MISMATCH));
       }
 
-      if (!partTwo.equals(day.partTwo())) {
-        failures.add(new Failure(dayInt, 2, FailureType.WRONG_VALUE));
+      if (!expectedResult.getRight().equals(task.partTwo())) {
+        failures.add(new Failure(day, 1, FailureType.RESULT_MISMATCH));
       }
     }
 

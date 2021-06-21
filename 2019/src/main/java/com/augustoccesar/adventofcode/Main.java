@@ -13,9 +13,15 @@ import com.augustoccesar.adventofcode.day10.Day10;
 import com.augustoccesar.adventofcode.day11.Day11;
 import com.augustoccesar.adventofcode.day12.Day12;
 import com.augustoccesar.adventofcode.day13.Day13;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 public class Main {
+
+  protected static final Map<Integer, Supplier<Task>> availableDays = buildAvailableDaysMap();
+
   public static void main(String[] args) {
     if (args.length < 1) {
       System.err.println("Invalid amount of args.");
@@ -34,22 +40,25 @@ public class Main {
     day.get().run();
   }
 
+  private static HashMap<Integer, Supplier<Task>> buildAvailableDaysMap() {
+    HashMap<Integer, Supplier<Task>> availableDays = new HashMap<>();
+    availableDays.put(1, Day01::new);
+    availableDays.put(2, Day02::new);
+    availableDays.put(3, Day03::new);
+    availableDays.put(4, Day04::new);
+    availableDays.put(5, Day05::new);
+    availableDays.put(6, Day06::new);
+    availableDays.put(7, Day07::new);
+    availableDays.put(8, Day08::new);
+    availableDays.put(9, Day09::new);
+    availableDays.put(10, Day10::new);
+    availableDays.put(11, Day11::new);
+    availableDays.put(12, Day12::new);
+    availableDays.put(13, Day13::new);
+    return availableDays;
+  }
+
   public static Optional<Task> getDay(final int dayInt) {
-    return switch (dayInt) {
-      case 1 -> Optional.of(new Day01());
-      case 2 -> Optional.of(new Day02());
-      case 3 -> Optional.of(new Day03());
-      case 4 -> Optional.of(new Day04());
-      case 5 -> Optional.of(new Day05());
-      case 6 -> Optional.of(new Day06());
-      case 7 -> Optional.of(new Day07());
-      case 8 -> Optional.of(new Day08());
-      case 9 -> Optional.of(new Day09());
-      case 10 -> Optional.of(new Day10());
-      case 11 -> Optional.of(new Day11());
-      case 12 -> Optional.of(new Day12());
-      case 13 -> Optional.of(new Day13());
-      default -> Optional.empty();
-    };
+    return Optional.ofNullable(availableDays.get(dayInt).get());
   }
 }
