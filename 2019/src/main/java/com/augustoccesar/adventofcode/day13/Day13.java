@@ -1,7 +1,6 @@
 package com.augustoccesar.adventofcode.day13;
 
 import com.augustoccesar.adventofcode.Task;
-import com.augustoccesar.adventofcode.shared.intcomputer.IntComputer;
 import java.io.IOException;
 
 public class Day13 extends Task {
@@ -9,24 +8,25 @@ public class Day13 extends Task {
   @Override
   public String partOne() throws IOException {
     final String game = this.readInput();
-    final IntComputer arcade = IntComputer.load(game);
-    int visibleBlocks = 0;
+    final Arcade arcade = Arcade.load(game);
 
-    while (!arcade.isHalted()) {
-      arcade.runUntilHaltedOrPaused();
-      if (arcade.getOutput().size() % 3 == 0) {
-        int tileType = (int) arcade.outputRead();
-        if (TileType.valueOf(tileType) == TileType.BLOCK) {
-          visibleBlocks++;
-        }
-      }
-    }
+    arcade.run(false);
 
-    return String.valueOf(visibleBlocks);
+    final long result = arcade.getTiles().stream()
+        .filter(it -> it.getType() == TileType.BLOCK)
+        .count();
+
+    return String.valueOf(result);
   }
 
   @Override
-  public String partTwo() {
-    return "-";
+  public String partTwo() throws IOException {
+    final String game = this.readInput();
+    final Arcade arcade = Arcade.load(game);
+    arcade.modifyMemory(0, 2); // Free to play
+
+    arcade.run(false);
+
+    return String.valueOf(arcade.getScore());
   }
 }

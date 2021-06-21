@@ -5,14 +5,17 @@ import lombok.Getter;
 
 @AllArgsConstructor
 enum TileType {
-  EMPTY(0),
-  WALL(1),
-  BLOCK(2),
-  HORIZONTAL_PADDLE(3),
-  BALL(4);
+  EMPTY(0, '.'),
+  WALL(1, '@'),
+  BLOCK(2, '#'),
+  HORIZONTAL_PADDLE(3, '-'),
+  BALL(4, 'o');
 
   @Getter
   private final int id;
+
+  @Getter
+  private final char repr;
 
   public static TileType valueOf(final int id) {
     return switch (id) {

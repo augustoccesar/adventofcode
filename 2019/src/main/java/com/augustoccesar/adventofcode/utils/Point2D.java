@@ -1,5 +1,7 @@
 package com.augustoccesar.adventofcode.utils;
 
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -122,5 +124,43 @@ public class Point2D {
     double res = Math.sqrt(a + b);
 
     return (int) res;
+  }
+
+  /**
+   * Find the min and max values for X and Y in a list of {@link Point2D}.
+   *
+   * @param points List of {@link Point2D} to find min and maxes.
+   * @return A {@link Pair} containing two other {@link Point2D}. First one with min and max for X,
+   * and second one containing min and max for Y.
+   */
+  public static Pair<MinMax<Integer>, MinMax<Integer>> minMaxes(List<Point2D> points) {
+    Pair<List<Integer>, List<Integer>> xsYs = splitXsYs(points);
+    List<Integer> xs = xsYs.getLeft();
+    List<Integer> ys = xsYs.getRight();
+
+    MinMax<Integer> minMaxX = MinMax.from(xs.toArray(new Integer[]{}));
+    MinMax<Integer> minMaxY = MinMax.from(ys.toArray(new Integer[]{}));
+
+    return Pair.of(minMaxX, minMaxY);
+  }
+
+
+  /**
+   * Transforms a list of {@link Point2D} into a {@link Pair} of {@link MinMax} for each of the
+   * axis.
+   *
+   * @param points List of {@link Point2D} to be split.
+   * @return {@link Pair} of {@link MinMax} for each of the axis.
+   */
+  public static Pair<List<Integer>, List<Integer>> splitXsYs(final List<Point2D> points) {
+    List<Integer> xs = new ArrayList<>(points.size());
+    List<Integer> ys = new ArrayList<>(points.size());
+
+    for (final Point2D point2D : points) {
+      xs.add(point2D.getX());
+      ys.add(point2D.getY());
+    }
+
+    return Pair.of(xs, ys);
   }
 }
