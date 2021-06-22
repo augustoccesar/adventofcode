@@ -1,5 +1,5 @@
 package com.augustoccesar.adventofcode.day14;
 
-public record Recipe(Reaction reaction, int reactionsNecessary, int leftover) {
+public record Recipe(Reaction reaction, long reactionsNecessary, long leftover) {
 
 }

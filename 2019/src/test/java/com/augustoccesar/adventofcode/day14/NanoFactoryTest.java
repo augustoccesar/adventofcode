@@ -16,7 +16,7 @@ public class NanoFactoryTest {
         7 A, 1 E => 1 FUEL""";
 
     NanoFactory nanoFactory = NanoFactory.fromSpec(spec);
-    int result = nanoFactory.produce(1, "FUEL");
+    long result = nanoFactory.produce(1, "FUEL");
 
     assertEquals(31, result);
   }
@@ -33,7 +33,7 @@ public class NanoFactoryTest {
         2 AB, 3 BC, 4 CA => 1 FUEL""";
 
     NanoFactory nanoFactory = NanoFactory.fromSpec(spec);
-    int result = nanoFactory.produce(1, "FUEL");
+    long result = nanoFactory.produce(1, "FUEL");
 
     assertEquals(165, result);
   }
@@ -52,7 +52,7 @@ public class NanoFactoryTest {
         3 DCFZ, 7 NZVS, 5 HKGWZ, 10 PSHF => 8 KHKGT""";
 
     NanoFactory nanoFactory = NanoFactory.fromSpec(spec);
-    int result = nanoFactory.produce(1, "FUEL");
+    long result = nanoFactory.produce(1, "FUEL");
 
     assertEquals(13312, result);
   }
@@ -74,7 +74,7 @@ public class NanoFactoryTest {
         176 ORE => 6 VJHF""";
 
     NanoFactory nanoFactory = NanoFactory.fromSpec(spec);
-    int result = nanoFactory.produce(1, "FUEL");
+    long result = nanoFactory.produce(1, "FUEL");
 
     assertEquals(180697, result);
   }
@@ -101,7 +101,7 @@ public class NanoFactoryTest {
         5 BHXH, 4 VRPVC => 5 LTCX""";
 
     NanoFactory nanoFactory = NanoFactory.fromSpec(spec);
-    int result = nanoFactory.produce(1, "FUEL");
+    long result = nanoFactory.produce(1, "FUEL");
 
     assertEquals(2210736, result);
   }

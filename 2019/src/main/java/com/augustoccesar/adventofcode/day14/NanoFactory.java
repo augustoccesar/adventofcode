@@ -8,9 +8,9 @@ import java.util.List;
 
 public class NanoFactory {
 
-  private int consumedOres = 0;
+  private long consumedOres = 0;
   private final HashMap<String, Reaction> reactions;
-  private final HashMap<String, Integer> leftovers = new HashMap<>();
+  private final HashMap<String, Long> leftovers = new HashMap<>();
   private final Deque<Order> orders = new ArrayDeque<>();
 
   private NanoFactory(HashMap<String, Reaction> reactions) {
@@ -27,7 +27,11 @@ public class NanoFactory {
     return new NanoFactory(reactions);
   }
 
-  public int produce(final int amount, final String chemical) {
+  public long produce(final long amount, final String chemical) {
+    this.consumedOres = 0;
+    this.leftovers.clear();
+    this.orders.clear();
+
     this.order(amount, chemical);
     runUntilOutOfOrders();
     return this.consumedOres;
@@ -40,7 +44,7 @@ public class NanoFactory {
     }
   }
 
-  private void order(final int amount, final String chemical) {
+  private void order(final long amount, final String chemical) {
     this.orders.push(new Order(amount, chemical));
   }
 
@@ -50,9 +54,9 @@ public class NanoFactory {
       return;
     }
 
-    int actualAmountNecessary = order.amount();
+    long actualAmountNecessary = order.amount();
     if (this.leftovers.get(order.chemical()) != null) {
-      int leftoverAmount = this.leftovers.get(order.chemical());
+      long leftoverAmount = this.leftovers.get(order.chemical());
       if (leftoverAmount >= actualAmountNecessary) {
         // Leftovers can cover this order, so skip
         this.leftovers.put(order.chemical(), leftoverAmount - actualAmountNecessary);
@@ -67,11 +71,11 @@ public class NanoFactory {
     Recipe recipe = recipeFor(actualAmountNecessary, order.chemical());
 
     Reaction reaction = recipe.reaction();
-    int reactionsNecessary = recipe.reactionsNecessary();
-    int leftoverAmount = recipe.leftover();
+    long reactionsNecessary = recipe.reactionsNecessary();
+    long leftoverAmount = recipe.leftover();
     this.leftovers.put(
         order.chemical(),
-        this.leftovers.getOrDefault(order.chemical(), 0) + leftoverAmount
+        this.leftovers.getOrDefault(order.chemical(), 0L) + leftoverAmount
     );
 
     for (int i = 0; i < reaction.getInputChemicals().size(); i++) {
@@ -82,12 +86,12 @@ public class NanoFactory {
     }
   }
 
-  private Recipe recipeFor(final int amount, final String chemical) {
+  private Recipe recipeFor(final long amount, final String chemical) {
     Reaction reaction = findReactionFor(chemical);
 
-    int reactionAmount = amount / reaction.getOutputAmount();
-    int mod = amount % reaction.getOutputAmount();
-    int leftover = 0;
+    long reactionAmount = amount / reaction.getOutputAmount();
+    long mod = amount % reaction.getOutputAmount();
+    long leftover = 0;
     if (mod != 0) {
       leftover = reaction.getOutputAmount() - mod;
       reactionAmount++;
