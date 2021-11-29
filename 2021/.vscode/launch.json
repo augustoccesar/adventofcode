@@ -1,0 +1,22 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "ruby-debug",
+            "request": "launch",
+            "name": "Launch File",
+            "program": "${workspaceFolder}/${command:AskForProgramName}",
+            "programArgs": [
+                "${input:args}"
+            ]
+        }
+    ],
+    "inputs": [
+        {
+            "id": "args",
+            "type": "promptString",
+            "description": "args",
+            "default": ""
+        },
+    ]
+}
