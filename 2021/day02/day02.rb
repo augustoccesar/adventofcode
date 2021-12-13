@@ -26,6 +26,21 @@ class Day02
   end
 
   def part_two
-    "-"
+    aim = 0
+    xy = [0, 0]
+
+    read_input.lines.map(&:split).map { |it| [it[0], it[1].to_i] }.each do |command_data|
+      case command_data[0]
+      when "down"
+        aim += command_data[1]
+      when "up"
+        aim -= command_data[1]
+      when "forward"
+        xy[0] += command_data[1]
+        xy[1] += aim * command_data[1]
+      end
+    end
+
+    xy.reduce(&:*).to_s
   end
 end
