@@ -17,6 +17,16 @@ class Day01
   end
 
   def part_two
-    "-"
+    data = read_input.lines.map(&:to_i)
+
+    increased = 0
+    (3..data.length - 1).each do |i|
+      current_sum = data[i - 2..i].reduce(&:+)
+      previous_sum = data[i - 3..i - 1].reduce(&:+)
+
+      increased += 1 if current_sum > previous_sum
+    end
+
+    increased.to_s
   end
 end
