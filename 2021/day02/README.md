@@ -1,3 +1,8 @@
+| Part | Execution time |
+| --- | --- |
+| 1 | 00:00.004079999 |
+| 2 | 00:00.000770999 |
+
 # Day 2: Dive!
 
 Now, you need to figure out how to pilot this thing.

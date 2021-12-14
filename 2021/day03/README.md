@@ -1,3 +1,8 @@
+| Part | Execution time |
+| --- | --- |
+| 1 | 00:00.006931000 |
+| 2 | 00:00.010041000 |
+
 # Day 3: Binary Diagnostic
 
 The submarine has been making some odd creaking noises, so you ask it to produce a diagnostic report just in case.
