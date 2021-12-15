@@ -21,6 +21,7 @@
 **/cmake-build*
 **/target
 **/expected_results
+**/tmp
 
 # 2021 specifics
 !2021/bin
