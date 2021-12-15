@@ -38,6 +38,7 @@ GEM
       unicode-display_width (>= 1.4.0, < 3.0)
     rubocop-ast (1.13.0)
       parser (>= 3.0.1.1)
+    ruby-prof (1.4.3)
     ruby-progressbar (1.11.0)
     solargraph (0.44.2)
       backport (~> 1.2)
@@ -65,6 +66,7 @@ PLATFORMS
 DEPENDENCIES
   readapt
   rubocop
+  ruby-prof
   solargraph
 
 BUNDLED WITH

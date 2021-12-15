@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "set"
-
 require_relative "../task"
 
 class Day15
@@ -15,40 +13,42 @@ class Day15
   def part_one
     map = parse_input(read_input)
     fast_access_map = {}
-    unvisited_nodes = Set[]
+    unvisited_nodes = {}
     tentative_distances = {}
+    next_to_visit = {}
 
     start_point = point_to_key([0, 0])
     end_point = point_to_key([map[0].size - 1, map[0].size - 1])
 
     tentative_distances[start_point] = 0
+    next_to_visit[start_point] = true
 
     map.each_with_index do |row, y|
       row.each_with_index do |cost, x|
         point_key = point_to_key([x, y])
 
         fast_access_map[point_key] = cost
-        unvisited_nodes.add(point_key)
+        unvisited_nodes[point_key] = true
         tentative_distances[point_key] = Float::INFINITY unless point_key == start_point
       end
     end
 
     current_point_key = start_point
-
-    while unvisited_nodes.include?(end_point)
+    while unvisited_nodes.key?(end_point)
       neighbor_points = neighbors(current_point_key, map[0].size - 1, map.size - 1)
+
       neighbor_points.each do |point|
         point_key = point_to_key(point)
         current_point_cost = tentative_distances[current_point_key] + fast_access_map[point_key]
 
         tentative_distances[point_key] = current_point_cost if current_point_cost < tentative_distances[point_key]
+        next_to_visit[point_key] = true
       end
 
       unvisited_nodes.delete(current_point_key)
+      next_to_visit.delete(current_point_key)
 
-      current_point_key = tentative_distances.select do |key, _|
-                            unvisited_nodes.include?(key)
-                          end.min_by { |(_, val)| val }[0]
+      current_point_key = next_to_visit.first[0]
     end
 
     tentative_distances[end_point].to_s
