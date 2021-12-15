@@ -11,47 +11,28 @@ class Day15
   ].freeze
 
   def part_one
-    map = parse_input(read_input)
-    fast_access_map = {}
-    unvisited_nodes = {}
-    tentative_distances = {}
-    next_to_visit = {}
+    map, tentative_distances, unvisited_nodes, size = parse_input(read_input)
 
-    start_point = point_to_key([0, 0])
-    end_point = point_to_key([map[0].size - 1, map[0].size - 1])
+    current_node = [0, 0]
+    target_node = [size - 1, size - 1]
 
-    tentative_distances[start_point] = 0
-    next_to_visit[start_point] = true
+    while unvisited_nodes.key?(target_node)
+      neighbors = neighbors(current_node, size)
+      neighbors.each do |neighbor|
+        next unless unvisited_nodes.key?(neighbor)
 
-    map.each_with_index do |row, y|
-      row.each_with_index do |cost, x|
-        point_key = point_to_key([x, y])
+        distance = tentative_distances[current_node] + map[neighbor]
 
-        fast_access_map[point_key] = cost
-        unvisited_nodes[point_key] = true
-        tentative_distances[point_key] = Float::INFINITY unless point_key == start_point
-      end
-    end
-
-    current_point_key = start_point
-    while unvisited_nodes.key?(end_point)
-      neighbor_points = neighbors(current_point_key, map[0].size - 1, map.size - 1)
-
-      neighbor_points.each do |point|
-        point_key = point_to_key(point)
-        current_point_cost = tentative_distances[current_point_key] + fast_access_map[point_key]
-
-        tentative_distances[point_key] = current_point_cost if current_point_cost < tentative_distances[point_key]
-        next_to_visit[point_key] = true
+        tentative_distances[neighbor] = distance if distance < tentative_distances[neighbor]
+        unvisited_nodes[neighbor] = tentative_distances[neighbor] if unvisited_nodes.key?(neighbor)
       end
 
-      unvisited_nodes.delete(current_point_key)
-      next_to_visit.delete(current_point_key)
+      unvisited_nodes.delete(current_node)
 
-      current_point_key = next_to_visit.first[0]
+      current_node = unvisited_nodes.min_by { |_k, v| v }[0] # TODO: Here is probably the main bottleneck
     end
 
-    tentative_distances[end_point].to_s
+    tentative_distances[target_node].to_s
   end
 
   def part_two
@@ -60,28 +41,32 @@ class Day15
 
   private
 
-  def neighbors(point_key, max_x, max_y)
-    point = key_to_point(point_key)
-    neighbors_points = DIRECTION_MODIFIERS.map do |(mx, my)|
-      [point[0] + mx, point[1] + my]
+  def neighbors(node, limit)
+    neighbors_nodes = DIRECTION_MODIFIERS.map do |(mx, my)|
+      [node[0] + mx, node[1] + my]
     end
 
-    neighbors_points.reject! do |x, y|
-      x.negative? || y.negative? || x > max_x || y > max_y
+    neighbors_nodes.reject! do |x, y|
+      x.negative? || y.negative? || x >= limit || y >= limit
     end
 
-    neighbors_points
-  end
-
-  def key_to_point(key)
-    key.split(",").map(&:to_i)
-  end
-
-  def point_to_key(point)
-    point.map(&:to_s).join(",")
+    neighbors_nodes
   end
 
   def parse_input(input)
-    input.lines(chomp: true).map { |line| line.chars.map(&:to_i) }
+    map = {}
+    unvisited_nodes = { [0, 0] => 0 }
+    tentative_distances = { [0, 0] => 0 }
+
+    input.lines(chomp: true).each_with_index.map do |line, y|
+      line.chars.each_with_index.map do |item, x|
+        map[[x, y]] = item.to_i
+
+        tentative_distances[[x, y]] = Float::INFINITY unless [x, y] == [0, 0]
+        unvisited_nodes[[x, y]] = Float::INFINITY unless [x, y] == [0, 0]
+      end
+    end
+
+    [map, tentative_distances, unvisited_nodes, Math.sqrt(map.size).to_i]
   end
 end
