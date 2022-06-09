@@ -6,14 +6,26 @@ class Day07
   include Task
 
   def part_one
+    run { |steps| steps }
+  end
+
+  def part_two
+    # https://en.wikipedia.org/wiki/Triangular_number
+    run { |steps| (steps * (steps + 1)) / 2 }
+  end
+
+  private
+
+  def run(&fuel_calc)
     positions = parse_input(read_input)
 
     min_cost = (1 << 64)
 
+    # TODO: There is probably a better way to avoid doing these many loops
     (0..positions.max).each do |base|
       cost = 0
       positions.each do |pos|
-        cost += (pos - base).abs
+        cost += fuel_calc.call((pos - base).abs)
       end
 
       min_cost = cost if cost < min_cost
@@ -21,12 +33,6 @@ class Day07
 
     min_cost.to_s
   end
-
-  def part_two
-    "-"
-  end
-
-  private
 
   def parse_input(input)
     input.split(",").map(&:to_i)
