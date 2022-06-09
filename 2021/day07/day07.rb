@@ -10,7 +10,7 @@ class Day07
 
     min_cost = (1 << 64)
 
-    positions.each do |base|
+    (0..positions.max).each do |base|
       cost = 0
       positions.each do |pos|
         cost += (pos - base).abs
