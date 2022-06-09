@@ -6,23 +6,27 @@ class Day06
   include Task
 
   def part_one
+    run(days: 80)
+  end
+
+  def part_two
+    run(days: 256)
+  end
+
+  private
+
+  def run(days:)
     timers = parse_input(read_input)
     timers_arr = Array.new(9, 0)
 
     timers.each { |timer| timers_arr[timer] += 1 }
 
-    80.times do
+    days.times do
       timers_arr = tick(timers_arr)
     end
 
     timers_arr.reduce(&:+)
   end
-
-  def part_two
-    "-"
-  end
-
-  private
 
   def tick(timers_arr)
     ticked_timers = Array.new(9, 0)
