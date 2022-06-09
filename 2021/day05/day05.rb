@@ -9,57 +9,29 @@ class Day05
     lines = parse_input(read_input)
     lines = lines.filter { |item| item.vertical? || item.horizontal? }
 
-    map = {}
-    lines.each do |line|
-      if line.vertical?
-        if line.start_point.y < line.end_point.y
-          top = line.start_point.y
-          bottom = line.end_point.y
-        else
-          top = line.end_point.y
-          bottom = line.start_point.y
-        end
-
-        (top..bottom).each do |y|
-          key = "#{line.start_point.x},#{y}"
-          map[key] = 0 unless map.key?(key)
-
-          map[key] = map[key] + 1
-        end
-
-        next
-      end
-
-      if line.horizontal?
-        if line.start_point.x < line.end_point.x
-          left = line.start_point.x
-          right = line.end_point.x
-        else
-          left = line.end_point.x
-          right = line.start_point.x
-        end
-
-        (left..right).each do |x|
-          key = "#{x},#{line.start_point.y}"
-          map[key] = 0 unless map.key?(key)
-
-          map[key] = map[key] + 1
-        end
-
-        next
-      end
-
-      raise StandardError, "Diagonal"
-    end
-
-    map.select { |k, v| v > 1 }.size.to_s
+    run(lines)
   end
 
   def part_two
-    "-"
+    lines = parse_input(read_input)
+
+    run(lines)
   end
 
   private
+
+  def run(lines)
+    map = {}
+    lines.each do |line|
+      line.point_strs.each do |point_str|
+        map[point_str] = 0 unless map.key?(point_str)
+
+        map[point_str] = map[point_str] + 1
+      end
+    end
+
+    map.select {|_, v| v > 1 }.size.to_s
+  end
 
   def parse_input(input)
     input.split("\n").map do |item|
@@ -85,6 +57,14 @@ class Point
     tokens = str.split(",")
     self.new(tokens[0].to_i, tokens[1].to_i)
   end
+
+  def to_s
+    "#{x},#{y}"
+  end
+
+  def ==(other)
+    x == other.x && y == other.y
+  end
 end
 
 class Line
@@ -101,5 +81,61 @@ class Line
 
   def vertical?
     start_point.x == end_point.x
+  end
+
+  def point_strs
+    direction_x = start_point.x > end_point.x ? :left : :right
+    direction_y = start_point.y > end_point.y ? :up : :down
+
+    points = []
+
+    if horizontal? || vertical?
+      y_iter = start_point.y.send(direction_to_iter(direction_y), end_point.y)
+      x_iter = start_point.x.send(direction_to_iter(direction_x), end_point.x)
+
+      y_iter.each do |y|
+        x_iter.each do |x|
+          points << Point.new(x, y).to_s
+        end
+      end
+
+      return points
+    end
+
+    current = start_point
+    points << current.to_s
+    while current != end_point
+      current = Point.new(
+        current.x.send(direction_to_add_sub(direction_x), 1),
+        current.y.send(direction_to_add_sub(direction_y), 1),
+      )
+      points << current.to_s
+    end
+
+    points
+  end
+
+  private
+
+  def direction_to_iter(direction)
+    case direction
+    when :left, :up
+      :downto
+    when :right, :down
+      :upto
+    else
+      raise ArgumentError, "Invalid direction"
+    end
+  end
+
+  def direction_to_add_sub(direction)
+    case direction
+    when :left, :up
+      :-
+    when :right, :down
+      :+
+    else
+      raise ArgumentError, "Invalid direction"
+    end
   end
 end
