@@ -7,29 +7,18 @@ class Day09
 
   def part_one
     map = HeightMap.from_input(read_input)
-    total = 0
 
-    map.data.each do |key, value|
-      has_smaller_neighbor = false
-      x, y = key.split(",").map(&:to_i)
-
-      map.neighbors(x, y).each do |_, neighbor|
-        if neighbor <= value
-          has_smaller_neighbor = true
-          break
-        end
-      end
-
-      next if has_smaller_neighbor
-
-      total += value.to_i + 1
-    end
-
-    total.to_s
+    map.lowest_points.values.map { |item| item + 1 }.reduce(&:+).to_s
   end
 
   def part_two
-    "-"
+    map = HeightMap.from_input(read_input)
+
+    basins = map.lowest_points.keys
+                .map { |key| key.split(",").map(&:to_i) }
+                .map { |(x, y)| map.scan_basin(x, y, {}) }
+
+    basins.sort[-3..-1].reduce(&:*).to_s
   end
 end
 
@@ -47,6 +36,45 @@ class HeightMap
     @data = data
     @max_x = max_x
     @max_y = max_y
+  end
+
+  def lowest_points
+    points = {}
+
+    data.each do |key, value|
+      has_smaller_neighbor = false
+      x, y = key.split(",").map(&:to_i)
+
+      neighbors(x, y).each do |_, neighbor|
+        if neighbor <= value
+          has_smaller_neighbor = true
+          break
+        end
+      end
+
+      next if has_smaller_neighbor
+
+      points["#{x},#{y}"] = value
+    end
+
+    points
+  end
+
+  def scan_basin(x, y, scanned_map)
+    scanned_map["#{x},#{y}"] = true
+
+    total = 1
+    neighbors = neighbors(x, y)
+
+    neighbors.each do |neighbor_key, neighbor|
+      next if neighbor == 9 || scanned_map.key?(neighbor_key)
+
+      neighbor_x, neighbor_y = neighbor_key.split(",").map(&:to_i)
+
+      total += scan_basin(neighbor_x, neighbor_y, scanned_map)
+    end
+
+    total
   end
 
   def neighbors(x, y)
@@ -75,7 +103,7 @@ class HeightMap
 
       input.split("\n").each_with_index do |row, y|
         row.chars.each_with_index do |item, x|
-          heightmap["#{x},#{y}"] = item
+          heightmap["#{x},#{y}"] = item.to_i
 
           max_x = x if x > max_x
         end
