@@ -7,9 +7,9 @@ repositories {
 }
 
 ext {
-    JAVA_VERSION = 16
-    LOMBOK_VERSION = '1.18.20'
-    JUNIT_VERSION = '4.13'
+    JAVA_VERSION = 17
+    LOMBOK_VERSION = '1.18.24'
+    JUNIT_VERSION = '4.13.2'
 }
 
 dependencies {
