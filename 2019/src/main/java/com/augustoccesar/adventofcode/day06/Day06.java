@@ -9,6 +9,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Stream;
 
 public class Day06 extends Task {
+
   @Override
   public String partOne() throws IOException {
     final String input = this.readInput();

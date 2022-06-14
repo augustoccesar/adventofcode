@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Day01 extends Task {
+
   @Override
   public String partOne() throws IOException {
     final AtomicInteger sum = new AtomicInteger(0);

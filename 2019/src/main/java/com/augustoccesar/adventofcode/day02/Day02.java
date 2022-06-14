@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Day02 extends Task {
+
   @Override
   public String partOne() throws IOException {
     int output = generateOutput(12, 2);

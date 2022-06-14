@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class Day04 extends Task {
+
   @Override
   public String partOne() throws IOException {
     return String.valueOf(getValidCount(1));

@@ -13,11 +13,15 @@ class Reaction {
 
   private static final Pattern REACTION_REGEX = Pattern.compile("(\\d+)\\s(\\w+)");
 
-  @Getter private final List<String> inputChemicals;
-  @Getter private final List<Long> inputAmounts;
+  @Getter
+  private final List<String> inputChemicals;
+  @Getter
+  private final List<Long> inputAmounts;
 
-  @Getter private final String outputChemical;
-  @Getter private final long outputAmount;
+  @Getter
+  private final String outputChemical;
+  @Getter
+  private final long outputAmount;
 
   public static Reaction from(final String reactionInstruction) {
     final Matcher matcher = REACTION_REGEX.matcher(reactionInstruction);

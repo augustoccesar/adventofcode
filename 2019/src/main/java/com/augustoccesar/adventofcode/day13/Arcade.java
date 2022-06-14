@@ -16,15 +16,19 @@ public class Arcade {
 
   private final IntComputer internalComputer;
 
-  @Getter private final List<Tile> tiles = new ArrayList<>();
+  @Getter
+  private final List<Tile> tiles = new ArrayList<>();
   private final HashMap<String, Tile> tilesFastAccess = new HashMap<>();
 
   private boolean visualize = false;
   private boolean loadedAllTiles = false;
 
-  @Getter private long score = 0;
-  @Getter private Point2D ballPos;
-  @Getter private Point2D paddlePos;
+  @Getter
+  private long score = 0;
+  @Getter
+  private Point2D ballPos;
+  @Getter
+  private Point2D paddlePos;
 
   private Arcade(final String game) {
     this.internalComputer = IntComputer.load(game, new ArcadeInput(this));

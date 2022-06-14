@@ -7,6 +7,7 @@ import lombok.Setter;
 @Getter
 @Builder
 public class Planet {
+
   private String name;
   @Setter
   private Planet orbit;

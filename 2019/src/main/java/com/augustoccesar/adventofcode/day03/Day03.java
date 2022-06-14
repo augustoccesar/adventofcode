@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class Day03 extends Task {
+
   @Override
   public String partOne() throws IOException {
     final List<HashMap<String, Pair<Point2D, Integer>>> wires = getWiresPaths();
@@ -90,13 +91,13 @@ public class Day03 extends Task {
    * Generates the intersection of two wire paths.
    *
    * <p>The input paths consists of: {@link HashMap} of {@link String} (Key of the {@link Point2D})
-   * to a {@link Pair} of {@link Point2D} and {@link Integer} (steps taken to reach the {@link
-   * Point2D}).
+   * to a {@link Pair} of {@link Point2D} and {@link Integer} (steps taken to reach the
+   * {@link Point2D}).
    *
    * @param pathOne Path of the first wire.
    * @param pathTwo Path of the second wire.
-   * @return The intersection of both paths paired with the summed steps to get to the {@link
-   *     Point2D} by both wires.
+   * @return The intersection of both paths paired with the summed steps to get to the
+   * {@link Point2D} by both wires.
    */
   private List<Pair<Point2D, Integer>> intersect(
       final HashMap<String, Pair<Point2D, Integer>> pathOne,
