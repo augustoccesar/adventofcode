@@ -30,21 +30,7 @@ class Day10
     errors = []
 
     read_input.lines.each do |line|
-      delim_stack = []
-
-      line.chars.each do |char|
-        if DELIMS.keys.include?(char)
-          delim_stack << char
-        elsif DELIMS.values.include?(char)
-          if char == DELIMS[delim_stack.last]
-            delim_stack.pop
-            next
-          end
-
-          errors << char
-          break
-        end
-      end
+      process_delimiters(line) { |corrupted_char| errors << corrupted_char }
     end
 
     errors.map { |item| CORRUPTED_ERROR_POINTS[item] }.reduce(&:+).to_s
@@ -55,21 +41,8 @@ class Day10
 
     read_input.lines.each do |line|
       corrupted = false
-      delim_stack = []
 
-      line.chars.each do |char|
-        if DELIMS.keys.include?(char)
-          delim_stack << char
-        elsif DELIMS.values.include?(char)
-          if char == DELIMS[delim_stack.last]
-            delim_stack.pop
-            next
-          end
-
-          corrupted = true
-          break
-        end
-      end
+      delim_stack = process_delimiters(line) { corrupted = true }
 
       next if corrupted
 
@@ -79,5 +52,28 @@ class Day10
     end
 
     scores.sort[(scores.size - 1) / 2].to_s
+  end
+
+  private
+
+  def process_delimiters(chunk, &corrupted_action)
+    delim_stack = []
+
+    chunk.chars.each do |char|
+      if DELIMS.keys.include?(char)
+        delim_stack << char
+      elsif DELIMS.values.include?(char)
+        if char == DELIMS[delim_stack.last]
+          delim_stack.pop
+          next
+        end
+
+        corrupted_action.call(char)
+
+        break
+      end
+    end
+
+    delim_stack
   end
 end
