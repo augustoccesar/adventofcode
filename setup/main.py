@@ -1,8 +1,13 @@
 import json
 import os
+import re
 import sys
-
 from os.path import exists
+
+import markdownify
+import requests
+from bs4 import BeautifulSoup
+
 
 def main():
     subcommand = sys.argv[1]
@@ -35,6 +40,8 @@ def prepare_handler(year: int, day: int):
 
     os.makedirs(task_destination)
 
+    create_readme(year, day, task_destination)
+
     template = open(template_path, "r").read()
     template = template.replace("$padded_day", padded_day).replace("$day", str(day))
 
@@ -52,6 +59,23 @@ def prepare_handler(year: int, day: int):
             
             file.seek(0)
             file.write(file_content)
+
+def create_readme(year: int, day: int, destination: str):
+    body = requests.get(f"https://adventofcode.com/{year}/day/{day}").text
+    soup = BeautifulSoup(body, 'html.parser')
+
+    article = str(soup.find("article"))
+    article = article.replace("h2", "h1")
+
+    markdown = markdownify.markdownify(article, heading_style="ATX", strip=["a"])
+    markdown = markdown.replace("--- ", "").replace(" ---", "")
+    markdown = re.sub(r"\n{2,}", "\n\n", markdown)
+    
+    if (markdown[-2:] == "\n\n"):
+        markdown = markdown[:-1]
+
+    with open(f"{destination}/README.md", "w") as f:
+        f.write(markdown)
 
 if __name__ == "__main__":
     main()
