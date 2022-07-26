@@ -17,6 +17,7 @@ add_executable(
         day04/day04.cpp
         day05/day05.cpp
         day07/day07.cpp
+//SETUP:target_executable
 )
 
 add_custom_command(TARGET aoc PRE_BUILD

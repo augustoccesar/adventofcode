@@ -1,0 +1,23 @@
+{
+    "2017": {
+        "tasks_path": "",
+        "extension": "cpp",
+        "instructions": [
+            {
+                "file": "main.cpp",
+                "label": "//SETUP:target_include",
+                "data": "#include \"day$padded_day/day$padded_day.cpp\"\n"
+            },
+            {
+                "file": "main.cpp",
+                "label": "//SETUP:target_case",
+                "data": "\t\tcase $day:\n\t\t\treturn new Day$padded_day;\n"
+            },
+            {
+                "file": "CMakeLists.txt",
+                "label": "//SETUP:target_executable",
+                "data": "        day$padded_day/day$padded_day.cpp\n"
+            }
+        ]
+    }
+}

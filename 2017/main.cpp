@@ -8,6 +8,7 @@
 #include "day05/day05.cpp"
 #include "day06/day06.cpp"
 #include "day07/day07.cpp"
+//SETUP:target_include
 
 AbstractTask* getDay(int i_day) {
   switch (i_day) {
@@ -25,6 +26,7 @@ AbstractTask* getDay(int i_day) {
       return new Day06;
     case 7:
       return new Day07;
+//SETUP:target_case
     default:
       return NULL;
   }
