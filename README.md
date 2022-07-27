@@ -25,3 +25,21 @@
     </tr>
 </table>
 
+## Helpers
+### Requirements:
+- Python 3.10+
+
+### Setup
+To use the helpers, first run
+```shell
+./bin/setup.sh
+```
+
+This will install the Python dependencies.
+
+### Scripts
+- `./bin/prepare-day.sh {year} {day}`
+    - Prepare the folder of the day on the year
+    - Use the template for the year found on `setup/templates` to generate the task file
+    - Create a README based on the page on Advent of Code website
+    - Update the year project based on the `setup/settings.json` instructions

@@ -9,26 +9,17 @@ import requests
 from bs4 import BeautifulSoup
 
 
-def main():
-    subcommand = sys.argv[1]
-    match subcommand:
-        case "prepare":
-            if len(sys.argv) != 4:
-                raise ValueError("Invalid amount of arguments")
-
-            year = int(sys.argv[2])
-            day = int(sys.argv[3])
-            prepare_handler(year, day)
-
-
 SETTINGS = json.load(open("./setup/settings.json", "r"))
 
-def prepare_handler(year: int, day: int):
+def prepare_handler(year_param: str, day_param: str):
+    year = int(year_param)
+    day = int(day_param)
+
     padded_day = "{:0>2}".format(day)
 
     template_path =f"./setup/templates/{year}"
     if not exists(template_path):
-        raise FileNotFoundError(f"Template for year {year} not found in the ./templates folder")
+        raise FileNotFoundError(f"Template for year {year} not found in the templates folder")
 
     if str(year) not in SETTINGS.keys():
         raise ValueError(f"Settings not found for year {year}")
@@ -76,6 +67,30 @@ def create_readme(year: int, day: int, destination: str):
 
     with open(f"{destination}/README.md", "w") as f:
         f.write(markdown)
+
+# TODO: Look into a CLI library to make this less weird
+SUBCOMMANDS = {
+    "prepare": {
+        "params": 2,
+        "handler": prepare_handler
+    }
+}
+
+def main():
+    if len(sys.argv) < 2:
+        print(f"Missing subcommand. Must be one of [{','.join(SUBCOMMANDS.keys())}]")
+        exit(1)
+
+    if sys.argv[1] not in SUBCOMMANDS.keys():
+        print(f"Invalid subcommand '{sys.argv[1]}'")
+        exit(1)
+
+    subcommand = SUBCOMMANDS[sys.argv[1]]
+    if len(sys.argv[2:]) != subcommand["params"]:
+        print("Wrong number of arguments")
+        exit(1)
+    
+    subcommand["handler"](*sys.argv[2:])
 
 if __name__ == "__main__":
     main()
