@@ -8,6 +8,7 @@ mod day07;
 mod day08;
 mod day09;
 mod day10;
+//SETUP:target_mod
 
 mod task;
 
@@ -25,8 +26,11 @@ use day07::Day07;
 use day08::Day08;
 use day09::Day09;
 use day10::Day10;
+//SETUP:target_use
 use task::Task;
 
+// NOTE: Add format skip here so the SETUP label stay on the start of the line
+#[rustfmt::skip]
 fn days<'a>() -> HashMap<String, &'a dyn Task> {
     let mut days: HashMap<String, &'a dyn Task> = HashMap::new();
     let tasks: Vec<&'a dyn Task> = vec![
@@ -40,6 +44,7 @@ fn days<'a>() -> HashMap<String, &'a dyn Task> {
         &Day08 {},
         &Day09 {},
         &Day10 {},
+//SETUP:target_tasks
     ];
     for task in tasks {
         days.insert(task.day(), task);

@@ -1,4 +1,26 @@
 {
+    "2016": {
+        "task_file_name": "mod",
+        "tasks_path": "/src",
+        "extension": "rs",
+        "instructions": [
+            {
+                "file": "src/main.rs",
+                "label": "//SETUP:target_mod",
+                "data": "mod day$padded_day;\n"
+            },
+            {
+                "file": "src/main.rs",
+                "label": "//SETUP:target_use",
+                "data": "use day$padded_day::Day$padded_day;\n"
+            },
+            {
+                "file": "src/main.rs",
+                "label": "//SETUP:target_tasks",
+                "data": "\t\t&Day$padded_day {},\n"
+            }
+        ]
+    },
     "2017": {
         "tasks_path": "",
         "extension": "cpp",
