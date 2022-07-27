@@ -36,7 +36,8 @@ def prepare_handler(year_param: str, day_param: str):
     template = open(template_path, "r").read()
     template = template.replace("$padded_day", padded_day).replace("$day", str(day))
 
-    task_full_path = f"{task_destination}/day{padded_day}.{settings['extension']}"
+    task_file_name = settings["task_file_name"] or f"day{padded_day}"
+    task_full_path = f"{task_destination}/{task_file_name}.{settings['extension']}"
     with open(task_full_path, "w") as file:
         file.write(template)
 
