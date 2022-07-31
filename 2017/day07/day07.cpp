@@ -60,6 +60,7 @@ class Day07 : public AbstractTask {
 
   ParsedInput parse_input(std::string input) {
     std::map<std::string, Disc> discs_map;
+    // std::tuple<has_children?, is_child?>
     std::map<std::string, std::tuple<bool, bool>> child_tracking;
 
     for (auto line : split(input, '\n')) {
@@ -73,10 +74,8 @@ class Day07 : public AbstractTask {
     for (auto &[disc_name, disc] : discs_map) {
       if (disc.child_discs_names.size() > 0) {
         for (auto child_name : disc.child_discs_names) {
-          Disc *child_disc = &discs_map[child_name];
-
-          auto a = &child_tracking[child_disc->name];
-          std::get<1>(*a) = true;
+          auto tracking = &child_tracking[child_name];
+          std::get<1>(*tracking) = true;
         }
       }
     }
@@ -115,15 +114,15 @@ class Day07 : public AbstractTask {
     }
 
     if (occurrences.size() != 1) {
+      Disc unbalanced_disc;
       int correct_weight;
-      Disc out_of_weight;
       int wrong_weight;
 
       for (auto [weight, occurrences] : occurrences) {
         if (occurrences == 1) {
           for (int i = 0; i < child_weights.size(); i++) {
             if (child_weights[i] == weight) {
-              out_of_weight = discs_map[base->child_discs_names[i]];
+              unbalanced_disc = discs_map[base->child_discs_names[i]];
               wrong_weight = weight;
               break;
             }
@@ -134,7 +133,7 @@ class Day07 : public AbstractTask {
       }
 
       int diff_weight = correct_weight - wrong_weight;
-      int res = out_of_weight.weight + diff_weight;
+      int res = unbalanced_disc.weight + diff_weight;
 
       if (*response == -1) {
         *response = res;
