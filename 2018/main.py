@@ -8,6 +8,7 @@ from aoc import (
     Day05,
     Day06,
     Day07,
+    Day08,
 #SETUP:target_import
 )
 
@@ -20,6 +21,7 @@ if __name__ == "__main__":
         "05": Day05(),
         "06": Day06(),
         "07": Day07(),
+		"08": Day08(),
 #SETUP:target_dict
     }
 
