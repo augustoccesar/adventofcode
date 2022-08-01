@@ -1,6 +1,16 @@
 import sys
 
-from aoc import Day01, Day02, Day03, Day04, Day05, Day06, Day07, Day08
+from aoc import (
+    Day01,
+    Day02,
+    Day03,
+    Day04,
+    Day05,
+    Day06,
+    Day07,
+    Day08,
+#SETUP:target_import
+)
 
 if __name__ == "__main__":
     days = {
@@ -12,6 +22,7 @@ if __name__ == "__main__":
         "06": Day06(),
         "07": Day07(),
 		"08": Day08(),
+#SETUP:target_dict
     }
 
     if len(sys.argv) < 2:

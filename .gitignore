@@ -26,3 +26,5 @@
 # 2021 specifics
 !2021/bin
 !2021/.vscode/launch.json
+
+!/bin
