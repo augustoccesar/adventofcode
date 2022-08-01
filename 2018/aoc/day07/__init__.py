@@ -14,50 +14,11 @@ PATTERN = re.compile(
 
 class Day07(Task):
     def part_one(self) -> str:
-        requirements: Dict[str, List[str]] = {}
-        statuses: Dict[str, bool] = {}
-        instruction: List[str] = []
+        workpool = WorkPool(self.read_input(), 1)
+        while not all([v is WorkStatus.DONE for _, v in workpool.statuses.items()]):
+            workpool.tick()
 
-        for line in self.read_input().split("\n"):
-            match = PATTERN.match(line)
-            required = match.group(1)
-            step = match.group(2)
-
-            # Add requirements for step
-            if requirements.get(step) is None:
-                requirements[step] = []
-
-            requirements[step].append(required)
-
-            # Add statuses for new steps
-            if statuses.get(required) is None:
-                statuses[required] = False
-            if statuses.get(step) is None:
-                statuses[step] = False
-
-        # Check the first items of the instruction
-        # A.K.A. doesn't have a requirement
-        roots = [
-            item
-            for item in statuses.keys()
-            if item not in requirements.keys()
-        ]
-
-        for root in roots:
-            requirements[root] = []
-
-        # Loop through the statuses items until all of them are enabled
-        while any([status == False for status in statuses.values()]):
-            activable_in_loop: List[str] = []
-            for item, _ in {k: v for k, v in statuses.items() if v is False}.items():
-                if can_activate(item, requirements, statuses):
-                    activable_in_loop.append(item)
-
-            to_activate = sorted(activable_in_loop)[0]
-            instruction.append(to_activate)
-            statuses[to_activate] = True
-
-        return "".join(instruction)
+        return "".join(workpool.work_done)
 
     def part_two(self) -> str:
         workpool = WorkPool(self.read_input(), 5)
@@ -85,14 +46,20 @@ class WorkStatus(Enum):
 
 
 class WorkPool:
-    time_requirements: Dict[str, int] = {}
-
-    curr_tick: int = 0
-    dependencies: Dict[str, List[str]] = {}
-    statuses: Dict[str, WorkStatus] = {}
-    workers: List[Worker] = []
+    curr_tick: int
+    dependencies: Dict[str, List[str]]
+    statuses: Dict[str, WorkStatus]
+    time_requirements: Dict[str, int]
+    workers: List[Worker]
+    work_done: List[str]
 
     def __init__(self, input: str, workers_count: int, added_time=0) -> None:
+        self.curr_tick = 0
+        self.dependencies = {}
+        self.statuses = {}
+        self.workers = []
+        self.work_done = []
+
         # `ord` - Return the Unicode code point for a one-character string.
         # ord('A') == 65
         # ord('A') - 64 == 1
@@ -146,6 +113,7 @@ class WorkPool:
                 time_required = self.time_requirements[worker.current_work]
                 if self.curr_tick - worker.started_at == time_required:
                     self.statuses[worker.current_work] = WorkStatus.DONE
+                    self.work_done.append(worker.current_work)
                     available_work = self.available_work()
 
                     if len(available_work) > 0:
@@ -164,13 +132,3 @@ class WorkPool:
                     self.statuses[work] = WorkStatus.IN_PROGRESS
 
         self.curr_tick += 1
-
-
-def can_activate(item: str, requirements: Dict[str, List[str]], statuses: Dict[str, bool]) -> bool:
-    req: List[str] = requirements[item]
-    for req_item in req:
-        # If any of the requirements is not finished, return false
-        if statuses[req_item] is False:
-            return False
-
-    return True
