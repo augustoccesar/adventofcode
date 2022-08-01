@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
 from typing import List
 
 from aoc.task import Task
@@ -13,13 +12,32 @@ class Day08(Task):
         return str(license.sum_metadata())
 
     def part_two(self) -> str:
-        return "-"
+        license = License(self.read_input())
+
+        return str(license.root.value)
 
 
-@dataclass
 class Node:
     children: List[Node]
     metadata: List[int]
+    value: int
+
+    def __init__(self, children: List[Node], metadata: List[int]) -> None:
+        self.children = children
+        self.metadata = metadata
+
+        if len(self.children) == 0:
+            self.value = sum(self.metadata)
+        else:
+            total = 0
+            for metadata_item in self.metadata:
+                child_idx = metadata_item - 1
+                if child_idx >= len(self.children) or child_idx < 0:
+                    continue
+
+                total += self.children[child_idx].value
+
+            self.value = total
 
     def sum_metadata(self) -> int:
         total = sum(self.metadata)
