@@ -25,7 +25,7 @@ class Day07(Task):
         while not all([v is WorkStatus.DONE for _, v in workpool.statuses.items()]):
             workpool.tick()
 
-        return str(workpool.curr_tick - 1)
+        return str(workpool.curr_tick)
 
 # -----------------------------------------------------------------------------
 
@@ -54,7 +54,7 @@ class WorkPool:
     work_done: List[str]
 
     def __init__(self, input: str, workers_count: int, added_time=0) -> None:
-        self.curr_tick = 0
+        self.curr_tick = -1
         self.dependencies = {}
         self.statuses = {}
         self.workers = []
@@ -106,6 +106,8 @@ class WorkPool:
         return available_items
 
     def tick(self) -> None:
+        self.curr_tick += 1
+
         available_work = self.available_work()
 
         for worker in self.workers:
@@ -130,5 +132,3 @@ class WorkPool:
                     worker.current_work = work
                     worker.started_at = self.curr_tick
                     self.statuses[work] = WorkStatus.IN_PROGRESS
-
-        self.curr_tick += 1
