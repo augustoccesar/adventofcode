@@ -41,5 +41,27 @@
                 "data": "        day$padded_day/day$padded_day.cpp\n"
             }
         ]
+    },
+    "2018": {
+        "task_file_name": "__init__",
+        "tasks_path": "/aoc",
+        "extension": "py",
+        "instructions": [
+            {
+                "file": "main.py",
+                "label": "#SETUP:target_import",
+                "data": "\tDay$padded_day,\n"
+            },
+            {
+                "file": "main.py",
+                "label": "#SETUP:target_dict",
+                "data": "\t\t\"$padded_day\": Day$padded_day(),\n"
+            },
+            {
+                "file": "aoc/__init__.py",
+                "label": "#SETUP:target_export",
+                "data": "from aoc.day$padded_day import Day$padded_day\n"
+            }
+        ]
     }
 }
