@@ -72,7 +72,6 @@ class Day09(Task):
         return str(winner_points)
 
     # TODO: This is running very slow. Should try to optmize it.
-    #   Took 10 seconds-ish (not that should probably add the timer to the 2018 as well).
     def part_two(self) -> str:
         match = PATTERN.match(self.read_input())
         players = int(match.group(1))

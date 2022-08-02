@@ -1,3 +1,8 @@
+| Part | Execution time |
+| --- | --- |
+| 1 | 00:00.007684 |
+| 2 | 00:00.005606 |
+
 # Day 8: Memory Maneuver
 
 The sleigh is much easier to pull than you'd expect for something its weight. Unfortunately, neither you nor the Elves know which way the North Pole is from here.

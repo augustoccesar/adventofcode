@@ -1,3 +1,8 @@
+| Part | Execution time |
+| --- | --- |
+| 1 | 00:00.002118 |
+| 2 | 00:00.001277 |
+
 # Day 4: Repose Record
 
 You've sneaked into another supply closet - this time, it's across from the prototype suit manufacturing lab. You need

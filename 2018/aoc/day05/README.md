@@ -1,3 +1,8 @@
+| Part | Execution time |
+| --- | --- |
+| 1 | 00:00.089105 |
+| 2 | 00:02.092644 ⚠️ |
+
 # Day 5: Alchemical Reduction
 
 You've managed to sneak in to the prototype suit manufacturing lab. The Elves are making decent progress, but are still

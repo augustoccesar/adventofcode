@@ -1,3 +1,8 @@
+| Part | Execution time |
+| --- | --- |
+| 1 | 00:00.036133 |
+| 2 | 00:05.948324 ⚠️ |
+
 # Day 9: Marble Mania
 
 You talk to the Elves while you wait for your navigation system to initialize. To pass the time, they introduce you to their favorite marble game.

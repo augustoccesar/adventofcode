@@ -1,3 +1,8 @@
+| Part | Execution time |
+| --- | --- |
+| 1 | 00:02.412859 ⚠️ |
+| 2 | 00:00.000117 |
+
 # Day 6: Chronal Coordinates
 
 The device on your wrist beeps several times, and once again you feel like you're falling.
