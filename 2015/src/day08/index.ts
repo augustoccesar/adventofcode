@@ -15,6 +15,20 @@ export class Day08 extends Task {
     }
 
     partTwo(): string {
-        return "-";
+        const data = this.readInput().split("\n");
+        let codeChars = 0;
+        let memoryChars = 0;
+
+        data.forEach(item => {
+            const encodedItem = encode(item)
+            codeChars += encodedItem.length;
+            memoryChars += eval(encodedItem).length;
+        });
+
+        return (codeChars - memoryChars).toString();
     }
+}
+
+function encode(str: string): string {
+    return "\"" + str.replace(/\\/g, "\\\\").replace(/\"/g, "\\\"") + "\""
 }
