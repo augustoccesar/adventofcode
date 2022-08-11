@@ -6,6 +6,8 @@ import { Day05 } from "./day05";
 import { Day06 } from "./day06";
 import { Day07 } from "./day07";
 import { Day08 } from "./day08";
+import { Day09 } from "./day09";
+//SETUP:target_import
 import { Task } from "./Task";
 
 type NullableTask = Task | null;
@@ -27,6 +29,8 @@ switch (dayInt) {
     case 6: day = new Day06(); break;
     case 7: day = new Day07(); break;
     case 8: day = new Day08(); break;
+	case 9: day = new Day09(); break;
+//SETUP:target_switch
 }
 
 if (day == null) {
