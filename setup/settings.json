@@ -1,4 +1,21 @@
 {
+    "2015": {
+        "task_file_name": "index",
+        "tasks_path": "/src",
+        "extension": "ts",
+        "instructions": [
+            {
+                "file": "src/index.ts",
+                "label": "//SETUP:target_import",
+                "data": "import { Day$padded_day } from \"./day$padded_day\";\n"
+            },
+            {
+                "file": "src/index.ts",
+                "label": "//SETUP:target_switch",
+                "data": "\tcase $day: day = new Day$padded_day(); break;\n"
+            }
+        ]
+    },
     "2016": {
         "task_file_name": "mod",
         "tasks_path": "/src",
