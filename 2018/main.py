@@ -9,8 +9,9 @@ from aoc import (
     Day06,
     Day07,
     Day08,
-	Day09,
-#SETUP:target_import
+    Day09,
+    Day10,
+# SETUP:target_import
 )
 
 if __name__ == "__main__":
@@ -22,9 +23,10 @@ if __name__ == "__main__":
         "05": Day05(),
         "06": Day06(),
         "07": Day07(),
-		"08": Day08(),
-		"09": Day09(),
-#SETUP:target_dict
+        "08": Day08(),
+        "09": Day09(),
+        "10": Day10(),
+# SETUP:target_dict
     }
 
     if len(sys.argv) < 2:
