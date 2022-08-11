@@ -22,7 +22,23 @@ export class Day09 extends Task {
     }
 
     partTwo(): string {
-        return "-";
+        const graph = new Graph();
+        for(const line of this.readInput().split("\n")) {
+            const [path, distance] = line.split("=");
+            const [from, to] = path.split("to").map(item => item.trim());
+
+            graph.addEdge(from, to, Number(distance.trim()));
+        }
+
+        let result = Number.NEGATIVE_INFINITY;
+        for(const vertex of graph.verticesMap.values()) {
+            const max = graph.maxTraverseAll(vertex);
+            if(max > result) {
+                result = max;
+            }
+        }
+
+        return result.toString();
     }
 }
 
@@ -92,6 +108,37 @@ class Graph {
 
 
         return min;
+    }
+
+    maxTraverseAll(start: Vertex, visited: Map<Vertex, boolean> = new Map()): number {
+        visited.set(start, true);
+
+        const visitedKeys = Array.from(visited.keys()).map(vertex => vertex.name);
+        const neighborKeys = Array.from(start.neighbors.keys()).map(vertex => vertex.name);
+
+        const nonVisitedKeys = neighborKeys.filter(key => {
+            return !visitedKeys.includes(key)
+        });
+
+        if(nonVisitedKeys.length === 0) {
+            return 0;
+        }
+
+        let max = Number.NEGATIVE_INFINITY;
+        for(const key of nonVisitedKeys) {
+            let total = 0;
+            const neighbor = this.verticesMap.get(key)!
+            total += start.neighbors.get(neighbor)!;
+
+            total += this.maxTraverseAll(neighbor, cloneMap(visited));
+
+            if(total > max) {
+                max = total;
+            }
+        }
+
+
+        return max;
     }
 }
 
