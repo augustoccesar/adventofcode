@@ -1,3 +1,8 @@
+| Part | Execution time |
+|------|----------------|
+| 1    | 00:00.05700000 |
+| 2    | 00:00.04600000 |
+
 # Day 9: All in a Single Night
 
 Every year, Santa manages to deliver all of his presents in a single night.

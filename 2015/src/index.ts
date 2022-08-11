@@ -38,5 +38,29 @@ if (day == null) {
     process.exit(1);
 }
 
-console.log(`Part One: ${day.partOne()}`);
-console.log(`Part Two: ${day.partTwo()}`);
+new Map([
+    ["One", () => {
+        return day!.partOne()
+    }],
+    ["Two", () => {
+        return day!.partTwo()
+    }],
+]).forEach((value, key) => {
+    const startTime = Date.now();
+    const result = value();
+    const endTime = Date.now();
+
+    console.log(`Part ${key}: ${result} (took: ${formatMs(endTime.valueOf() - startTime.valueOf())})`);
+})
+
+function formatMs(ms: number): string {
+    const minutes = Math.floor(ms / 60000);
+    const seconds = ms / 1000.0;
+
+    const secondsStr = seconds < 10
+        ? "0" + String(seconds.toPrecision(7))
+        : String(seconds.toPrecision(7));
+    const minutesStr = minutes < 10 ? "0" + String(minutes) : String(minutes);
+
+    return `${minutesStr}:${secondsStr}`;
+}
