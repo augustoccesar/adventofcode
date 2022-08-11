@@ -2,41 +2,15 @@ import {Task} from '../Task';
 
 export class Day09 extends Task {
     partOne(): string {
-        const graph = new Graph();
-        for(const line of this.readInput().split("\n")) {
-            const [path, distance] = line.split("=");
-            const [from, to] = path.split("to").map(item => item.trim());
-
-            graph.addEdge(from, to, Number(distance.trim()));
-        }
-
-        let result = Number.POSITIVE_INFINITY;
-        for(const vertex of graph.verticesMap.values()) {
-            const min = graph.minTraverseAll(vertex);
-            if(min < result) {
-                result = min;
-            }
-        }
+        const graph = Graph.fromInput(this.readInput());
+        const result = graph.traverseAll(TraverseLookup.MIN);
 
         return result.toString();
     }
 
     partTwo(): string {
-        const graph = new Graph();
-        for(const line of this.readInput().split("\n")) {
-            const [path, distance] = line.split("=");
-            const [from, to] = path.split("to").map(item => item.trim());
-
-            graph.addEdge(from, to, Number(distance.trim()));
-        }
-
-        let result = Number.NEGATIVE_INFINITY;
-        for(const vertex of graph.verticesMap.values()) {
-            const max = graph.maxTraverseAll(vertex);
-            if(max > result) {
-                result = max;
-            }
-        }
+        const graph = Graph.fromInput(this.readInput());
+        const result = graph.traverseAll(TraverseLookup.MAX);
 
         return result.toString();
     }
@@ -79,38 +53,19 @@ class Graph {
         toVertex.addNeighbor(fromVertex, weight);
     }
 
-    minTraverseAll(start: Vertex, visited: Map<Vertex, boolean> = new Map()): number {
-        visited.set(start, true);
-
-        const visitedKeys = Array.from(visited.keys()).map(vertex => vertex.name);
-        const neighborKeys = Array.from(start.neighbors.keys()).map(vertex => vertex.name);
-
-        const nonVisitedKeys = neighborKeys.filter(key => {
-            return !visitedKeys.includes(key)
-        });
-
-        if(nonVisitedKeys.length === 0) {
-            return 0;
-        }
-
-        let min = Number.POSITIVE_INFINITY;
-        for(const key of nonVisitedKeys) {
-            let total = 0;
-            const neighbor = this.verticesMap.get(key)!
-            total += start.neighbors.get(neighbor)!;
-
-            total += this.minTraverseAll(neighbor, cloneMap(visited));
-
-            if(total < min) {
-                min = total;
+    traverseAll(traverseLookup: TraverseLookup): number {
+        let result = traverseLookup === TraverseLookup.MAX ? Number.NEGATIVE_INFINITY : Number.POSITIVE_INFINITY;
+        for(const vertex of this.verticesMap.values()) {
+            const total = this.traverseFromVertex(vertex, traverseLookup);
+            if(traverseLookupCmp(result, total, traverseLookup)) {
+                result = total;
             }
         }
 
-
-        return min;
+        return result;
     }
 
-    maxTraverseAll(start: Vertex, visited: Map<Vertex, boolean> = new Map()): number {
+    traverseFromVertex(start: Vertex, traverseLookup: TraverseLookup, visited: Map<Vertex, boolean> = new Map()): number {
         visited.set(start, true);
 
         const visitedKeys = Array.from(visited.keys()).map(vertex => vertex.name);
@@ -124,25 +79,51 @@ class Graph {
             return 0;
         }
 
-        let max = Number.NEGATIVE_INFINITY;
+        let result = traverseLookup === TraverseLookup.MAX ? Number.NEGATIVE_INFINITY : Number.POSITIVE_INFINITY;
         for(const key of nonVisitedKeys) {
             let total = 0;
             const neighbor = this.verticesMap.get(key)!
             total += start.neighbors.get(neighbor)!;
 
-            total += this.maxTraverseAll(neighbor, cloneMap(visited));
+            total += this.traverseFromVertex(neighbor, traverseLookup, cloneVisited(visited));
 
-            if(total > max) {
-                max = total;
+            if(traverseLookupCmp(result, total, traverseLookup)) {
+                result = total;
             }
         }
 
 
-        return max;
+        return result;
+    }
+
+    static fromInput(input: string): Graph {
+        const graph = new Graph();
+        for(const line of input.split("\n")) {
+            const [path, distance] = line.split("=");
+            const [from, to] = path.split("to").map(item => item.trim());
+
+            graph.addEdge(from, to, Number(distance.trim()));
+        }
+
+        return graph;
     }
 }
 
-function cloneMap<T, E>(map: Map<T, E>): Map<T, E> {
+enum TraverseLookup {
+    MIN,
+    MAX
+}
+
+function traverseLookupCmp(baseNumber: number, newNumber: number, traverseLookup: TraverseLookup) {
+    switch (traverseLookup) {
+        case TraverseLookup.MAX:
+            return baseNumber < newNumber;
+        case TraverseLookup.MIN:
+            return baseNumber > newNumber;
+    }
+}
+
+function cloneVisited<T, E>(map: Map<T, E>): Map<T, E> {
     const cloned = new Map();
     for(const [key, val] of map.entries()) {
         cloned.set(key, val);
