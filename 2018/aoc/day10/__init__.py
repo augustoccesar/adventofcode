@@ -94,4 +94,7 @@ class Day10(Task):
         return "<See Output>"
 
     def part_two(self) -> str:
-        return "-"
+        sky = Sky(self.read_input())
+        sky.tick_until_aligned()
+
+        return sky.seconds_elapsed.__str__()
