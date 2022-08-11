@@ -13,15 +13,15 @@
 <table>
     <tr>
         <td align="center">❌</td>
-        <td align="left">Not started</td
+        <td align="left">Not started</td>
     </tr>
     <tr>
         <td align="center">🟡</td>
-        <td align="left">Partially done</td
+        <td align="left">Partially done</td>
     </tr>
     <tr>
         <td align="center">✅</td>
-        <td align="left">Fully done</td
+        <td align="left">Fully done</td>
     </tr>
 </table>
 
