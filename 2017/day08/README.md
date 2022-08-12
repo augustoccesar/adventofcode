@@ -1,8 +1,11 @@
 # Day 8: I Heard You Like Registers
 
-You receive a signal directly from the CPU. Because of your recent assistance with jump instructions, it would like you to compute the result of a series of unusual register instructions.
+You receive a signal directly from the CPU. Because of your recent assistance with jump instructions, it would like you
+to compute the result of a series of unusual register instructions.
 
-Each instruction consists of several parts: the register to modify, whether to increase or decrease that register's value, the amount by which to increase or decrease it, and a condition. If the condition fails, skip the instruction without modifying the register. The registers all start at `0`. The instructions look like this:
+Each instruction consists of several parts: the register to modify, whether to increase or decrease that register's
+value, the amount by which to increase or decrease it, and a condition. If the condition fails, skip the instruction
+without modifying the register. The registers all start at `0`. The instructions look like this:
 
 ```
 b inc 5 if a > 1
@@ -21,7 +24,8 @@ These instructions would be processed as follows:
 
 After this process, the largest value in any register is `1`.
 
-You might also encounter `<=` (less than or equal to) or `!=` (not equal to). However, the CPU doesn't have the bandwidth to tell you what all the registers are named, and leaves that to you to determine.
+You might also encounter `<=` (less than or equal to) or `!=` (not equal to). However, the CPU doesn't have the
+bandwidth to tell you what all the registers are named, and leaves that to you to determine.
 
 *What is the largest value in any register* after completing the instructions in your puzzle input?
 
