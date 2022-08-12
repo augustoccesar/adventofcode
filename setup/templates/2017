@@ -2,7 +2,7 @@
 
 class Day$padded_day : public AbstractTask {
 public:
-  std::string part_one() override { return "-" }
+  std::string part_one() override { return "-"; }
 
-  std::string part_two() override { return "-" }
-}
+  std::string part_two() override { return "-"; }
+};

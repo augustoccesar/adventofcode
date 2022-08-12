@@ -54,7 +54,7 @@
             },
             {
                 "file": "CMakeLists.txt",
-                "label": "//SETUP:target_executable",
+                "label": "#SETUP:target_executable",
                 "data": "        day$padded_day/day$padded_day.cpp\n"
             }
         ]
