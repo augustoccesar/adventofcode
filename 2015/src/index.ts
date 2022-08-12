@@ -7,6 +7,7 @@ import { Day06 } from "./day06";
 import { Day07 } from "./day07";
 import { Day08 } from "./day08";
 import { Day09 } from "./day09";
+import { Day10 } from "./day10";
 //SETUP:target_import
 import { Task } from "./Task";
 
@@ -30,6 +31,7 @@ switch (dayInt) {
     case 7: day = new Day07(); break;
     case 8: day = new Day08(); break;
 	case 9: day = new Day09(); break;
+	case 10: day = new Day10(); break;
 //SETUP:target_switch
 }
 
