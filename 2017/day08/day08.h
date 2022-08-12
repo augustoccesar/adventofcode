@@ -46,11 +46,15 @@ class Instruction {
 
 class CPU {
  public:
+  int m_largestAllTimeRegister = INT_MIN;
   std::map<std::string, int> m_registry;
+  std::vector<Instruction> m_instructions;
 
-  void applyInstruction(const Instruction& instruction);
-  void addRegister(std::string register_);
+  void applyAllInstructions();
+  void addRegister(const std::string& register_);
   int largestRegister();
+
+  static CPU fromInput(const std::string& input);
 };
 
 class Day08 : public AbstractTask {

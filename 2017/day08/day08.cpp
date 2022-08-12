@@ -2,52 +2,20 @@
 
 std::string Day08::part_one() {
   std::string input = read_input("inputs/day08_input.txt");
-  std::vector<std::string> lines = split(input, '\n');
 
-  CPU cpu = CPU();
-  std::vector<Instruction> instructions;
-
-  for (std::string line : lines) {
-    auto instruction = Instruction::fromString(line);
-    instructions.push_back(instruction);
-
-    cpu.addRegister(instruction.m_register);
-    cpu.addRegister(instruction.m_condition.m_register);
-  }
-
-  for (Instruction& instruction : instructions) {
-    cpu.applyInstruction(instruction);
-  }
+  CPU cpu = CPU::fromInput(input);
+  cpu.applyAllInstructions();
 
   return std::to_string(cpu.largestRegister());
 }
 
 std::string Day08::part_two() {
   std::string input = read_input("inputs/day08_input.txt");
-  std::vector<std::string> lines = split(input, '\n');
 
-  CPU cpu = CPU();
-  std::vector<Instruction> instructions;
+  CPU cpu = CPU::fromInput(input);
+  cpu.applyAllInstructions();
 
-  for (std::string line : lines) {
-    auto instruction = Instruction::fromString(line);
-    instructions.push_back(instruction);
-
-    cpu.addRegister(instruction.m_register);
-    cpu.addRegister(instruction.m_condition.m_register);
-  }
-
-  int max = INT_MIN;
-  for (Instruction& instruction : instructions) {
-    cpu.applyInstruction(instruction);
-
-    int currentMaxRegister = cpu.largestRegister();
-    if(currentMaxRegister > max) {
-      max = currentMaxRegister;
-    }
-  }
-
-  return std::to_string(max);
+  return std::to_string(cpu.m_largestAllTimeRegister);
 }
 
 Modifier modifierFromStr(const std::string& str) {
@@ -130,18 +98,40 @@ Instruction Instruction::fromString(const std::string& line) {
           .m_condition = Condition::fromString(conditionMatch)};
 }
 
-void CPU::applyInstruction(const Instruction& instruction) {
-  auto condition = instruction.m_condition;
-  bool fulfilCondition = applyCmp(m_registry[condition.m_register],
-                                  condition.m_value, condition.m_cmp);
-  if (fulfilCondition) {
-    int currentValue = m_registry[instruction.m_register];
-    m_registry[instruction.m_register] = applyModifier(
-        currentValue, instruction.m_amount, instruction.m_modifier);
+CPU CPU::fromInput(const std::string& input) {
+  std::vector<std::string> lines = split(input, '\n');
+
+  CPU cpu = CPU();
+  for (const std::string& line : lines) {
+    auto instruction = Instruction::fromString(line);
+    cpu.m_instructions.push_back(instruction);
+
+    cpu.addRegister(instruction.m_register);
+    cpu.addRegister(instruction.m_condition.m_register);
+  }
+
+  return cpu;
+}
+
+void CPU::applyAllInstructions() {
+  for(Instruction& instruction : m_instructions) {
+    auto condition = instruction.m_condition;
+    bool fulfilCondition = applyCmp(m_registry[condition.m_register],
+                                    condition.m_value, condition.m_cmp);
+    if (fulfilCondition) {
+      int currentValue = m_registry[instruction.m_register];
+      int newValue = applyModifier(currentValue, instruction.m_amount,
+                                   instruction.m_modifier);
+      m_registry[instruction.m_register] = newValue;
+
+      if (newValue > m_largestAllTimeRegister) {
+        m_largestAllTimeRegister = newValue;
+      }
+    }
   }
 }
 
-void CPU::addRegister(std::string register_) {
+void CPU::addRegister(const std::string& register_) {
   if (m_registry.contains(register_)) {
     return;
   }
@@ -152,7 +142,7 @@ void CPU::addRegister(std::string register_) {
 int CPU::largestRegister() {
   int max = INT_MIN;
   for (auto const& [key, val] : m_registry) {
-    if(val > max) {
+    if (val > max) {
       max = val;
     }
   }
