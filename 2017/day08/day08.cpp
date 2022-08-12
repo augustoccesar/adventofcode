@@ -22,7 +22,33 @@ std::string Day08::part_one() {
   return std::to_string(cpu.largestRegister());
 }
 
-std::string Day08::part_two() { return "-"; }
+std::string Day08::part_two() {
+  std::string input = read_input("inputs/day08_input.txt");
+  std::vector<std::string> lines = split(input, '\n');
+
+  CPU cpu = CPU();
+  std::vector<Instruction> instructions;
+
+  for (std::string line : lines) {
+    auto instruction = Instruction::fromString(line);
+    instructions.push_back(instruction);
+
+    cpu.addRegister(instruction.m_register);
+    cpu.addRegister(instruction.m_condition.m_register);
+  }
+
+  int max = INT_MIN;
+  for (Instruction& instruction : instructions) {
+    cpu.applyInstruction(instruction);
+
+    int currentMaxRegister = cpu.largestRegister();
+    if(currentMaxRegister > max) {
+      max = currentMaxRegister;
+    }
+  }
+
+  return std::to_string(max);
+}
 
 Modifier modifierFromStr(const std::string& str) {
   if (str == "inc")
