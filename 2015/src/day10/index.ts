@@ -2,14 +2,17 @@ import { Task } from '../Task';
 
 export class Day10 extends Task {
     partOne(): string {
-        let input = this.readInput().split("");
+        const input = this.readInput().split("");
         const result = runGame(input, 40);
 
         return result.length.toString();
     }
 
     partTwo(): string {
-        return "-";
+        const input = this.readInput().split("");
+        const result = runGame(input, 50);
+
+        return result.length.toString();
     }
 }
 
