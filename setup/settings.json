@@ -50,7 +50,7 @@
             {
                 "file": "main.cpp",
                 "label": "//SETUP:target_case",
-                "data": "\t\tcase $day:\n\t\t\treturn new Day$padded_day;\n"
+                "data": "    case $day:\n      return new Day$padded_day;\n"
             },
             {
                 "file": "CMakeLists.txt",
