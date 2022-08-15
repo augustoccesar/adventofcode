@@ -10,6 +10,7 @@
 #include "day07/day07.cpp"
 #include "day08/day08.h"
 #include "day09/day09.cpp"
+#include "day10/day10.cpp"
 //SETUP:target_include
 
 AbstractTask* getDay(int i_day) {
@@ -32,6 +33,8 @@ AbstractTask* getDay(int i_day) {
       return new Day08;
     case 9:
       return new Day09;
+    case 10:
+      return new Day10;
 //SETUP:target_case
     default:
       return NULL;
@@ -47,7 +50,7 @@ int main(int argc, char* argv[]) {
   auto i_day = std::stoi(argv[1]);
   AbstractTask* day = getDay(i_day);
 
-  if (day == NULL) {
+  if (day == nullptr) {
     std::cerr << "Day not found" << std::endl;
     exit(1);
   }
