@@ -14,7 +14,7 @@ class Day09 : public AbstractTask {
         continue;
       }
 
-      if (input[i] == '<') {
+      if (input[i] == '<' && !inGarbage) {
         inGarbage = true;
         continue;
       }
@@ -38,5 +38,32 @@ class Day09 : public AbstractTask {
     return std::to_string(groupScore);
   }
 
-  std::string part_two() override { return "-"; }
+  std::string part_two() override {
+    auto input = read_input("inputs/day09_input.txt");
+
+    bool inGarbage = false;
+    int garbageCount = 0;
+    for (int i = 0; i < input.size(); i++) {
+      if (input[i] == '!') {
+        i += 1;
+        continue;
+      }
+
+      if (input[i] == '<' && !inGarbage) {
+        inGarbage = true;
+        continue;
+      }
+
+      if (input[i] == '>') {
+        inGarbage = false;
+        continue;
+      }
+
+      if (inGarbage) {
+        garbageCount++;
+      }
+    }
+
+    return std::to_string(garbageCount);
+  }
 };
