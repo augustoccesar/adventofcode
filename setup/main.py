@@ -3,6 +3,7 @@ import os
 import re
 import sys
 from os.path import exists
+from typing import Dict
 
 import markdownify
 import requests
@@ -25,7 +26,7 @@ def prepare_handler(year_param: str, day_param: str):
     if str(year) not in SETTINGS.keys():
         raise ValueError(f"Settings not found for year {year}")
 
-    settings = SETTINGS[str(year)]
+    settings: Dict = SETTINGS[str(year)]
     task_destination = f"./{year}{settings['tasks_path']}/day{padded_day}"
     if exists(task_destination):
         raise Exception(f"Folder for day {day} in year {year} already exists")
@@ -43,6 +44,9 @@ def prepare_handler(year_param: str, day_param: str):
     with open(task_full_path, "w") as file:
         file.write(template)
 
+    if "instructions" not in settings.keys():
+        return
+    
     for instruction in settings['instructions']:
         with open(f"./{year}/{instruction['file']}", "r+") as file:
             file_content = file.read()

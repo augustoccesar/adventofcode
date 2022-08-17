@@ -80,5 +80,9 @@
                 "data": "from aoc.day$padded_day import Day$padded_day\n"
             }
         ]
+    },
+    "2021": {
+        "tasks_path": "",
+        "extension": "rb"
     }
 }
