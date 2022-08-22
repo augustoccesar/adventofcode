@@ -6,36 +6,56 @@ class Day11
   include Task
 
   def part_one
-    data = []
-    read_input.split("\n").each do |line|
-      data << line.chars.map(&:to_i)
-    end
+    data = parse_input(read_input)
 
     flashes = 0
     100.times do
-      flashed = {}
-      (0...data.size).each do |y|
-        (0...data[0].size).each do |x|
-          next if flashed[pos_to_str(x, y)]
-
-          data[y][x] = data[y][x] + 1
-          next if data[y][x] <= 9
-
-          flash(data, x, y, flashed)
-        end
-      end
-
-      flashes += flashed.size
+      flashes += check_flashes(data).size
     end
 
     flashes.to_s
   end
 
   def part_two
-    "-"
+    data = parse_input(read_input)
+
+    i = 0
+    loop do
+      flashed = check_flashes(data)
+      i += 1
+
+      break if flashed.size == data.size * data[0].size
+    end
+
+    i.to_s
   end
 
   private
+
+  def parse_input(input)
+    data = []
+    input.split("\n").each do |line|
+      data << line.chars.map(&:to_i)
+    end
+
+    data
+  end
+
+  def check_flashes(data)
+    flashed = {}
+    (0...data.size).each do |y|
+      (0...data[0].size).each do |x|
+        next if flashed[pos_to_str(x, y)]
+
+        data[y][x] = data[y][x] + 1
+        next if data[y][x] <= 9
+
+        flash(data, x, y, flashed)
+      end
+    end
+
+    flashed
+  end
 
   def flash(data, x, y, flashed)
     data[y][x] = 0
