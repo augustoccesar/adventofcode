@@ -1,80 +1,69 @@
 # frozen_string_literal: true
 
+require "set"
 require_relative "../task"
 
 class Day12
   include Task
 
   def part_one
-    caves_map = parse_input(read_input)
+    cave_map = CaveMap.new(read_input)
 
-    paths = []
-    caves_map["start"].trace(paths: paths)
-
-    paths.size.to_s
+    cave_map.paths("start", "end").size
   end
 
   def part_two
-    caves_map = parse_input(read_input)
+    cave_map = CaveMap.new(read_input)
 
-    paths = []
-    caves_map.keys.filter { |o| o == o.downcase && !%w[start end].include?(o) }.each do |allow_double|
-      caves_map["start"].trace(paths: paths, allow_double: allow_double)
+    paths = Set.new
+    cave_map.map.keys.filter { |o| o == o.downcase && !%w[start end].include?(o) }.each do |allow_double|
+      paths.merge(cave_map.paths("start", "end", allow_double: allow_double))
     end
 
-    paths.map { |path| path.map(&:name).join(",") }.uniq.size.to_s
+    paths.size.to_s
   end
+end
 
-  private
+class CaveMap
+  attr_reader :map
 
-  def parse_input(input)
-    caves_map = {}
+  def initialize(input)
+    @map = {}
 
     input.split("\n").each do |line|
       from, to = line.split("-")
 
-      caves_map[from] = Cave.new(from) unless caves_map.key?(from)
-      caves_map[to] = Cave.new(to) unless caves_map.key?(to)
-
-      caves_map[from].add_neighbor(caves_map[to])
-      caves_map[to].add_neighbor(caves_map[from])
+      @map.key?(from) ? @map[from] << to : @map[from] = [to]
+      @map.key?(to) ? @map[to] << from : @map[to] = [from]
     end
-
-    caves_map
-  end
-end
-
-class Cave
-  attr_reader :name, :neighbors
-
-  def initialize(name)
-    @name = name
-    @neighbors = []
   end
 
-  def add_neighbor(cave)
-    @neighbors << cave
+  def paths(from, to, allow_double: nil)
+    visited = @map.keys.map { |k| [k, 0] }.to_h
+    result = Set.new
+    paths_iter(result, from, to, visited, allow_double: allow_double)
+
+    result
   end
 
-  def trace(current_path = [], visited = {}, paths: [], allow_double: nil)
-    visited.key?(@name) ? visited[@name] += 1 : visited[@name] = 1
-    current_path << self
+  private
 
-    @neighbors.each do |neighbor|
-      next if visited.key?(neighbor.name) && neighbor.small? && neighbor.name != allow_double
-      next if neighbor.name == allow_double && visited.key?(neighbor.name) && visited[neighbor.name] > 1
+  def paths_iter(result, from, to, visited, path = [], allow_double:)
+    visited[from] += 1
+    path << from
 
-      if neighbor.name == "end"
-        current_path << neighbor
-        paths << current_path
-        next
+    if from == to
+      result.add(path.join(","))
+    else
+      @map[from].each do |neighbor|
+        next if neighbor == neighbor.downcase && visited[neighbor].positive? && neighbor != allow_double
+        next if neighbor == allow_double && visited[neighbor] > 1
+
+        paths_iter(result, neighbor, to, visited, path, allow_double: allow_double)
       end
-
-      neighbor.trace(current_path.clone, visited.clone, paths: paths, allow_double: allow_double)
     end
-  end
 
-  def small?
-    @name == @name.downcase
+    path.pop
+    visited[from] -= 1
   end
 end
