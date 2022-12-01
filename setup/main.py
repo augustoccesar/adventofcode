@@ -40,6 +40,10 @@ def prepare_handler(year_param: str, day_param: str):
         "$padded_day", padded_day).replace("$day", str(day))
 
     task_file_name = settings.get("task_file_name") or f"day{padded_day}"
+    task_file_name_format = settings.get("task_file_name_format")
+    if task_file_name_format and task_file_name_format == "camel":
+        task_file_name = task_file_name.title()
+
     task_full_path = f"{task_destination}/{task_file_name}.{settings['extension']}"
     with open(task_full_path, "w") as file:
         file.write(template)
