@@ -49,7 +49,7 @@ async function executeTimed(header, func) {
   console.log(`${header}: ${result}\n(took ${timeStr})\n`);
 }
 
-// NOTE(augustoccesar)[2022-11-01]:
+// NOTE(augustoccesar)[2022-12-01]:
 //  When using 'yarn start' it is .slice(3), but if using directly 'node', it should
 //  be .slice(2). Maybe do this dinamic somehow at some point?
 const args = argv.slice(3);
