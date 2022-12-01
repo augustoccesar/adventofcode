@@ -1,6 +1,6 @@
 | Part | Execution time  |
 |------|-----------------|
-| 1    | 00:00.305       |
+| 1    | 00:00.232       |
 | 2    | -               |
 
 # Day 1: Calorie Counting
