@@ -19,7 +19,12 @@ export async function partOne() {
  * @returns {Promise<string>}
  */
 export async function partTwo() {
-  return "-";
+  const elfs = await resolveInput();
+  const topElfs = elfs.sort((a, b) => b - a).slice(0, 3);
+
+  return topElfs
+    .reduce((partialSum, item) => partialSum + item)
+    .toString();
 }
 
 async function resolveInput() {
