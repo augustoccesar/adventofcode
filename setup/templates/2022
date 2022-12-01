@@ -1,0 +1,15 @@
+import { readInput } from "../input.js";
+
+/**
+ * @returns {string}
+ */
+export async function partOne() {
+  return "-";
+}
+
+/**
+ * @returns {string}
+ */
+export async function partTwo() {
+  return "-";
+}

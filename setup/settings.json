@@ -84,5 +84,10 @@
     "2021": {
         "tasks_path": "",
         "extension": "rb"
+    },
+    "2022": {
+        "tasks_path": "",
+        "task_file_name": "index",
+        "extension": "js"
     }
 }

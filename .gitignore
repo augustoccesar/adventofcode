@@ -27,4 +27,7 @@
 !2021/bin
 !2021/.vscode/launch.json
 
+# 2022 specifics
+!2022/bin
+
 !/bin
