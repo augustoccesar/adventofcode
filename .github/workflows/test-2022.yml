@@ -1,0 +1,39 @@
+name: "2022"
+
+on:
+  push:
+    branches: 
+      - master
+    paths: 
+      - '2022/**'
+  pull_request:
+    branches: 
+      - master
+    paths: 
+      - '2022/**'
+
+jobs:
+  test:
+    runs-on: "ubuntu-latest"
+    steps:
+      - uses: actions/checkout@v2
+      - name: Decrypt results
+        run: ./.github/scripts/decrypt_secret.sh
+        env:
+          VAULT_PASS: ${{ secrets.VaultPass }}
+          RESULTS_INPUT: ./2022/expected_results.gpg
+          RESULTS_OUTPUT: ./2022/expected_results
+      - name: Set Node.js 16.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+      - name: Run install
+        uses: borales/actions-yarn@v4
+        with:
+          dir: './2022'
+          cmd: install
+      - name: Run tests
+        uses: borales/actions-yarn@v4
+        with:
+          dir: './2022'
+          cmd: test

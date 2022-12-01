@@ -4,12 +4,14 @@
   "type": "module",
   "description": "Solutions for Advent of Code 2022",
   "scripts": {
-    "start": "node index.js ${0}"
+    "start": "node index.js ${0}",
+    "test": "mocha --diff false"
   },
   "author": "Augusto César",
   "license": "MIT",
   "private": true,
   "devDependencies": {
-    "eslint": "^8.28.0"
+    "eslint": "^8.28.0",
+    "mocha": "^10.1.0"
   }
 }
