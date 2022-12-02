@@ -23,11 +23,9 @@
 **/expected_results
 **/tmp
 
-# 2021 specifics
-!2021/bin
 !2021/.vscode/launch.json
 
-# 2022 specifics
-!2022/bin
-
 !/bin
+!2020/bin
+!2021/bin
+!2022/bin

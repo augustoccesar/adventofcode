@@ -15,12 +15,5 @@ Using Golang 1.15
 
 ## How to run
 ```
-make day={day}
-```
-
-### Example:
-
-For running Day 10:
-```
-make day=10
+> ./bin/run <day>
 ```
