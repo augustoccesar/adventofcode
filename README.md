@@ -4,7 +4,7 @@
 | :-- | :-: | :-: | :-: | :-: |  :-: |  :-: | 
 | [2022 - Kotlin](2022/README.md) | [![2022](https://github.com/augustoccesar/adventofcode/actions/workflows/test-2022.yml/badge.svg)](https://github.com/augustoccesar/adventofcode/actions/workflows/test-2022.yml) | ✅❌❌❌❌ | ❌❌❌❌❌ | ❌❌❌❌❌ | ❌❌❌❌❌ | ❌❌❌❌❌ |
 | [2021 - Ruby 3](2021/README.md) | | ✅✅✅✅✅ | ✅✅✅✅✅ | ✅✅❌✅🟡 | ❌❌❌❌❌ | ❌❌❌❌❌ |
-| [2020 - Golang 1.15](2020/README.md) | [![2020](https://github.com/augustoccesar/adventofcode/workflows/2020/badge.svg)](https://github.com/augustoccesar/adventofcode/actions?query=workflow%3A2020) | ✅✅✅✅✅| ✅✅✅✅✅ | ✅✅✅✅✅ | ✅✅✅✅✅ | ✅✅✅✅✅ |
+| [2020 - Golang 1.15](2020/README.md) | [![2020](https://github.com/augustoccesar/adventofcode/actions/workflows/test-2020.yml/badge.svg)](https://github.com/augustoccesar/adventofcode/actions/workflows/test-2020.yml) | ✅✅✅✅✅| ✅✅✅✅✅ | ✅✅✅✅✅ | ✅✅✅✅✅ | ✅✅✅✅✅ |
 | [2019 - Java 17](2019/README.md) | [![2019](https://github.com/augustoccesar/adventofcode/workflows/2019/badge.svg)](https://github.com/augustoccesar/adventofcode/actions?query=workflow%3A2019) | ✅✅✅✅✅ | ✅✅✅✅✅ | ✅🟡✅✅❌ | ❌❌❌❌❌ | ❌❌❌❌❌ |
 | [2018 - Python 3.8](2018/README.md) | | ✅✅✅✅✅ | ✅✅✅✅✅ | ❌❌❌❌❌ | ❌❌❌❌❌ | ❌❌❌❌❌ |
 | [2017 - C++ 20](2017/README.md) | | ✅✅✅✅✅ | ✅✅✅✅✅ | ❌❌❌❌❌ | ❌❌❌❌❌ | ❌❌❌❌❌ |
