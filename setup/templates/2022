@@ -1,15 +1,13 @@
-import { readInput } from "../input.js";
+package se.augustocesar.day$padded_day
 
-/**
- * @returns {string}
- */
-export async function partOne() {
-  return "-";
-}
+import se.augustocesar.Task
 
-/**
- * @returns {string}
- */
-export async function partTwo() {
-  return "-";
+class Day$padded_day : Task() {
+    override fun partOne(): String {
+        return "-"
+    }
+
+    override fun partTwo(): String {
+        return "-"
+    }
 }

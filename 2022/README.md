@@ -1,6 +1,6 @@
 # [AoC 2022](https://adventofcode.com/2022)
 
-Using Javascript
+Using Kotlin
 
 ## Calendar (Part One / Part Two)
 
