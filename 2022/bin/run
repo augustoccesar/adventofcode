@@ -1,1 +1,1 @@
-yarn start $1
+gradle run --args=$1
