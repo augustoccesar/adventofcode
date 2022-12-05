@@ -8,22 +8,13 @@ class Day03 : Task() {
         var total = 0
 
         readInput().lines().forEach {
-            val found = hashMapOf<Int, Boolean>()
             val items = it.chars().toList()
 
-            for ((i, item) in items.withIndex()) {
-                val itemPrio = charASCIIToPrio(item)
+            val firstHalf = items.subList(0, items.size / 2).toSet()
+            val secondHalf = items.subList(items.size / 2, items.size).toSet()
 
-                if (i < items.size / 2) {
-                    found[itemPrio] = true
-                    continue
-                }
-
-                if (found.containsKey(itemPrio)) {
-                    total += itemPrio
-                    break
-                }
-            }
+            val item = firstHalf.intersect(secondHalf).first()
+            total += charASCIIToPrio(item)
         }
 
         return total.toString()
