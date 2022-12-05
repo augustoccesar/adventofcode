@@ -30,12 +30,25 @@ class Day03 : Task() {
     }
 
     override fun partTwo(): String {
-        return "-"
+        val rucksacks = readInput().lines()
+        var total = 0
+
+        for (i in rucksacks.indices step 3) {
+            val res = rucksacks[i].toSet()
+                .intersect(rucksacks[i + 1].toSet())
+                .intersect(rucksacks[i + 2].toSet())
+                .first()
+                .code
+
+            total += charASCIIToPrio(res)
+        }
+
+        return total.toString()
     }
 }
 
 private fun charASCIIToPrio(charASCII: Int): Int {
-    return if(charASCII > 96) {
+    return if (charASCII > 96) {
         charASCII - 96
     } else {
         charASCII - 38
