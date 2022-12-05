@@ -1,6 +1,7 @@
 package se.augustocesar
 
 import se.augustocesar.day01.Day01
+import se.augustocesar.day02.Day02
 //SETUP:target_import
 import java.time.Instant
 import java.time.ZoneId
@@ -37,5 +38,6 @@ fun formatTime(timeMillis: Long): String {
 
 val daysMap = mapOf<String, Task>(
     "01" to Day01(),
+    "02" to Day02(),
 //SETUP:target_map
 )
