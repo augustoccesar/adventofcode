@@ -21,7 +21,20 @@ class Day02 : Task() {
     }
 
     override fun partTwo(): String {
-        return "-"
+        val input = readInput()
+        var score = 0
+
+        input.lines().forEach {
+            val data = it.split(" ")
+            val opponentPlay = Play.fromRepresentation(data[0])
+            val expectedOutcome = Outcome.fromRepresentation(data[1])
+
+            val myPlay = opponentPlay.counterPlay(expectedOutcome)
+
+            score += expectedOutcome.points + myPlay.points
+        }
+
+        return score.toString()
     }
 }
 
@@ -56,6 +69,32 @@ enum class Play(val points: Int) {
         }
     }
 
+    fun counterPlay(outcome: Outcome): Play {
+        when(this) {
+            ROCK -> {
+                return when(outcome) {
+                    Outcome.WIN -> PAPER
+                    Outcome.LOSS -> SCISSOR
+                    Outcome.TIE -> ROCK
+                }
+            }
+            PAPER -> {
+                return when(outcome) {
+                    Outcome.WIN -> SCISSOR
+                    Outcome.LOSS -> ROCK
+                    Outcome.TIE -> PAPER
+                }
+            }
+            SCISSOR -> {
+                return when(outcome) {
+                    Outcome.WIN -> ROCK
+                    Outcome.LOSS -> PAPER
+                    Outcome.TIE -> SCISSOR
+                }
+            }
+        }
+    }
+
     companion object {
         fun fromRepresentation(representation: String): Play {
             return when (representation) {
@@ -71,5 +110,16 @@ enum class Play(val points: Int) {
 enum class Outcome(val points: Int) {
     WIN(6),
     LOSS(0),
-    TIE(3)
+    TIE(3);
+
+    companion object {
+        fun fromRepresentation(representation: String): Outcome {
+            return when (representation) {
+                "X" -> LOSS
+                "Y" -> TIE
+                "Z" -> WIN
+                else -> throw RuntimeException("Invalid representation")
+            }
+        }
+    }
 }
