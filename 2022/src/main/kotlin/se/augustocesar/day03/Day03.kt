@@ -39,9 +39,9 @@ class Day03 : Task() {
 }
 
 private fun charASCIIToPrio(charASCII: Int): Int {
-    return if (charASCII > 96) {
-        charASCII - 96
-    } else {
-        charASCII - 38
+    return when(charASCII) {
+        in 97..122 -> charASCII - 96 // a-z
+        in 65..90 -> charASCII - 38 // A-Z
+        else -> throw RuntimeException("Unsupported char ASCII code")
     }
 }
