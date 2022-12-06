@@ -1,15 +1,16 @@
 # 🎄🎅 Advent of Code 🎅🎄
 
-| Language | Status | Week 1 | Week 2 | Week 3 | Week 4 | Week 5 |
-| :-- | :-: | :-: | :-: | :-: |  :-: |  :-: | 
-| [2022 - Kotlin](2022/README.md) | [![2022](https://github.com/augustoccesar/adventofcode/actions/workflows/test-2022.yml/badge.svg)](https://github.com/augustoccesar/adventofcode/actions/workflows/test-2022.yml) | ✅✅✅✅❌ | ❌❌❌❌❌ | ❌❌❌❌❌ | ❌❌❌❌❌ | ❌❌❌❌❌ |
-| [2021 - Ruby 3](2021/README.md) | | ✅✅✅✅✅ | ✅✅✅✅✅ | ✅✅❌✅🟡 | ❌❌❌❌❌ | ❌❌❌❌❌ |
-| [2020 - Golang 1.15](2020/README.md) | [![2020](https://github.com/augustoccesar/adventofcode/actions/workflows/test-2020.yml/badge.svg)](https://github.com/augustoccesar/adventofcode/actions/workflows/test-2020.yml) | ✅✅✅✅✅| ✅✅✅✅✅ | ✅✅✅✅✅ | ✅✅✅✅✅ | ✅✅✅✅✅ |
-| [2019 - Java 17](2019/README.md) | [![2019](https://github.com/augustoccesar/adventofcode/workflows/2019/badge.svg)](https://github.com/augustoccesar/adventofcode/actions?query=workflow%3A2019) | ✅✅✅✅✅ | ✅✅✅✅✅ | ✅🟡✅✅❌ | ❌❌❌❌❌ | ❌❌❌❌❌ |
-| [2018 - Python 3.8](2018/README.md) | | ✅✅✅✅✅ | ✅✅✅✅✅ | ❌❌❌❌❌ | ❌❌❌❌❌ | ❌❌❌❌❌ |
-| [2017 - C++ 20](2017/README.md) | | ✅✅✅✅✅ | ✅✅✅✅✅ | ❌❌❌❌❌ | ❌❌❌❌❌ | ❌❌❌❌❌ |
-| [2016 - Rust 1.51](2016/README.md) | | ✅✅✅✅✅ | ✅✅✅✅✅ | ❌❌❌❌❌ | ❌❌❌❌❌ | ❌❌❌❌❌ |
-| [2015 - Typescript 4.1](2015/README.md) | | ✅✅✅✅✅ | ✅✅✅✅✅ | ❌❌❌❌❌ | ❌❌❌❌❌ | ❌❌❌❌❌ |
+| Year | Language | Status | 1 - 5 | 6 - 10 | 11 - 15 | 16 - 20 | 21 - 25 |
+| :-- | :-- | :-: | :-: | :-: | :-: |  :-: |  :-: | 
+| [2022](2022/README.md) | ![Kotlin](https://img.shields.io/badge/Solved%20with-Kotlin-7F52FF) | [![2022](https://img.shields.io/github/workflow/status/augustoccesar/adventofcode/2022?label=2022)](https://github.com/augustoccesar/adventofcode/actions/workflows/test-2022.yml) | ✅✅✅✅❌ | ❌❌❌❌❌ | ❌❌❌❌❌ | ❌❌❌❌❌ | ❌❌❌❌❌ |
+| [2021](2021/README.md) | ![Ruby](https://img.shields.io/badge/Solved%20with-Ruby-CC342D) | | ✅✅✅✅✅ | ✅✅✅✅✅ | ✅✅❌✅🟡 | ❌❌❌❌❌ | ❌❌❌❌❌ |
+| [2020](2020/README.md) | ![Golang](https://img.shields.io/badge/Solved%20with-Go-79D4FD) | [![2020](https://img.shields.io/github/workflow/status/augustoccesar/adventofcode/2020?label=2020)](https://github.com/augustoccesar/adventofcode/actions/workflows/test-2020.yml) | ✅✅✅✅✅| ✅✅✅✅✅ | ✅✅✅✅✅ | ✅✅✅✅✅ | ✅✅✅✅✅ |
+| [2019](2019/README.md) | ![Java](https://img.shields.io/badge/Solved%20with-Java-F0931C) | [![2019](https://img.shields.io/github/workflow/status/augustoccesar/adventofcode/2019?label=2019)](https://github.com/augustoccesar/adventofcode/actions?query=workflow%3A2019) | ✅✅✅✅✅ | ✅✅✅✅✅ | ✅🟡✅✅❌ | ❌❌❌❌❌ | ❌❌❌❌❌ |
+| [2018](2018/README.md) | ![Python](https://img.shields.io/badge/Solved%20with-Python-F7CA3E) | | ✅✅✅✅✅ | ✅✅✅✅✅ | ❌❌❌❌❌ | ❌❌❌❌❌ | ❌❌❌❌❌ |
+| [2017](2017/README.md) | ![Cpp](https://img.shields.io/badge/Solved%20with-C++-00427E) | | ✅✅✅✅✅ | ✅✅✅✅✅ | ❌❌❌❌❌ | ❌❌❌❌❌ | ❌❌❌❌❌ |
+| [2016](2016/README.md) | ![Rust](https://img.shields.io/badge/Solved%20with-Rust-A72145) | | ✅✅✅✅✅ | ✅✅✅✅✅ | ❌❌❌❌❌ | ❌❌❌❌❌ | ❌❌❌❌❌ |
+| [2015](2015/README.md) | ![Typescript](https://img.shields.io/badge/Solved%20with-Typescript-3178C6) | | ✅✅✅✅✅ | ✅✅✅✅✅ | ❌❌❌❌❌ | ❌❌❌❌❌ | ❌❌❌❌❌ |
+
 
 <table>
     <tr>
