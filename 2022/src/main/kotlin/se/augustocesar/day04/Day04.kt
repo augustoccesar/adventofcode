@@ -21,6 +21,19 @@ class Day04 : Task() {
     }
 
     override fun partTwo(): String {
-        return "-"
+        var total = 0
+
+        readInput().lines().forEach {line ->
+            val sections = line
+                .split(",")
+                .map { section -> section.split("-").map { item -> item.toInt() } }
+                .map { IntRange(it[0], it[1]) }
+
+            if(sections[0].intersect(sections[1]).isNotEmpty()) {
+                total++
+            }
+        }
+
+        return total.toString()
     }
 }
