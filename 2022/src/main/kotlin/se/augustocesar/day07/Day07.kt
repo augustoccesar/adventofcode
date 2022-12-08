@@ -73,7 +73,7 @@ class Entry(val name: String, val type: EntryType, val parent: Entry?, val child
         }
 
         val sizes: List<Int> = this.children.map {
-            if(it.type == EntryType.FOLDER) {
+            if (it.type == EntryType.FOLDER) {
                 it.calculateSize()
             } else {
                 it.size
@@ -90,8 +90,8 @@ private fun resolveFileSystem(input: String): Entry {
     var currentDir = Entry("/", EntryType.FOLDER, null, arrayListOf(), 0)
     val rootDir = currentDir
 
-    for((i, line) in input.lines().withIndex()) {
-        if(i == 0) {
+    for ((i, line) in input.lines().withIndex()) {
+        if (i == 0) {
             continue
         }
 
@@ -99,9 +99,9 @@ private fun resolveFileSystem(input: String): Entry {
             val folderName = line.removePrefix("$ cd ")
 
             val children = if (folderName == "..") {
-                currentDir.parent ?: throw RuntimeException("Wut")
+                currentDir.parent ?: throw RuntimeException("Current folder does not have a parent")
             } else {
-                currentDir.children.find { it.name == folderName } ?: throw RuntimeException("Wut")
+                currentDir.children.find { it.name == folderName } ?: throw RuntimeException("Can't find nested folder")
             }
 
             currentDir = children
@@ -134,12 +134,12 @@ private fun resolveFileSystem(input: String): Entry {
 private fun lookupDirs(entry: Entry, fn: (Int) -> Boolean): List<Entry> {
     val folders: ArrayList<Entry> = arrayListOf()
 
-    if(fn(entry.size)) {
+    if (fn(entry.size)) {
         folders.add(entry)
     }
 
-    entry.children.forEach {children ->
-        if(children.type == EntryType.FOLDER) {
+    entry.children.forEach { children ->
+        if (children.type == EntryType.FOLDER) {
             folders.addAll(lookupDirs(children, fn))
         }
     }
