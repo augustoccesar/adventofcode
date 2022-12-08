@@ -7,6 +7,7 @@ import se.augustocesar.day04.Day04
 import se.augustocesar.day05.Day05
 import se.augustocesar.day06.Day06
 import se.augustocesar.day07.Day07
+import se.augustocesar.day08.Day08
 //SETUP:target_import
 import java.time.Instant
 import java.time.ZoneId
@@ -49,5 +50,6 @@ val daysMap = mapOf<String, Task>(
     "05" to Day05(),
     "06" to Day06(),
     "07" to Day07(),
+    "08" to Day08(),
 //SETUP:target_map
 )
