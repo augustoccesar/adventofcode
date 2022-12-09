@@ -5,19 +5,12 @@ import kotlin.streams.toList
 
 class Day08 : Task() {
     override fun partOne(): String {
-        val lines = readInput().lines()
-        val grid = arrayListOf<List<Int>>()
-
-        lines.forEach { line ->
-            grid.add(line.chars().map { it.toChar().digitToInt() }.toList())
-        }
+        val grid = inputToGrid(readInput())
 
         var visibleTrees = 0
-        for (row in 0 until grid.size) {
-            for (col in 0 until grid[0].size) {
-                if (visible(row, col, grid)) {
-                    visibleTrees++
-                }
+        iterateGrid(grid) { row, col ->
+            if (visible(row, col, grid)) {
+                visibleTrees++
             }
         }
 
@@ -25,20 +18,13 @@ class Day08 : Task() {
     }
 
     override fun partTwo(): String {
-        val lines = readInput().lines()
-        val grid = arrayListOf<List<Int>>()
-
-        lines.forEach { line ->
-            grid.add(line.chars().map { it.toChar().digitToInt() }.toList())
-        }
+        val grid = inputToGrid(readInput())
 
         var maxScenic = 0
-        for (row in 0 until grid.size) {
-            for (col in 0 until grid[0].size) {
-                val score = scenicScore(row, col, grid)
-                if (score > maxScenic) {
-                    maxScenic = score
-                }
+        iterateGrid(grid) { row, col ->
+            val score = scenicScore(row, col, grid)
+            if (score > maxScenic) {
+                maxScenic = score
             }
         }
 
@@ -46,7 +32,28 @@ class Day08 : Task() {
     }
 }
 
-fun scenicScore(row: Int, col: Int, map: List<List<Int>>): Int {
+typealias Grid = List<List<Int>>
+
+private fun inputToGrid(input: String): Grid {
+    val lines = input.lines()
+    val grid = arrayListOf<List<Int>>()
+
+    lines.forEach { line ->
+        grid.add(line.chars().map { it.toChar().digitToInt() }.toList())
+    }
+
+    return grid
+}
+
+private fun iterateGrid(grid: Grid, fn: (Int, Int) -> Unit) {
+    for (row in grid.indices) {
+        for (col in grid[0].indices) {
+            fn(row, col)
+        }
+    }
+}
+
+fun scenicScore(row: Int, col: Int, map: Grid): Int {
     val size = map[row][col]
 
     var visibleLeft = 0
@@ -97,7 +104,7 @@ fun scenicScore(row: Int, col: Int, map: List<List<Int>>): Int {
     return visibleLeft * visibleRight * visibleUp * visibleDown
 }
 
-fun visible(row: Int, col: Int, map: List<List<Int>>): Boolean {
+fun visible(row: Int, col: Int, map: Grid): Boolean {
     if (row == 0 || row == map.size - 1) {
         return true
     }
