@@ -3,13 +3,15 @@ package se.augustocesar.day08
 import se.augustocesar.Task
 import kotlin.streams.toList
 
+// TODO: improve scenicScore and visible methods
+
 class Day08 : Task() {
     override fun partOne(): String {
-        val grid = inputToGrid(readInput())
+        val map = Map.from(readInput())
 
         var visibleTrees = 0
-        iterateGrid(grid) { row, col ->
-            if (visible(row, col, grid)) {
+        map.iterate { row, col ->
+            if (visible(row, col, map)) {
                 visibleTrees++
             }
         }
@@ -18,11 +20,11 @@ class Day08 : Task() {
     }
 
     override fun partTwo(): String {
-        val grid = inputToGrid(readInput())
+        val map = Map.from(readInput())
 
         var maxScenic = 0
-        iterateGrid(grid) { row, col ->
-            val score = scenicScore(row, col, grid)
+        map.iterate { row, col ->
+            val score = scenicScore(row, col, map)
             if (score > maxScenic) {
                 maxScenic = score
             }
@@ -32,28 +34,30 @@ class Day08 : Task() {
     }
 }
 
-typealias Grid = List<List<Int>>
-
-private fun inputToGrid(input: String): Grid {
-    val lines = input.lines()
-    val grid = arrayListOf<List<Int>>()
-
-    lines.forEach { line ->
-        grid.add(line.chars().map { it.toChar().digitToInt() }.toList())
+class Map : ArrayList<List<Int>>() {
+    fun iterate(fn: (Int, Int) -> Unit) {
+        for (row in this.indices) {
+            for (col in this[0].indices) {
+                fn(row, col)
+            }
+        }
     }
 
-    return grid
-}
+    companion object {
+        fun from(input: String): Map {
+            val lines = input.lines()
+            val grid = Map()
 
-private fun iterateGrid(grid: Grid, fn: (Int, Int) -> Unit) {
-    for (row in grid.indices) {
-        for (col in grid[0].indices) {
-            fn(row, col)
+            lines.forEach { line ->
+                grid.add(line.chars().map { it.toChar().digitToInt() }.toList())
+            }
+
+            return grid
         }
     }
 }
 
-fun scenicScore(row: Int, col: Int, map: Grid): Int {
+fun scenicScore(row: Int, col: Int, map: Map): Int {
     val size = map[row][col]
 
     var visibleLeft = 0
@@ -104,7 +108,7 @@ fun scenicScore(row: Int, col: Int, map: Grid): Int {
     return visibleLeft * visibleRight * visibleUp * visibleDown
 }
 
-fun visible(row: Int, col: Int, map: Grid): Boolean {
+fun visible(row: Int, col: Int, map: Map): Boolean {
     if (row == 0 || row == map.size - 1) {
         return true
     }
