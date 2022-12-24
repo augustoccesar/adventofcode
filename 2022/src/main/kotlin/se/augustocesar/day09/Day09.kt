@@ -7,11 +7,7 @@ class Day09 : Task() {
     override fun partOne(): String {
         val rope = Rope.withKnots(2)
 
-        readInput().lines().forEach { line ->
-            val tokens = line.split(" ")
-            val direction = Direction.fromRepresentation(tokens[0])
-            val steps = tokens[1].toInt()
-
+        forEachCommand(readInput()) { direction, steps ->
             repeat(steps) { rope.moveHead(direction) }
         }
 
@@ -21,15 +17,24 @@ class Day09 : Task() {
     override fun partTwo(): String {
         val rope = Rope.withKnots(10)
 
-        readInput().lines().forEach { line ->
-            val tokens = line.split(" ")
-            val direction = Direction.fromRepresentation(tokens[0])
-            val steps = tokens[1].toInt()
-
+        forEachCommand(readInput()) { direction, steps ->
             repeat(steps) { rope.moveHead(direction) }
         }
 
         return rope.tailTracking.size.toString()
+    }
+
+    private fun forEachCommand(
+            input: String,
+            action: (direction: Direction, steps: Int) -> Unit
+    ) {
+        input.lines().forEach { line ->
+            val tokens = line.split(" ")
+            val direction = Direction.fromRepresentation(tokens[0])
+            val steps = tokens[1].toInt()
+
+            action(direction, steps)
+        }
     }
 }
 
@@ -70,7 +75,7 @@ class Rope private constructor(size: Int) {
                 currKnot.position = currKnot.position.sum(compDirection.yAxis.modifier)
             }
 
-            if(currKnot.next == null) {
+            if (currKnot.next == null) {
                 tailTracking.add(currKnot.position.key())
             }
 
