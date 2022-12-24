@@ -5,7 +5,7 @@ import kotlin.math.abs
 
 class Day09 : Task() {
     override fun partOne(): String {
-        val rope = Rope()
+        val rope = Rope.withKnots(2)
 
         readInput().lines().forEach { line ->
             val tokens = line.split(" ")
@@ -23,30 +23,55 @@ class Day09 : Task() {
     }
 }
 
-class Rope {
-    private var head: Point2D = Point2D(0, 0)
-    private var tail: Point2D = Point2D(0, 0)
-    val tailTracking: HashSet<String> = hashSetOf(tail.key())
+class Knot(var next: Knot?, var previous: Knot?) {
+    var position: Point2D = Point2D(0, 0)
+}
 
-    fun moveHead(direction: Direction) {
-        head = head.sum(direction.modifier)
-        if (!head.isTouching(tail)) {
-            moveTail()
+class Rope private constructor(size: Int) {
+    private val head = Knot(null, null)
+    val tailTracking: HashSet<String> = hashSetOf(Point2D(0, 0).key())
+
+    init {
+        var current = head
+        repeat(size - 1) {
+            val knot = Knot(null, current)
+            current.next = knot
+
+            current = knot
         }
     }
 
-    private fun moveTail() {
-        val compDirection = tail.directionToFollow(head)
+    fun moveHead(direction: Direction) {
+        head.position = head.position.sum(direction.modifier)
 
-        if (compDirection.xAxis != null) {
-            tail = tail.sum(compDirection.xAxis.modifier)
+        var currKnot = head.next
+        while (currKnot != null) {
+            if (currKnot.position.isTouching(currKnot.previous!!.position)) {
+                break
+            }
+
+            val compDirection = currKnot.position.directionToFollow(currKnot.previous!!.position)
+
+            if (compDirection.xAxis != null) {
+                currKnot.position = currKnot.position.sum(compDirection.xAxis.modifier)
+            }
+
+            if (compDirection.yAxis != null) {
+                currKnot.position = currKnot.position.sum(compDirection.yAxis.modifier)
+            }
+
+            if(currKnot.next == null) {
+                tailTracking.add(currKnot.position.key())
+            }
+
+            currKnot = currKnot.next
         }
+    }
 
-        if (compDirection.yAxis != null) {
-            tail = tail.sum(compDirection.yAxis.modifier)
+    companion object {
+        fun withKnots(size: Int): Rope {
+            return Rope(size)
         }
-
-        tailTracking.add(tail.key())
     }
 }
 
