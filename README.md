@@ -2,7 +2,7 @@
 
 | Year | Language | Status | 1 - 5 | 6 - 10 | 11 - 15 | 16 - 20 | 21 - 25 |
 | :-- | :-- | :-: | :-: | :-: | :-: |  :-: |  :-: | 
-| [2022](2022/README.md) | ![Kotlin](https://img.shields.io/badge/Solved%20with-Kotlin-7F52FF) | [![2022](https://github.com/augustoccesar/adventofcode/actions/workflows/test-2022.yml/badge.svg)](https://github.com/augustoccesar/adventofcode/actions/workflows/test-2022.yml) | ✅✅✅✅✅ | ✅✅✅❌❌ | ❌❌❌❌❌ | ❌❌❌❌❌ | ❌❌❌❌❌ |
+| [2022](2022/README.md) | ![Kotlin](https://img.shields.io/badge/Solved%20with-Kotlin-7F52FF) | [![2022](https://github.com/augustoccesar/adventofcode/actions/workflows/test-2022.yml/badge.svg)](https://github.com/augustoccesar/adventofcode/actions/workflows/test-2022.yml) | ✅✅✅✅✅ | ✅✅✅🟡❌ | ❌❌❌❌❌ | ❌❌❌❌❌ | ❌❌❌❌❌ |
 | [2021](2021/README.md) | ![Ruby](https://img.shields.io/badge/Solved%20with-Ruby-CC342D) | | ✅✅✅✅✅ | ✅✅✅✅✅ | ✅✅❌✅🟡 | ❌❌❌❌❌ | ❌❌❌❌❌ |
 | [2020](2020/README.md) | ![Golang](https://img.shields.io/badge/Solved%20with-Go-79D4FD) | [![2020](https://github.com/augustoccesar/adventofcode/actions/workflows/test-2020.yml/badge.svg)](https://github.com/augustoccesar/adventofcode/actions/workflows/test-2020.yml) | ✅✅✅✅✅| ✅✅✅✅✅ | ✅✅✅✅✅ | ✅✅✅✅✅ | ✅✅✅✅✅ |
 | [2019](2019/README.md) | ![Java](https://img.shields.io/badge/Solved%20with-Java-F0931C) | [![2019](https://github.com/augustoccesar/adventofcode/actions/workflows/test-2019.yml/badge.svg)](https://github.com/augustoccesar/adventofcode/actions/workflows/test-2019.yml) | ✅✅✅✅✅ | ✅✅✅✅✅ | ✅🟡✅✅❌ | ❌❌❌❌❌ | ❌❌❌❌❌ |
