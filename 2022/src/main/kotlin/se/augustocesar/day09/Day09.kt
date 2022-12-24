@@ -19,7 +19,17 @@ class Day09 : Task() {
     }
 
     override fun partTwo(): String {
-        return "-"
+        val rope = Rope.withKnots(10)
+
+        readInput().lines().forEach { line ->
+            val tokens = line.split(" ")
+            val direction = Direction.fromRepresentation(tokens[0])
+            val steps = tokens[1].toInt()
+
+            repeat(steps) { rope.moveHead(direction) }
+        }
+
+        return rope.tailTracking.size.toString()
     }
 }
 
