@@ -101,5 +101,17 @@
                 "data": "    \"$padded_day\" to Day$padded_day(),\n"
             }
         ]
+    },
+    "2023": {
+        "task_file_name": "main",
+        "tasks_path": "/src",
+        "extension": "rs",
+        "instructions": [
+            {
+                "file": "Cargo.toml",
+                "label": "#SETUP:target_bin",
+                "data": "[[bin]]\nname = \"day$padded_day\"\npath = \"src/day$padded_day/main.rs\"\n\n"
+            }
+        ]
     }
 }

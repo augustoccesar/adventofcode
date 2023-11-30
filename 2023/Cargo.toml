@@ -1,0 +1,11 @@
+[package]
+rust = "1.74"
+name = "aoc2023"
+version = "0.1.0"
+authors = ["Augusto Cesar <augusto@augustocesar.se>"]
+edition = "2018"
+
+[dependencies]
+regex = "1"
+
+#SETUP:target_bin
