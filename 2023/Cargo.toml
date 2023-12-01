@@ -8,4 +8,8 @@ edition = "2018"
 [dependencies]
 regex = "1"
 
+[[bin]]
+name = "day01"
+path = "src/day01/main.rs"
+
 #SETUP:target_bin
