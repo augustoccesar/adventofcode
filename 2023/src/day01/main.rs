@@ -1,4 +1,7 @@
-use aoc2023::{read_input, read_named_input, timed};
+use aoc2023::{read_input, timed};
+
+use lazy_static::lazy_static;
+use regex::Regex;
 
 fn part_one() -> String {
     read_input("01")
@@ -22,10 +25,54 @@ fn part_one() -> String {
 }
 
 fn part_two() -> String {
-    String::from("part two")
+    read_input("01")
+        .lines()
+        .map(|line| {
+            let first = first_digit_char(line);
+            let last = first_digit_char(&line.chars().rev().collect::<String>());
+
+            [first, last].iter().collect::<String>()
+        })
+        .map(|digit| digit.parse::<i64>().unwrap())
+        .sum::<i64>()
+        .to_string()
 }
 
 fn main() {
     timed(part_one);
     timed(part_two);
+}
+
+fn first_digit_char(str: &str) -> char {
+    DIGIT_PATTERN
+        .find(str)
+        .map(|match_item| match_item.as_str())
+        .map(|digit_str| {
+            if digit_str.len() == 1 {
+                digit_str.chars().next().unwrap()
+            } else {
+                digit_str_to_char(digit_str)
+            }
+        })
+        .unwrap()
+}
+
+lazy_static! {
+    static ref DIGIT_PATTERN: Regex =
+        Regex::new(r"\d|one|eno|two|owt|three|eerht|four|ruof|five|evif|six|xis|seven|neves|eight|thgie|nine|enin").unwrap();
+}
+
+fn digit_str_to_char(digit_str: &str) -> char {
+    match digit_str {
+        "one" | "eno" => '1',
+        "two" | "owt" => '2',
+        "three" | "eerht" => '3',
+        "four" | "ruof" => '4',
+        "five" | "evif" => '5',
+        "six" | "xis" => '6',
+        "seven" | "neves" => '7',
+        "eight" | "thgie" => '8',
+        "nine" | "enin" => '9',
+        _ => panic!("invalid digit literal"),
+    }
 }
