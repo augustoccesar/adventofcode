@@ -7,39 +7,23 @@ fn part_one() -> String {
 
     let result = read_input("02")
         .lines()
-        .map(|item| {
-            let parts = item.split(':').collect::<Vec<&str>>();
-            let game_id = parts
-                .first()
-                .unwrap()
-                .split(' ')
-                .last()
-                .map(|item| item.parse::<u64>().unwrap())
-                .unwrap();
+        .map(Game::from)
+        .map(|game| {
+            for round in game.rounds {
+                if round.red > config_red {
+                    return 0;
+                }
 
-            let rounds = parts.get(1).unwrap().split(';').collect::<Vec<&str>>();
-            for round in rounds {
-                let picks = round.split(',').map(|pick| pick.trim());
-                for pick in picks {
-                    let [quantity, color]: [_; 2] =
-                        pick.split(' ').collect::<Vec<&str>>().try_into().unwrap();
-                    let quantity = quantity.parse::<u8>().unwrap();
+                if round.green > config_green {
+                    return 0;
+                }
 
-                    if color == "red" && quantity > config_red {
-                        return 0;
-                    }
-
-                    if color == "green" && quantity > config_green {
-                        return 0;
-                    }
-
-                    if color == "blue" && quantity > config_blue {
-                        return 0;
-                    }
+                if round.blue > config_blue {
+                    return 0;
                 }
             }
 
-            game_id
+            game.id
         })
         .sum::<u64>();
 
@@ -49,29 +33,21 @@ fn part_one() -> String {
 fn part_two() -> String {
     let result = read_input("02")
         .lines()
-        .map(|item| {
-            let parts = item.split(':').collect::<Vec<&str>>();
-
+        .map(Game::from)
+        .map(|game| {
             let [mut max_red, mut max_green, mut max_blue]: [_; 3] = [0, 0, 0];
-            let rounds = parts.get(1).unwrap().split(';').collect::<Vec<&str>>();
-            for round in rounds {
-                let picks = round.split(',').map(|pick| pick.trim());
-                for pick in picks {
-                    let [quantity, color]: [_; 2] =
-                        pick.split(' ').collect::<Vec<&str>>().try_into().unwrap();
-                    let quantity = quantity.parse::<u64>().unwrap();
 
-                    if color == "red" && quantity > max_red {
-                        max_red = quantity;
-                    }
+            for round in game.rounds {
+                if round.red > max_red {
+                    max_red = round.red;
+                }
 
-                    if color == "green" && quantity > max_green {
-                        max_green = quantity;
-                    }
+                if round.green > max_green {
+                    max_green = round.green;
+                }
 
-                    if color == "blue" && quantity > max_blue {
-                        max_blue = quantity;
-                    }
+                if round.blue > max_blue {
+                    max_blue = round.blue;
                 }
             }
 
@@ -85,4 +61,61 @@ fn part_two() -> String {
 fn main() {
     timed(part_one);
     timed(part_two);
+}
+
+struct Game {
+    id: u64,
+    rounds: Vec<Round>,
+}
+
+impl From<&str> for Game {
+    fn from(value: &str) -> Self {
+        let parts = value.split(':').collect::<Vec<&str>>();
+        let game_id = parts
+            .first()
+            .unwrap()
+            .split(' ')
+            .last()
+            .map(|item| item.parse::<u64>().unwrap())
+            .unwrap();
+
+        let rounds = parts
+            .get(1)
+            .unwrap()
+            .split(';')
+            .map(Round::from)
+            .collect::<Vec<Round>>();
+
+        Self {
+            id: game_id,
+            rounds,
+        }
+    }
+}
+
+struct Round {
+    red: u64,
+    green: u64,
+    blue: u64,
+}
+
+impl From<&str> for Round {
+    fn from(value: &str) -> Self {
+        let [mut red, mut green, mut blue]: [_; 3] = [0, 0, 0];
+        let picks = value.split(',').map(|pick| pick.trim());
+        for pick in picks {
+            let [quantity, color]: [_; 2] =
+                pick.split(' ').collect::<Vec<&str>>().try_into().unwrap();
+            let quantity = quantity.parse::<u64>().unwrap();
+
+            match color {
+                "red" => red = quantity,
+                "green" => green = quantity,
+                "blue" => blue = quantity,
+                _ => panic!("Invalid color"),
+            }
+        }
+
+        Self { red, green, blue }
+    }
 }
