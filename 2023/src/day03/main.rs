@@ -85,9 +85,7 @@ fn part_two() -> String {
                 x = next;
 
                 if let Some(gear_pos) = gear {
-                    if !gears.contains_key(&gear_pos) {
-                        gears.insert(gear_pos, vec![]);
-                    }
+                    gears.entry(gear_pos).or_default();
 
                     let number = digit
                         .into_iter()
