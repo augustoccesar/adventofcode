@@ -1,4 +1,6 @@
-use aoc2023::{read_input, read_named_input, timed};
+use std::collections::HashMap;
+
+use aoc2023::{read_input, timed};
 
 fn part_one() -> String {
     let matrix: Vec<Vec<char>> = read_input("03")
@@ -54,7 +56,61 @@ fn part_one() -> String {
 }
 
 fn part_two() -> String {
-    String::from("part two")
+    let matrix: Vec<Vec<char>> = read_input("03")
+        .lines()
+        .map(|line| line.chars().collect())
+        .collect();
+    let mut gears: HashMap<(usize, usize), Vec<i64>> = HashMap::new();
+
+    for y in 0..matrix.len() {
+        let mut x = 0;
+        while x < matrix[y].len() {
+            let item = matrix[y][x];
+
+            if item.is_ascii_digit() {
+                let mut gear = adjacent_gear(&matrix, x, y);
+
+                let mut digit = vec![item];
+                let mut next = x + 1;
+
+                while next < matrix[y].len() && matrix[y][next].is_ascii_digit() {
+                    if gear.is_none() {
+                        gear = adjacent_gear(&matrix, next, y);
+                    }
+
+                    digit.push(matrix[y][next]);
+                    next += 1;
+                }
+
+                x = next;
+
+                if let Some(gear_pos) = gear {
+                    if !gears.contains_key(&gear_pos) {
+                        gears.insert(gear_pos, vec![]);
+                    }
+
+                    let number = digit
+                        .into_iter()
+                        .collect::<String>()
+                        .parse::<i64>()
+                        .unwrap();
+
+                    gears.get_mut(&gear_pos).unwrap().push(number);
+                }
+
+                continue;
+            }
+
+            x += 1;
+        }
+    }
+
+    gears
+        .iter()
+        .filter(|it| it.1.len() == 2)
+        .map(|it| it.1.iter().copied().reduce(|acc, e| acc * e).unwrap())
+        .sum::<i64>()
+        .to_string()
 }
 
 fn main() {
@@ -62,19 +118,19 @@ fn main() {
     timed(part_two);
 }
 
-fn has_adjacent_symbol(matrix: &Vec<Vec<char>>, x: usize, y: usize) -> bool {
-    let modifiers = [
-        (0, -1),  // TOP
-        (1, -1),  // TOP RIGHT
-        (1, 0),   // RIGHT
-        (1, 1),   // BOTTOM RIGHT
-        (0, 1),   // BOTTOM
-        (-1, -1), // BOTTOM LEFT
-        (-1, 0),  // LEFT
-        (-1, 1),  // TOP LEFT
-    ];
+const POS_MODIFIERS: [(i32, i32); 8] = [
+    (0, -1),  // TOP
+    (1, -1),  // TOP RIGHT
+    (1, 0),   // RIGHT
+    (1, 1),   // BOTTOM RIGHT
+    (0, 1),   // BOTTOM
+    (-1, -1), // BOTTOM LEFT
+    (-1, 0),  // LEFT
+    (-1, 1),  // TOP LEFT
+];
 
-    for (x_mod, y_mod) in modifiers {
+fn has_adjacent_symbol(matrix: &Vec<Vec<char>>, x: usize, y: usize) -> bool {
+    for (x_mod, y_mod) in POS_MODIFIERS {
         let x = x as i32 + x_mod;
         let y = y as i32 + y_mod;
 
@@ -96,4 +152,29 @@ fn has_adjacent_symbol(matrix: &Vec<Vec<char>>, x: usize, y: usize) -> bool {
     }
 
     false
+}
+
+fn adjacent_gear(matrix: &Vec<Vec<char>>, x: usize, y: usize) -> Option<(usize, usize)> {
+    for (x_mod, y_mod) in POS_MODIFIERS {
+        let x = x as i32 + x_mod;
+        let y = y as i32 + y_mod;
+
+        if x < 0 || y < 0 {
+            continue;
+        }
+
+        let x = x as usize;
+        let y = y as usize;
+
+        if y >= matrix.len() || x >= matrix[y].len() {
+            continue;
+        }
+
+        let item = matrix[y][x];
+        if item == '*' {
+            return Some((x, y));
+        }
+    }
+
+    None
 }
