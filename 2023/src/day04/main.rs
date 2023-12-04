@@ -5,25 +5,8 @@ use aoc2023::{read_input, timed};
 fn part_one() -> String {
     read_input("04")
         .lines()
-        .map(|line| {
-            let [_, numbers]: [&str; 2] =
-                line.split(':').collect::<Vec<&str>>().try_into().unwrap();
-            let [winning_numbers, owned_numbers]: [Vec<u64>; 2] = numbers
-                .split('|')
-                .map(|numbers| {
-                    numbers
-                        .split_whitespace()
-                        .map(|number| number.parse::<u64>().unwrap())
-                        .collect::<Vec<u64>>()
-                })
-                .collect::<Vec<Vec<u64>>>()
-                .try_into()
-                .unwrap();
-
-            (winning_numbers, owned_numbers)
-        })
-        .map(|(winning_numbers, owned_numbers)| intersection(&winning_numbers, &owned_numbers))
-        .map(|matching_numbers| match matching_numbers.len() {
+        .map(count_card_winning_numbers)
+        .map(|matching_numbers_count| match matching_numbers_count {
             0 => 0,
             1 => 1,
             n => 1 << (n - 1),
@@ -33,40 +16,27 @@ fn part_one() -> String {
 }
 
 fn part_two() -> String {
-    // (copies, winning numbers)
+    // (copies, winning_numbers_count)
     let mut cards: Vec<(u64, usize)> = vec![];
 
-    for line in read_input("04").lines() {
-        let [_, numbers]: [&str; 2] = line.split(':').collect::<Vec<&str>>().try_into().unwrap();
+    for (idx, line) in read_input("04").lines().enumerate() {
+        let winning_numbers_count = count_card_winning_numbers(line);
 
-        let [winning_numbers, owned_numbers]: [Vec<u64>; 2] = numbers
-            .split('|')
-            .map(|numbers| {
-                numbers
-                    .split_whitespace()
-                    .map(|number| number.parse::<u64>().unwrap())
-                    .collect::<Vec<u64>>()
-            })
-            .collect::<Vec<Vec<u64>>>()
-            .try_into()
-            .unwrap();
-
-        let winning_numbers_count = intersection(&winning_numbers, &owned_numbers).len();
-
-        cards.push((1, winning_numbers_count));
-    }
-
-    for i in 0..cards.len() {
-        let current_card = cards[i];
-        if current_card.1 == 0 {
-            continue;
+        match cards.get_mut(idx) {
+            Some(card) => {
+                card.0 += 1;
+                card.1 = winning_numbers_count;
+            }
+            None => cards.push((1, winning_numbers_count)),
         }
 
-        let start_copy_id = i + 1;
-        let end_copy_id = i + current_card.1;
-        (start_copy_id..=end_copy_id).for_each(|copy_id| {
-            cards[copy_id].0 += current_card.0;
-        });
+        for copy_idx in (idx + 1)..=(idx + winning_numbers_count) {
+            let current_card = cards[idx];
+            match cards.get_mut(copy_idx) {
+                Some(card) => card.0 += current_card.0,
+                None => cards.push((current_card.0, 0)),
+            }
+        }
     }
 
     cards.iter().map(|card| card.0).sum::<u64>().to_string()
@@ -92,4 +62,26 @@ where
     }
 
     vec_intersection
+}
+
+fn count_card_winning_numbers(card_str: &str) -> usize {
+    let [_, numbers]: [&str; 2] = card_str
+        .split(':')
+        .collect::<Vec<&str>>()
+        .try_into()
+        .unwrap();
+
+    let [winning_numbers, owned_numbers]: [Vec<u64>; 2] = numbers
+        .split('|')
+        .map(|numbers| {
+            numbers
+                .split_whitespace()
+                .map(|number| number.parse::<u64>().unwrap())
+                .collect::<Vec<u64>>()
+        })
+        .collect::<Vec<Vec<u64>>>()
+        .try_into()
+        .unwrap();
+
+    intersection(&winning_numbers, &owned_numbers).len()
 }
