@@ -1,6 +1,6 @@
 use std::convert::TryInto;
 
-use aoc2023::{read_input, read_named_input, timed};
+use aoc2023::{read_input, timed};
 
 fn part_one() -> String {
     read_input("04")
@@ -33,7 +33,43 @@ fn part_one() -> String {
 }
 
 fn part_two() -> String {
-    String::from("part two")
+    // (copies, winning numbers)
+    let mut cards: Vec<(u64, usize)> = vec![];
+
+    for line in read_input("04").lines() {
+        let [_, numbers]: [&str; 2] = line.split(':').collect::<Vec<&str>>().try_into().unwrap();
+
+        let [winning_numbers, owned_numbers]: [Vec<u64>; 2] = numbers
+            .split('|')
+            .map(|numbers| {
+                numbers
+                    .split_whitespace()
+                    .map(|number| number.parse::<u64>().unwrap())
+                    .collect::<Vec<u64>>()
+            })
+            .collect::<Vec<Vec<u64>>>()
+            .try_into()
+            .unwrap();
+
+        let winning_numbers_count = intersection(&winning_numbers, &owned_numbers).len();
+
+        cards.push((1, winning_numbers_count));
+    }
+
+    for i in 0..cards.len() {
+        let current_card = cards[i];
+        if current_card.1 == 0 {
+            continue;
+        }
+
+        let start_copy_id = i + 1;
+        let end_copy_id = i + current_card.1;
+        (start_copy_id..=end_copy_id).for_each(|copy_id| {
+            cards[copy_id].0 += current_card.0;
+        });
+    }
+
+    cards.iter().map(|card| card.0).sum::<u64>().to_string()
 }
 
 fn main() {
