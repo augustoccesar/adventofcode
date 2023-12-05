@@ -1,6 +1,6 @@
-use std::{collections::HashMap, convert::TryInto};
+use std::collections::HashMap;
 
-use aoc2023::{read_input, read_named_input, timed};
+use aoc2023::{read_input, timed};
 
 fn part_one() -> String {
     let almanac = build_almanac(&read_input("05"));
@@ -16,7 +16,26 @@ fn part_one() -> String {
 }
 
 fn part_two() -> String {
-    String::from("part two")
+    let almanac = build_almanac(&read_input("05"));
+    let mut closest_location = 0;
+    let seed_ranges: Vec<(i64, i64)> = almanac
+        .seeds
+        .chunks(2)
+        .map(|chunk| (chunk[0], chunk[0] + chunk[1]))
+        .collect();
+
+    'outer: loop {
+        let seed = almanac.reverse_traverse_categories(&Category::Location, closest_location);
+        for (range_start, range_end) in &seed_ranges {
+            if seed >= *range_start && seed < *range_end {
+                break 'outer;
+            }
+        }
+
+        closest_location += 1;
+    }
+
+    closest_location.to_string()
 }
 
 fn main() {
@@ -49,6 +68,19 @@ impl Category {
             Category::Location => None,
         }
     }
+
+    fn previous(&self) -> Option<Self> {
+        match self {
+            Category::Seed => None,
+            Category::Soil => Some(Self::Seed),
+            Category::Fertilizer => Some(Self::Soil),
+            Category::Water => Some(Self::Fertilizer),
+            Category::Light => Some(Self::Water),
+            Category::Temperature => Some(Self::Light),
+            Category::Humidity => Some(Self::Temperature),
+            Category::Location => Some(Self::Humidity),
+        }
+    }
 }
 
 type CategoryMap = HashMap<(Category, Category), Vec<(i64, i64, i64)>>;
@@ -69,6 +101,21 @@ impl Almanac {
 
                 let output = find_in_ranges(ranges, input);
                 self.traverse_categories(&next_category, output)
+            }
+            None => input,
+        }
+    }
+
+    fn reverse_traverse_categories(&self, current_category: &Category, input: i64) -> i64 {
+        match current_category.previous() {
+            Some(previous_category) => {
+                let ranges = self
+                    .category_map
+                    .get(&(previous_category.clone(), current_category.clone()))
+                    .unwrap();
+
+                let output = reverse_find_in_ranges(ranges, input);
+                self.reverse_traverse_categories(&previous_category, output)
             }
             None => input,
         }
@@ -126,9 +173,20 @@ fn build_almanac(input: &str) -> Almanac {
 
 fn find_in_ranges(ranges: &[(i64, i64, i64)], lookup: i64) -> i64 {
     for (destination_start, source_start, length) in ranges {
-        if lookup >= *source_start && lookup <= source_start + length {
+        if lookup >= *source_start && lookup < source_start + length {
             let distance = lookup - source_start;
             return destination_start + distance;
+        }
+    }
+
+    lookup
+}
+
+fn reverse_find_in_ranges(ranges: &[(i64, i64, i64)], lookup: i64) -> i64 {
+    for (destination_start, source_start, length) in ranges {
+        if lookup >= *destination_start && lookup < destination_start + length {
+            let distance = lookup - destination_start;
+            return source_start + distance;
         }
     }
 
