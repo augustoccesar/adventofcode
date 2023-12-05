@@ -1,4 +1,7 @@
-use std::collections::HashMap;
+use std::{
+    collections::HashMap,
+    ops::{Deref, DerefMut},
+};
 
 use aoc2023::{read_input, timed};
 
@@ -6,7 +9,7 @@ fn part_one() -> String {
     let almanac = build_almanac(&read_input("05"));
     let mut closest_location = i64::MAX;
     for seed in &almanac.seeds {
-        let location = almanac.traverse_categories(&Category::Seed, *seed);
+        let location = almanac.traverse_categories(Direction::Normal, &Category::Seed, *seed);
         if location < closest_location {
             closest_location = location;
         }
@@ -18,14 +21,11 @@ fn part_one() -> String {
 fn part_two() -> String {
     let almanac = build_almanac(&read_input("05"));
     let mut closest_location = 0;
-    let seed_ranges: Vec<(i64, i64)> = almanac
-        .seeds
-        .chunks(2)
-        .map(|chunk| (chunk[0], chunk[0] + chunk[1]))
-        .collect();
+    let seed_ranges: Vec<(i64, i64)> = almanac.seeds_as_ranges();
 
     'outer: loop {
-        let seed = almanac.reverse_traverse_categories(&Category::Location, closest_location);
+        let seed =
+            almanac.traverse_categories(Direction::Reverse, &Category::Location, closest_location);
         for (range_start, range_end) in &seed_ranges {
             if seed >= *range_start && seed < *range_end {
                 break 'outer;
@@ -83,7 +83,54 @@ impl Category {
     }
 }
 
-type CategoryMap = HashMap<(Category, Category), Vec<(i64, i64, i64)>>;
+type InnerCategoryMap = HashMap<(Category, Category), Vec<(i64, i64, i64)>>;
+struct CategoryMap(InnerCategoryMap);
+
+impl CategoryMap {
+    fn new() -> Self {
+        Self(HashMap::new())
+    }
+
+    fn find_by_destination(&self, key: &(Category, Category), lookup: i64) -> i64 {
+        let ranges = self.0.get(key).unwrap();
+
+        for (destination_start, source_start, length) in ranges {
+            if lookup >= *destination_start && lookup < destination_start + length {
+                let distance = lookup - destination_start;
+                return source_start + distance;
+            }
+        }
+
+        lookup
+    }
+
+    fn find_by_source(&self, key: &(Category, Category), lookup: i64) -> i64 {
+        let ranges = self.0.get(key).unwrap();
+
+        for (destination_start, source_start, length) in ranges {
+            if lookup >= *source_start && lookup < source_start + length {
+                let distance = lookup - source_start;
+                return destination_start + distance;
+            }
+        }
+
+        lookup
+    }
+}
+
+impl Deref for CategoryMap {
+    type Target = InnerCategoryMap;
+
+    fn deref(&self) -> &Self::Target {
+        &self.0
+    }
+}
+
+impl DerefMut for CategoryMap {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.0
+    }
+}
 
 struct Almanac {
     seeds: Vec<i64>,
@@ -91,33 +138,36 @@ struct Almanac {
 }
 
 impl Almanac {
-    fn traverse_categories(&self, current_category: &Category, input: i64) -> i64 {
-        match current_category.next() {
-            Some(next_category) => {
-                let ranges = self
-                    .category_map
-                    .get(&(current_category.clone(), next_category.clone()))
-                    .unwrap();
-
-                let output = find_in_ranges(ranges, input);
-                self.traverse_categories(&next_category, output)
-            }
-            None => input,
-        }
+    fn seeds_as_ranges(&self) -> Vec<(i64, i64)> {
+        self.seeds
+            .chunks(2)
+            .map(|chunk| (chunk[0], chunk[0] + chunk[1]))
+            .collect()
     }
 
-    fn reverse_traverse_categories(&self, current_category: &Category, input: i64) -> i64 {
-        match current_category.previous() {
-            Some(previous_category) => {
-                let ranges = self
-                    .category_map
-                    .get(&(previous_category.clone(), current_category.clone()))
-                    .unwrap();
-
-                let output = reverse_find_in_ranges(ranges, input);
-                self.reverse_traverse_categories(&previous_category, output)
-            }
-            None => input,
+    fn traverse_categories(
+        &self,
+        direction: Direction,
+        current_category: &Category,
+        input: i64,
+    ) -> i64 {
+        match direction {
+            Direction::Normal => match current_category.next() {
+                Some(next_category) => {
+                    let key = (current_category.clone(), next_category.clone());
+                    let output = self.category_map.find_by_source(&key, input);
+                    self.traverse_categories(direction, &next_category, output)
+                }
+                None => input,
+            },
+            Direction::Reverse => match current_category.previous() {
+                Some(previous_category) => {
+                    let key = (previous_category.clone(), current_category.clone());
+                    let output = self.category_map.find_by_destination(&key, input);
+                    self.traverse_categories(direction, &previous_category, output)
+                }
+                None => input,
+            },
         }
     }
 }
@@ -171,24 +221,7 @@ fn build_almanac(input: &str) -> Almanac {
     }
 }
 
-fn find_in_ranges(ranges: &[(i64, i64, i64)], lookup: i64) -> i64 {
-    for (destination_start, source_start, length) in ranges {
-        if lookup >= *source_start && lookup < source_start + length {
-            let distance = lookup - source_start;
-            return destination_start + distance;
-        }
-    }
-
-    lookup
-}
-
-fn reverse_find_in_ranges(ranges: &[(i64, i64, i64)], lookup: i64) -> i64 {
-    for (destination_start, source_start, length) in ranges {
-        if lookup >= *destination_start && lookup < destination_start + length {
-            let distance = lookup - destination_start;
-            return source_start + distance;
-        }
-    }
-
-    lookup
+enum Direction {
+    Normal,
+    Reverse,
 }
