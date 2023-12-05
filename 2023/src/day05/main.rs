@@ -4,7 +4,7 @@ fn part_one() -> String {
     let almanac = Almanac::from(read_input("05").as_str());
     let mut closest_location = i64::MAX;
     for seed in &almanac.seeds {
-        let location = almanac.traverse_categories(Direction::Normal, -1, *seed);
+        let location = almanac.traverse_categories(Direction::Normal, *seed);
         if location < closest_location {
             closest_location = location;
         }
@@ -19,7 +19,7 @@ fn part_two() -> String {
     let seed_ranges: Vec<(i64, i64)> = almanac.seeds_as_ranges();
 
     'outer: loop {
-        let seed = almanac.traverse_categories(Direction::Reverse, 7, closest_location);
+        let seed = almanac.traverse_categories(Direction::Reverse, closest_location);
         for (range_start, range_end) in &seed_ranges {
             if seed >= *range_start && seed < *range_end {
                 break 'outer;
@@ -55,7 +55,19 @@ impl Almanac {
             .collect()
     }
 
-    fn traverse_categories(&self, direction: Direction, current_step: i8, input: i64) -> i64 {
+    fn traverse_categories(&self, direction: Direction, input: i64) -> i64 {
+        match direction {
+            Direction::Normal => self.traverse_categories_recursion(direction, -1, input),
+            Direction::Reverse => self.traverse_categories_recursion(direction, 7, input),
+        }
+    }
+
+    fn traverse_categories_recursion(
+        &self,
+        direction: Direction,
+        current_step: i8,
+        input: i64,
+    ) -> i64 {
         let next_step_idx = match direction {
             Direction::Normal => current_step + 1,
             Direction::Reverse => current_step - 1,
@@ -81,7 +93,7 @@ impl Almanac {
             }
         }
 
-        self.traverse_categories(direction, next_step_idx as i8, output)
+        self.traverse_categories_recursion(direction, next_step_idx as i8, output)
     }
 }
 
