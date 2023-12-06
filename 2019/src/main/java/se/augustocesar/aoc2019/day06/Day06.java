@@ -1,19 +1,20 @@
 package se.augustocesar.aoc2019.day06;
 
-import se.augustocesar.aoc2019.Task;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Stream;
+import se.augustocesar.aoc2019.task.RunnableTask;
+import se.augustocesar.aoc2019.task.Task;
 
+@RunnableTask(day = 6)
 public class Day06 extends Task {
 
   @Override
-  public String partOne() throws IOException {
-    final String input = this.readInput();
-    HashMap<String, Planet> planets = buildPlanetsMap(input);
+  public String partOne() {
+    HashMap<String, Planet> planets = buildPlanetsMap(this.readInputLines());
 
     int totalOrbits = 0;
     for (Entry<String, Planet> entry : planets.entrySet()) {
@@ -32,9 +33,8 @@ public class Day06 extends Task {
   }
 
   @Override
-  public String partTwo() throws IOException {
-    final String input = this.readInput();
-    HashMap<String, Planet> planets = buildPlanetsMap(input);
+  public String partTwo() {
+    HashMap<String, Planet> planets = buildPlanetsMap(this.readInputLines());
 
     Planet currSan = planets.get("SAN").getOrbit();
     LinkedList<String> stepsSan = new LinkedList<>();
@@ -61,18 +61,17 @@ public class Day06 extends Task {
 
     long res =
         Stream.concat(
-                stepsSan.stream().takeWhile(item -> item != intersectPlanet.get().getName()),
-                stepsYou.stream().takeWhile(item -> item != intersectPlanet.get().getName()))
-            .count();
+            stepsSan.stream().takeWhile(item -> !item.equals(intersectPlanet.get().getName())),
+            stepsYou.stream().takeWhile(item -> !item.equals(intersectPlanet.get().getName()))
+        ).count();
 
     return String.valueOf(res);
   }
 
-  private HashMap<String, Planet> buildPlanetsMap(final String input) {
+  private HashMap<String, Planet> buildPlanetsMap(final List<String> input) {
     HashMap<String, Planet> planets = new HashMap<>();
 
     input
-        .lines()
         .forEach(
             line -> {
               final String[] planetNames = line.split("\\)");

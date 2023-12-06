@@ -1,12 +1,13 @@
 package se.augustocesar.aoc2019.day08;
 
-import se.augustocesar.aoc2019.Task;
-import java.io.IOException;
+import se.augustocesar.aoc2019.task.RunnableTask;
+import se.augustocesar.aoc2019.task.Task;
 
+@RunnableTask(day = 8)
 public class Day08 extends Task {
 
   @Override
-  public String partOne() throws IOException {
+  public String partOne() {
     String data = this.readInput();
     int width = 25;
     int height = 6;
@@ -27,13 +28,14 @@ public class Day08 extends Task {
       }
     }
 
+    assert selectedLayer != null;
     long result = countChar(selectedLayer, '1') * countChar(selectedLayer, '2');
 
     return String.valueOf(result);
   }
 
   @Override
-  public String partTwo() throws IOException {
+  public String partTwo() {
     String data = this.readInput();
     int width = 25;
     int height = 6;

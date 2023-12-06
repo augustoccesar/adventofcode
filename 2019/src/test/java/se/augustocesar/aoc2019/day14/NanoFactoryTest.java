@@ -1,11 +1,11 @@
 package se.augustocesar.aoc2019.day14;
 
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
 public class NanoFactoryTest {
+
   @Test
   public void example_1() {
     String spec = """
@@ -16,7 +16,7 @@ public class NanoFactoryTest {
         7 A, 1 D => 1 E
         7 A, 1 E => 1 FUEL""";
 
-    NanoFactory nanoFactory = NanoFactory.fromSpec(spec);
+    NanoFactory nanoFactory = NanoFactory.fromSpec(spec.lines().toList());
     long result = nanoFactory.produce(1, "FUEL");
 
     assertEquals(31, result);
@@ -33,7 +33,7 @@ public class NanoFactoryTest {
         4 C, 1 A => 1 CA
         2 AB, 3 BC, 4 CA => 1 FUEL""";
 
-    NanoFactory nanoFactory = NanoFactory.fromSpec(spec);
+    NanoFactory nanoFactory = NanoFactory.fromSpec(spec.lines().toList());
     long result = nanoFactory.produce(1, "FUEL");
 
     assertEquals(165, result);
@@ -52,7 +52,7 @@ public class NanoFactoryTest {
         165 ORE => 2 GPVTF
         3 DCFZ, 7 NZVS, 5 HKGWZ, 10 PSHF => 8 KHKGT""";
 
-    NanoFactory nanoFactory = NanoFactory.fromSpec(spec);
+    NanoFactory nanoFactory = NanoFactory.fromSpec(spec.lines().toList());
     long result = nanoFactory.produce(1, "FUEL");
 
     assertEquals(13312, result);
@@ -74,7 +74,7 @@ public class NanoFactoryTest {
         1 VJHF, 6 MNCFX => 4 RFSQX
         176 ORE => 6 VJHF""";
 
-    NanoFactory nanoFactory = NanoFactory.fromSpec(spec);
+    NanoFactory nanoFactory = NanoFactory.fromSpec(spec.lines().toList());
     long result = nanoFactory.produce(1, "FUEL");
 
     assertEquals(180697, result);
@@ -101,7 +101,7 @@ public class NanoFactoryTest {
         7 XCVML => 6 RJRHP
         5 BHXH, 4 VRPVC => 5 LTCX""";
 
-    NanoFactory nanoFactory = NanoFactory.fromSpec(spec);
+    NanoFactory nanoFactory = NanoFactory.fromSpec(spec.lines().toList());
     long result = nanoFactory.produce(1, "FUEL");
 
     assertEquals(2210736, result);

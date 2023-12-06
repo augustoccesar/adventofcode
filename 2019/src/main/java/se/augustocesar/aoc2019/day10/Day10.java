@@ -1,6 +1,7 @@
 package se.augustocesar.aoc2019.day10;
 
-import se.augustocesar.aoc2019.Task;
+import se.augustocesar.aoc2019.task.RunnableTask;
+import se.augustocesar.aoc2019.task.Task;
 import se.augustocesar.aoc2019.utils.ListUtil;
 import se.augustocesar.aoc2019.utils.Point2D;
 import java.io.IOException;
@@ -11,11 +12,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+@RunnableTask(day = 10)
 public class Day10 extends Task {
 
   @Override
-  public String partOne() throws IOException {
-    ArrayList<Point2D> asteroids = this.getAsteroids(this.readInput());
+  public String partOne() {
+    ArrayList<Point2D> asteroids = this.getAsteroids(this.readInputLines());
     int maxVisible = 0;
 
     for (final Point2D base : asteroids) {
@@ -29,9 +31,9 @@ public class Day10 extends Task {
   }
 
   @Override
-  public String partTwo() throws IOException {
+  public String partTwo() {
     final Point2D base = Point2D.on(22, 28);
-    final ArrayList<Point2D> asteroids = this.getAsteroids(this.readInput());
+    final ArrayList<Point2D> asteroids = this.getAsteroids(this.readInputLines());
 
     HashMap<Double, LinkedList<Point2D>> radar = buildRadar(base, asteroids, true);
 
@@ -67,12 +69,11 @@ public class Day10 extends Task {
     return String.valueOf(result);
   }
 
-  private ArrayList<Point2D> getAsteroids(final String inputMap) {
+  private ArrayList<Point2D> getAsteroids(final List<String> inputMap) {
     AtomicInteger currY = new AtomicInteger();
     ArrayList<Point2D> asteroids = new ArrayList<>();
 
     inputMap
-        .lines()
         .forEach(
             line -> {
               String[] objects = line.split("");

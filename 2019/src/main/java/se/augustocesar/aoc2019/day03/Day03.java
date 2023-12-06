@@ -1,19 +1,19 @@
 package se.augustocesar.aoc2019.day03;
 
-import se.augustocesar.aoc2019.Task;
-import se.augustocesar.aoc2019.utils.Pair;
-import se.augustocesar.aoc2019.utils.Point2D;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+import se.augustocesar.aoc2019.task.RunnableTask;
+import se.augustocesar.aoc2019.task.Task;
+import se.augustocesar.aoc2019.utils.Pair;
+import se.augustocesar.aoc2019.utils.Point2D;
 
+@RunnableTask(day = 3)
 public class Day03 extends Task {
 
   @Override
-  public String partOne() throws IOException {
+  public String partOne() {
     final List<HashMap<String, Pair<Point2D, Integer>>> wires = getWiresPaths();
 
     int shortest = Integer.MAX_VALUE;
@@ -30,7 +30,7 @@ public class Day03 extends Task {
   }
 
   @Override
-  public String partTwo() throws IOException {
+  public String partTwo() {
     final List<HashMap<String, Pair<Point2D, Integer>>> wires = getWiresPaths();
 
     int shortest = Integer.MAX_VALUE;
@@ -46,8 +46,8 @@ public class Day03 extends Task {
     return String.valueOf(shortest);
   }
 
-  private List<HashMap<String, Pair<Point2D, Integer>>> getWiresPaths() throws IOException {
-    List<String> input = this.readInput().lines().collect(Collectors.toList());
+  private List<HashMap<String, Pair<Point2D, Integer>>> getWiresPaths() {
+    List<String> input = this.readInputLines();
     List<HashMap<String, Pair<Point2D, Integer>>> wires = new ArrayList<>();
 
     for (String in : input) {

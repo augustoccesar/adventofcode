@@ -1,16 +1,18 @@
 package se.augustocesar.aoc2019.day07;
 
-import se.augustocesar.aoc2019.Task;
 import se.augustocesar.aoc2019.shared.intcomputer.MemoryInputAccessMode;
 import se.augustocesar.aoc2019.shared.intcomputer.IntComputer;
 import se.augustocesar.aoc2019.shared.intcomputer.MemoryInputSource;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicLong;
+import se.augustocesar.aoc2019.task.RunnableTask;
+import se.augustocesar.aoc2019.task.Task;
 
+@RunnableTask(day = 7)
 public class Day07 extends Task {
 
   @Override
-  public String partOne() throws IOException {
+  public String partOne() {
     final String program = this.readInput().strip();
     final int[] phaseList = new int[]{0, 1, 2, 3, 4};
     final AtomicLong maxOut = new AtomicLong(Integer.MIN_VALUE);
@@ -41,7 +43,7 @@ public class Day07 extends Task {
   }
 
   @Override
-  public String partTwo() throws IOException {
+  public String partTwo() {
     final String program = this.readInput().strip();
     final int[] phaseList = new int[]{5, 6, 7, 8, 9};
     final AtomicLong maxOut = new AtomicLong(Long.MIN_VALUE);

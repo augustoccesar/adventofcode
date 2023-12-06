@@ -17,7 +17,7 @@ public class NanoFactory {
     this.reactions = reactions;
   }
 
-  public static NanoFactory fromSpec(final String spec) {
+  public static NanoFactory fromSpec(final List<String> spec) {
     HashMap<String, Reaction> reactions = new HashMap<>();
 
     for (final Reaction reaction : reactionsFromSpec(spec)) {
@@ -100,10 +100,10 @@ public class NanoFactory {
     return new Recipe(reaction, reactionAmount, leftover);
   }
 
-  private static List<Reaction> reactionsFromSpec(final String spec) {
+  private static List<Reaction> reactionsFromSpec(final List<String> spec) {
     final List<Reaction> reactions = new ArrayList<>();
 
-    for (final String line : spec.split("\n")) {
+    for (final String line : spec) {
       reactions.add(Reaction.from(line));
     }
 

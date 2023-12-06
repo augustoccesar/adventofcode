@@ -1,28 +1,29 @@
 package se.augustocesar.aoc2019.day04;
 
-import se.augustocesar.aoc2019.Task;
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import se.augustocesar.aoc2019.task.RunnableTask;
+import se.augustocesar.aoc2019.task.Task;
 
+@RunnableTask(day = 4)
 public class Day04 extends Task {
 
   @Override
-  public String partOne() throws IOException {
+  public String partOne() {
     return String.valueOf(getValidCount(1));
   }
 
   @Override
-  public String partTwo() throws IOException {
+  public String partTwo() {
     return String.valueOf(getValidCount(2));
   }
 
-  private int getValidCount(int version) throws IOException {
-    final String[] input = this.readInput().strip().split("-");
+  private int getValidCount(int version) {
+    final String[] input = this.readInput().split("-");
     final int rangeStart = Integer.parseInt(input[0]);
     final int rangeEnd = Integer.parseInt(input[1]);
 
@@ -68,7 +69,7 @@ public class Day04 extends Task {
     }
 
     return switch (version) {
-      case 1 -> pairs.size() > 0;
+      case 1 -> !pairs.isEmpty();
       case 2 -> pairs.stream()
           .anyMatch(pair -> stringPass.indexOf(pair) == stringPass.lastIndexOf(pair));
       default -> false;

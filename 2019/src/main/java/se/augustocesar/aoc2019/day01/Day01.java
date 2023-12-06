@@ -1,45 +1,44 @@
 package se.augustocesar.aoc2019.day01;
 
-import se.augustocesar.aoc2019.Task;
-import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
+import se.augustocesar.aoc2019.task.RunnableTask;
+import se.augustocesar.aoc2019.task.Task;
 
+@RunnableTask(day = 1)
 public class Day01 extends Task {
 
   @Override
-  public String partOne() throws IOException {
+  public String partOne() {
     final AtomicInteger sum = new AtomicInteger(0);
-    streamInput(
-        (s) -> {
-          int mass = Integer.parseInt(s);
+    this.readInputLines().forEach(line -> {
+      int mass = Integer.parseInt(line);
 
-          int value = sum.get() + fuelRequired(mass);
-          sum.set(value);
-        });
+      int value = sum.get() + fuelRequired(mass);
+      sum.set(value);
+    });
 
     return sum.toString();
   }
 
   @Override
-  public String partTwo() throws IOException {
+  public String partTwo() {
     final AtomicInteger sum = new AtomicInteger(0);
-    streamInput(
-        (s) -> {
-          int mass = Integer.parseInt(s);
-          int fuelRequired = fuelRequired(mass);
-          int stageSum = fuelRequired;
+    this.readInputLines().forEach(line -> {
+      int mass = Integer.parseInt(line);
+      int fuelRequired = fuelRequired(mass);
+      int stageSum = fuelRequired;
 
-          while (true) {
-            fuelRequired = fuelRequired(fuelRequired);
-            if (fuelRequired <= 0) {
-              break;
-            }
+      while (true) {
+        fuelRequired = fuelRequired(fuelRequired);
+        if (fuelRequired <= 0) {
+          break;
+        }
 
-            stageSum += fuelRequired;
-          }
+        stageSum += fuelRequired;
+      }
 
-          sum.set(sum.get() + stageSum);
-        });
+      sum.set(sum.get() + stageSum);
+    });
 
     return sum.toString();
   }

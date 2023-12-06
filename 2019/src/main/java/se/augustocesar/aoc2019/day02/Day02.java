@@ -1,22 +1,23 @@
 package se.augustocesar.aoc2019.day02;
 
-import se.augustocesar.aoc2019.Task;
-import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import se.augustocesar.aoc2019.task.RunnableTask;
+import se.augustocesar.aoc2019.task.Task;
 
+@RunnableTask(day = 2)
 public class Day02 extends Task {
 
   @Override
-  public String partOne() throws IOException {
+  public String partOne() {
     int output = generateOutput(12, 2);
 
     return String.valueOf(output);
   }
 
   @Override
-  public String partTwo() throws IOException {
+  public String partTwo() {
     boolean found = false;
     int expected = 19690720;
     int noun = -1;
@@ -37,8 +38,8 @@ public class Day02 extends Task {
     return String.valueOf(result);
   }
 
-  public int generateOutput(int noun, int verb) throws IOException {
-    String input = readInput().trim();
+  public int generateOutput(int noun, int verb) {
+    String input = this.readInput().trim();
     List<Integer> inputArr =
         Stream.of(input.split(",")).map(Integer::parseInt).collect(Collectors.toList());
 

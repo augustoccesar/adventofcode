@@ -2,8 +2,6 @@ package se.augustocesar.aoc2019;
 
 import static org.junit.jupiter.api.Assertions.fail;
 
-import org.junit.jupiter.api.Test;
-import se.augustocesar.aoc2019.utils.Pair;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,9 +12,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Supplier;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import org.junit.jupiter.api.Test;
+import se.augustocesar.aoc2019.task.Task;
+import se.augustocesar.aoc2019.task.TaskLoader;
+import se.augustocesar.aoc2019.utils.Pair;
 
 public class MainTest {
 
@@ -26,13 +25,8 @@ public class MainTest {
     RESULT_MISMATCH,
   }
 
-  @Getter
-  @AllArgsConstructor
-  private static class Failure {
+  private record Failure(int day, int part, FailureType type) {
 
-    private final int day;
-    private final int part;
-    private final FailureType type;
   }
 
   @Test
@@ -41,7 +35,8 @@ public class MainTest {
     final InputStream input = this.getClass().getResourceAsStream("/expected_results");
     final BufferedReader br = new BufferedReader(new InputStreamReader(input));
 
-    final Map<Integer, Supplier<Task>> implementedDays = Main.availableDays;
+    final TaskLoader taskLoader = new TaskLoader("se.augustocesar.aoc2019");
+    final Map<Integer, Task> implementedDays = taskLoader.registeredTasks();
     final Map<Integer, Pair<String, String>> expectedResults = new HashMap<>();
 
     while (br.ready()) {
@@ -56,10 +51,10 @@ public class MainTest {
 
     for (final Integer day : days) {
       final List<Failure> preRunFailures = new ArrayList<>();
-      final Supplier<Task> implementation = implementedDays.get(day);
+      final Task task = implementedDays.get(day);
       final Pair<String, String> expectedResult = expectedResults.get(day);
 
-      if (implementation == null) {
+      if (task == null) {
         preRunFailures.add(new Failure(day, 1, FailureType.IMPLEMENTATION_NOT_FOUND));
         preRunFailures.add(new Failure(day, 2, FailureType.IMPLEMENTATION_NOT_FOUND));
       }
@@ -74,7 +69,6 @@ public class MainTest {
         continue;
       }
 
-      final Task task = implementation.get();
       if (!expectedResult.getLeft().equals(task.partOne())) {
         failures.add(new Failure(day, 1, FailureType.RESULT_MISMATCH));
       }

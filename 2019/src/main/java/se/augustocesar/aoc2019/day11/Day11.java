@@ -1,12 +1,14 @@
 package se.augustocesar.aoc2019.day11;
 
-import se.augustocesar.aoc2019.Task;
 import java.io.IOException;
+import se.augustocesar.aoc2019.task.RunnableTask;
+import se.augustocesar.aoc2019.task.Task;
 
+@RunnableTask(day = 11)
 public class Day11 extends Task {
 
   @Override
-  public String partOne() throws IOException {
+  public String partOne() {
     String program = this.readInput();
     Robot robot = Robot.load(program);
 
@@ -16,7 +18,7 @@ public class Day11 extends Task {
   }
 
   @Override
-  public String partTwo() throws IOException {
+  public String partTwo() {
     String program = this.readInput();
     Robot robot = Robot.load(program);
 

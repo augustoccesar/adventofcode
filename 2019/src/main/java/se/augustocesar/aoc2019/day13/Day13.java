@@ -1,12 +1,13 @@
 package se.augustocesar.aoc2019.day13;
 
-import se.augustocesar.aoc2019.Task;
-import java.io.IOException;
+import se.augustocesar.aoc2019.task.RunnableTask;
+import se.augustocesar.aoc2019.task.Task;
 
+@RunnableTask(day = 13)
 public class Day13 extends Task {
 
   @Override
-  public String partOne() throws IOException {
+  public String partOne() {
     final String game = this.readInput();
     final Arcade arcade = Arcade.load(game);
 
@@ -20,7 +21,7 @@ public class Day13 extends Task {
   }
 
   @Override
-  public String partTwo() throws IOException {
+  public String partTwo() {
     final String game = this.readInput();
     final Arcade arcade = Arcade.load(game);
     arcade.modifyMemory(0, 2); // Free to play
