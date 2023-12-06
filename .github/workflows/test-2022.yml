@@ -1,6 +1,7 @@
 name: "2022"
 
 on:
+  workflow_dispatch:
   push:
     branches: 
       - master

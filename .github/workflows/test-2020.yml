@@ -1,6 +1,7 @@
 name: "2020"
 
 on:
+  workflow_dispatch:
   push:
     branches: 
       - master
