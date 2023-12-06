@@ -7,22 +7,23 @@ repositories {
 }
 
 ext {
-    JAVA_VERSION = 17
-    LOMBOK_VERSION = '1.18.24'
-    JUNIT_VERSION = '4.13.2'
+    JAVA_VERSION = 21
+    LOMBOK_VERSION = '1.18.30'
+    JUNIT_VERSION = '5.8.1'
 }
 
 dependencies {
     compileOnly "org.projectlombok:lombok:${LOMBOK_VERSION}"
     annotationProcessor "org.projectlombok:lombok:${LOMBOK_VERSION}"
 
-    testImplementation "junit:junit:${JUNIT_VERSION}"
+    testImplementation "org.junit.jupiter:junit-jupiter-api:${JUNIT_VERSION}"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${JUNIT_VERSION}"
     testCompileOnly "org.projectlombok:lombok:${LOMBOK_VERSION}"
 	testAnnotationProcessor "org.projectlombok:lombok:${LOMBOK_VERSION}"
 }
 
 application {
-    mainClass = 'com.augustoccesar.adventofcode.Main'
+    mainClass = 'se.augustocesar.aoc2019.Main'
 }
 
 java {
@@ -32,7 +33,7 @@ java {
 }
 
 test {
-    useJUnit()
+    useJUnitPlatform()
     testLogging {
 		events "failed"
 		exceptionFormat "full"
