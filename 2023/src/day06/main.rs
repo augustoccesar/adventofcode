@@ -4,7 +4,7 @@ fn part_one() -> String {
     let timesheet = parse_timesheet(&read_input("06"));
     let times = &timesheet[0];
     let distances = &timesheet[1];
-    let mut result = 1;
+    let mut result: u64 = 1;
 
     for race_idx in 0..times.len() {
         let race_time = times[race_idx];
@@ -33,7 +33,7 @@ fn main() {
     timed(part_two);
 }
 
-fn find_possible_hold_times(race_time: i64, record_distance: i64) -> i64 {
+fn find_possible_hold_times(race_time: u64, record_distance: u64) -> u64 {
     let mut possible_hold_times = 0;
     let mut hold_time = race_time - 1;
     while hold_time > 0 {
@@ -50,7 +50,7 @@ fn find_possible_hold_times(race_time: i64, record_distance: i64) -> i64 {
     possible_hold_times
 }
 
-fn parse_timesheet(input: &str) -> Vec<Vec<i64>> {
+fn parse_timesheet(input: &str) -> Vec<Vec<u64>> {
     input
         .lines()
         .map(|line| line.split(':').last().unwrap().trim())
@@ -58,18 +58,13 @@ fn parse_timesheet(input: &str) -> Vec<Vec<i64>> {
             values
                 .split(' ')
                 .filter(|item| item != &"")
-                .collect::<Vec<&str>>()
+                .map(|item| item.parse::<u64>().unwrap())
+                .collect::<Vec<u64>>()
         })
-        .map(|values| {
-            values
-                .iter()
-                .map(|item| item.parse::<i64>().unwrap())
-                .collect::<Vec<i64>>()
-        })
-        .collect::<Vec<Vec<i64>>>()
+        .collect::<Vec<Vec<u64>>>()
 }
 
-fn parse_timesheet_2(input: &str) -> Vec<i64> {
+fn parse_timesheet_2(input: &str) -> Vec<u64> {
     input
         .lines()
         .map(|line| line.split(':').last().unwrap().trim())
@@ -79,8 +74,8 @@ fn parse_timesheet_2(input: &str) -> Vec<i64> {
                 .filter(|item| item != &"")
                 .collect::<Vec<&str>>()
                 .join("")
-                .parse::<i64>()
+                .parse::<u64>()
                 .unwrap()
         })
-        .collect::<Vec<i64>>()
+        .collect::<Vec<u64>>()
 }
