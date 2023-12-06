@@ -1,4 +1,4 @@
-use aoc2023::{read_input, read_named_input, timed};
+use aoc2023::{read_input, timed};
 
 fn part_one() -> String {
     let timesheet = parse_timesheet(&read_input("06"));
@@ -30,7 +30,24 @@ fn part_one() -> String {
 }
 
 fn part_two() -> String {
-    String::from("part two")
+    let data = parse_timesheet_2(&read_input("06"));
+    let race_time = data[0];
+    let record_distance = data[1];
+
+    let mut possible_hold_times = 0;
+    let mut hold_time = race_time - 1;
+    while hold_time > 0 {
+        let time_to_race = race_time - hold_time;
+        let velocity = hold_time;
+        let distance_ran = velocity * time_to_race;
+        if distance_ran > record_distance {
+            possible_hold_times += 1;
+        }
+
+        hold_time -= 1;
+    }
+
+    possible_hold_times.to_string()
 }
 
 fn main() {
@@ -55,4 +72,20 @@ fn parse_timesheet(input: &str) -> Vec<Vec<i64>> {
                 .collect::<Vec<i64>>()
         })
         .collect::<Vec<Vec<i64>>>()
+}
+
+fn parse_timesheet_2(input: &str) -> Vec<i64> {
+    input
+        .lines()
+        .map(|line| line.split(':').last().unwrap().trim())
+        .map(|values| {
+            values
+                .split(' ')
+                .filter(|item| item != &"")
+                .collect::<Vec<&str>>()
+                .join("")
+                .parse::<i64>()
+                .unwrap()
+        })
+        .collect::<Vec<i64>>()
 }
