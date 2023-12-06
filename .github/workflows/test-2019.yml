@@ -24,10 +24,10 @@ jobs:
           RESULTS_INPUT: ./2019/expected_results.gpg
           RESULTS_OUTPUT: ./2019/src/test/resources/expected_results
           
-      - name: Set up JDK 15
+      - name: Set up JDK 21
         uses: actions/setup-java@v1
         with:
-          java-version: 15
+          java-version: 21
       - name: Test with Gradle
-        run: ./gradlew test --tests com.augustoccesar.adventofcode.MainTest
+        run: ./gradlew test --tests se.augustocesar.aoc2019.MainTest
         working-directory: ./2019
