@@ -10,18 +10,7 @@ fn part_one() -> String {
         let race_time = times[race_idx];
         let record_distance = distances[race_idx];
 
-        let mut possible_hold_times = 0;
-        let mut hold_time = race_time - 1;
-        while hold_time > 0 {
-            let time_to_race = race_time - hold_time;
-            let velocity = hold_time;
-            let distance_ran = velocity * time_to_race;
-            if distance_ran > record_distance {
-                possible_hold_times += 1;
-            }
-
-            hold_time -= 1;
-        }
+        let possible_hold_times = find_possible_hold_times(race_time, record_distance);
 
         result *= possible_hold_times;
     }
@@ -34,6 +23,17 @@ fn part_two() -> String {
     let race_time = data[0];
     let record_distance = data[1];
 
+    let possible_hold_times = find_possible_hold_times(race_time, record_distance);
+
+    possible_hold_times.to_string()
+}
+
+fn main() {
+    timed(part_one);
+    timed(part_two);
+}
+
+fn find_possible_hold_times(race_time: i64, record_distance: i64) -> i64 {
     let mut possible_hold_times = 0;
     let mut hold_time = race_time - 1;
     while hold_time > 0 {
@@ -47,12 +47,7 @@ fn part_two() -> String {
         hold_time -= 1;
     }
 
-    possible_hold_times.to_string()
-}
-
-fn main() {
-    timed(part_one);
-    timed(part_two);
+    possible_hold_times
 }
 
 fn parse_timesheet(input: &str) -> Vec<Vec<i64>> {
