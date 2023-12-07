@@ -94,7 +94,7 @@ fn calculate_label(label: char, wildcard: bool) -> u8 {
         '4' => 4,
         '3' => 3,
         '2' => 2,
-        _ => panic!("Invalid card label"),
+        _ => unreachable!(),
     }
 }
 
@@ -131,13 +131,13 @@ fn calculate_hand(hand: &[char; 5], wildcard: bool) -> HandType {
         return default_strength;
     }
 
-    let j_count = hand.iter().filter(|label| **label == 'J').count();
     match default_strength {
         HandType::FiveOfAKind => HandType::FiveOfAKind,
         HandType::FourOfAKind => HandType::FiveOfAKind,
         HandType::FullHouse => HandType::FiveOfAKind,
         HandType::ThreeOfAKind => HandType::FourOfAKind,
         HandType::TwoPair => {
+            let j_count = hand.iter().filter(|label| **label == 'J').count();
             if j_count == 1 {
                 HandType::FullHouse
             } else if j_count == 2 {
