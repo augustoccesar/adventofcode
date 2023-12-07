@@ -3,96 +3,74 @@ use std::{collections::HashMap, convert::TryInto};
 use aoc2023::{read_input, timed};
 
 fn part_one() -> String {
-    let mut hands = read_input("07")
-        .lines()
-        .map(|line| {
-            let tokens = line.split(' ').collect::<Vec<&str>>();
-            let hand: [char; 5] = tokens[0].chars().collect::<Vec<char>>().try_into().unwrap();
-            let strength = calculate_hand(&hand, false);
+    let wildcard = false;
+    let mut hands = parse_input(&read_input("07"), wildcard);
 
-            (hand, strength, tokens[1].parse::<u32>().unwrap())
-        })
-        .collect::<Vec<([char; 5], u8, u32)>>();
-
-    hands.sort_by(|left, right| {
-        if left.1 != right.1 {
-            return left.1.cmp(&right.1);
-        }
-
-        for i in 0..5 {
-            let left_label = left.0[i];
-            let left_value = calculate_label(left_label, false);
-
-            let right_label = right.0[i];
-            let right_value = calculate_label(right_label, false);
-
-            let res = left_value.cmp(&right_value);
-
-            if res.is_eq() {
-                continue;
-            }
-
-            return res;
-        }
-
-        unreachable!()
-    });
-
-    let mut result = 0;
-    for (i, (_, _, bid)) in hands.iter().enumerate() {
-        result += (i + 1) as u32 * bid;
-    }
-
-    result.to_string()
+    sort_hands(&mut hands, wildcard);
+    total_winnings(&hands).to_string()
 }
 
 fn part_two() -> String {
-    let mut hands = read_input("07")
-        .lines()
-        .map(|line| {
-            let tokens = line.split(' ').collect::<Vec<&str>>();
-            let hand: [char; 5] = tokens[0].chars().collect::<Vec<char>>().try_into().unwrap();
-            let strength = calculate_hand(&hand, true);
+    let wildcard = true;
+    let mut hands = parse_input(&read_input("07"), wildcard);
 
-            (hand, strength, tokens[1].parse::<u32>().unwrap())
-        })
-        .collect::<Vec<([char; 5], u8, u32)>>();
-
-    hands.sort_by(|left, right| {
-        if left.1 != right.1 {
-            return left.1.cmp(&right.1);
-        }
-
-        for i in 0..5 {
-            let left_label = left.0[i];
-            let left_value = calculate_label(left_label, true);
-
-            let right_label = right.0[i];
-            let right_value = calculate_label(right_label, true);
-
-            let res = left_value.cmp(&right_value);
-
-            if res.is_eq() {
-                continue;
-            }
-
-            return res;
-        }
-
-        unreachable!()
-    });
-
-    let mut result = 0;
-    for (i, (_, _, bid)) in hands.iter().enumerate() {
-        result += (i + 1) as u32 * bid;
-    }
-
-    result.to_string()
+    sort_hands(&mut hands, wildcard);
+    total_winnings(&hands).to_string()
 }
 
 fn main() {
     timed(part_one);
     timed(part_two);
+}
+
+type Hand = ([char; 5], HandType, u32);
+
+fn parse_input(input: &str, wildcard: bool) -> Vec<Hand> {
+    input
+        .lines()
+        .map(|line| {
+            let tokens = line.split(' ').collect::<Vec<&str>>();
+            let hand: [char; 5] = tokens[0].chars().collect::<Vec<char>>().try_into().unwrap();
+            let strength = calculate_hand(&hand, wildcard);
+
+            (hand, strength, tokens[1].parse::<u32>().unwrap())
+        })
+        .collect::<Vec<Hand>>()
+}
+
+fn sort_hands(hands: &mut [Hand], wildcard: bool) {
+    hands.sort_by(|left, right| {
+        if left.1 != right.1 {
+            return left.1.partial_cmp(&right.1).unwrap();
+        }
+
+        for i in 0..5 {
+            let left_label = left.0[i];
+            let left_value = calculate_label(left_label, wildcard);
+
+            let right_label = right.0[i];
+            let right_value = calculate_label(right_label, wildcard);
+
+            let res = left_value.cmp(&right_value);
+
+            if res.is_eq() {
+                continue;
+            }
+
+            return res;
+        }
+
+        unreachable!()
+    });
+}
+
+fn total_winnings(hands: &[Hand]) -> u32 {
+    let mut result = 0;
+    for (i, (_, _, bid)) in hands.iter().enumerate() {
+        result += (i + 1) as u32 * bid;
+    }
+
+    result
 }
 
 fn calculate_label(label: char, wildcard: bool) -> u8 {
@@ -120,7 +98,7 @@ fn calculate_label(label: char, wildcard: bool) -> u8 {
     }
 }
 
-fn calculate_hand(hand: &[char; 5], wildcard: bool) -> u8 {
+fn calculate_hand(hand: &[char; 5], wildcard: bool) -> HandType {
     let mut agg: HashMap<char, u32> = HashMap::new();
     for card in hand {
         let count = agg.entry(*card).or_insert(0);
@@ -128,32 +106,25 @@ fn calculate_hand(hand: &[char; 5], wildcard: bool) -> u8 {
     }
 
     let default_strength = if agg.len() == 1 {
-        // Five of a kind
-        7
+        HandType::FiveOfAKind
     } else if agg.len() == 2 {
         let max_count = *agg.values().max().unwrap();
         if max_count == 4 {
-            // Four of a kind
-            6
+            HandType::FourOfAKind
         } else {
-            // Full house
-            5
+            HandType::FullHouse
         }
     } else if agg.len() == 3 {
         let max_count = *agg.values().max().unwrap();
         if max_count == 3 {
-            // Three of a kind
-            4
+            HandType::ThreeOfAKind
         } else {
-            // Two pairs
-            3
+            HandType::TwoPair
         }
     } else if agg.len() == 4 {
-        // One pair
-        2
+        HandType::OnePair
     } else {
-        // High card
-        1
+        HandType::HighCard
     };
 
     if !wildcard || !hand.contains(&'J') {
@@ -162,28 +133,51 @@ fn calculate_hand(hand: &[char; 5], wildcard: bool) -> u8 {
 
     let j_count = hand.iter().filter(|label| **label == 'J').count();
     match default_strength {
-        7 => 7,
-        6 => 7,
-        5 => 7,
-        4 => {
-            if j_count == 1 || j_count == 3 {
-                6
-            } else {
-                unreachable!()
-            }
-        }
-        3 => {
+        HandType::FiveOfAKind => HandType::FiveOfAKind,
+        HandType::FourOfAKind => HandType::FiveOfAKind,
+        HandType::FullHouse => HandType::FiveOfAKind,
+        HandType::ThreeOfAKind => HandType::FourOfAKind,
+        HandType::TwoPair => {
             if j_count == 1 {
-                5
+                HandType::FullHouse
             } else if j_count == 2 {
-                6
+                HandType::FourOfAKind
             } else {
                 unreachable!()
             }
         }
-        2 => 4,
-        1 => 2,
-        _ => unreachable!(),
+        HandType::OnePair => HandType::ThreeOfAKind,
+        HandType::HighCard => HandType::OnePair,
     }
 }
 
+#[derive(PartialEq, Eq)]
+enum HandType {
+    FiveOfAKind,
+    FourOfAKind,
+    FullHouse,
+    ThreeOfAKind,
+    TwoPair,
+    OnePair,
+    HighCard,
+}
+
+impl HandType {
+    fn value(&self) -> u8 {
+        match self {
+            HandType::FiveOfAKind => 7,
+            HandType::FourOfAKind => 6,
+            HandType::FullHouse => 5,
+            HandType::ThreeOfAKind => 4,
+            HandType::TwoPair => 3,
+            HandType::OnePair => 2,
+            HandType::HighCard => 1,
+        }
+    }
+}
+
+impl PartialOrd for HandType {
+    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+        Some(self.value().cmp(&other.value()))
+    }
+}
