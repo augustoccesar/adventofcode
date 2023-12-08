@@ -1,6 +1,6 @@
-use std::collections::HashMap;
+use std::collections::{hash_map::Entry, HashMap};
 
-use aoc2023::{read_input, read_named_input, timed};
+use aoc2023::{read_input, timed};
 use lazy_static::lazy_static;
 use regex::Regex;
 
@@ -49,7 +49,60 @@ fn part_one() -> String {
 }
 
 fn part_two() -> String {
-    String::from("part two")
+    let lines = read_input("08")
+        .lines()
+        .map(|line| line.to_string())
+        .collect::<Vec<String>>();
+
+    let instructions = lines[0].chars().collect::<Vec<char>>();
+    let mut map: HashMap<String, (String, String)> = HashMap::new();
+    let mut current_nodes: Vec<String> = Vec::new();
+    for line in lines[2..].iter() {
+        let captures = NODES_REGEX.captures(line).unwrap();
+        let node = captures.get(1).unwrap().as_str().to_string();
+        let left = captures.get(2).unwrap().as_str().to_string();
+        let right = captures.get(3).unwrap().as_str().to_string();
+
+        if node.ends_with('A') {
+            current_nodes.push(node.clone());
+        }
+
+        map.insert(node, (left, right));
+    }
+
+    let mut cycles = vec![0_u64; current_nodes.len()];
+
+    for idx in 0..current_nodes.len() {
+        let mut node = current_nodes[idx].clone();
+        let mut hist: HashMap<(String, char), u64> = HashMap::new();
+
+        let mut step = 0;
+        let mut instruction_idx = 0;
+        loop {
+            let instruction = instructions[instruction_idx];
+
+            if node.ends_with('Z') {
+                if let Entry::Vacant(e) = hist.entry((node.clone(), instruction)) {
+                    e.insert(step);
+                    cycles[idx] = step;
+                } else {
+                    break;
+                }
+            }
+
+            let (left, right) = map.get(&node).unwrap();
+            if instruction == 'L' {
+                node = left.clone();
+            } else {
+                node = right.clone();
+            }
+
+            step += 1;
+            instruction_idx = (instruction_idx + 1) % instructions.len();
+        }
+    }
+
+    lcm(&cycles).to_string()
 }
 
 fn main() {
@@ -60,4 +113,20 @@ fn main() {
 lazy_static! {
     static ref NODES_REGEX: Regex =
         Regex::new(r"([A-Z]{3})\s=\s\(([A-Z]{3}),\s([A-Z]{3})\)").expect("failed to compile regex");
+}
+
+fn lcm(values: &[u64]) -> u64 {
+    values
+        .iter()
+        .fold(1, |acc, &item| acc * item / gcd(acc, item))
+}
+
+fn gcd(mut left: u64, mut right: u64) -> u64 {
+    while right != 0 {
+        let remainder = left % right;
+        left = right;
+        right = remainder;
+    }
+
+    left
 }
