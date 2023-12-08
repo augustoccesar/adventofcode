@@ -1,4 +1,4 @@
-use std::collections::{hash_map::Entry, HashMap};
+use std::collections::HashMap;
 
 use aoc2023::{read_input, timed};
 use lazy_static::lazy_static;
@@ -49,45 +49,25 @@ fn part_one() -> String {
 }
 
 fn part_two() -> String {
-    let lines = read_input("08")
-        .lines()
-        .map(|line| line.to_string())
+    let (map, instructions) = parse_input(&read_input("08"));
+    let current_nodes = map
+        .keys()
+        .filter(|node| node.ends_with('A'))
+        .cloned()
         .collect::<Vec<String>>();
 
-    let instructions = lines[0].chars().collect::<Vec<char>>();
-    let mut map: HashMap<String, (String, String)> = HashMap::new();
-    let mut current_nodes: Vec<String> = Vec::new();
-    for line in lines[2..].iter() {
-        let captures = NODES_REGEX.captures(line).unwrap();
-        let node = captures.get(1).unwrap().as_str().to_string();
-        let left = captures.get(2).unwrap().as_str().to_string();
-        let right = captures.get(3).unwrap().as_str().to_string();
-
-        if node.ends_with('A') {
-            current_nodes.push(node.clone());
-        }
-
-        map.insert(node, (left, right));
-    }
-
     let mut cycles = vec![0_u64; current_nodes.len()];
-
     for idx in 0..current_nodes.len() {
         let mut node = current_nodes[idx].clone();
-        let mut hist: HashMap<(String, char), u64> = HashMap::new();
 
         let mut step = 0;
         let mut instruction_idx = 0;
         loop {
             let instruction = instructions[instruction_idx];
 
-            if node.ends_with('Z') {
-                if let Entry::Vacant(e) = hist.entry((node.clone(), instruction)) {
-                    e.insert(step);
-                    cycles[idx] = step;
-                } else {
-                    break;
-                }
+            if node.ends_with('Z') && cycles[idx] == 0 {
+                cycles[idx] = step;
+                break;
             }
 
             let (left, right) = map.get(&node).unwrap();
@@ -113,6 +93,27 @@ fn main() {
 lazy_static! {
     static ref NODES_REGEX: Regex =
         Regex::new(r"([A-Z]{3})\s=\s\(([A-Z]{3}),\s([A-Z]{3})\)").expect("failed to compile regex");
+}
+
+type Map = HashMap<String, (String, String)>;
+
+fn parse_input(input: &str) -> (Map, Vec<char>) {
+    let lines = input
+        .lines()
+        .map(|line| line.to_string())
+        .collect::<Vec<String>>();
+
+    let instructions = lines[0].chars().collect::<Vec<char>>();
+    let mut map: Map = Map::new();
+    for line in lines[2..].iter() {
+        let captures = NODES_REGEX.captures(line).unwrap();
+        let node = captures.get(1).unwrap().as_str().to_string();
+        let left = captures.get(2).unwrap().as_str().to_string();
+        let right = captures.get(3).unwrap().as_str().to_string();
+        map.insert(node, (left, right));
+    }
+
+    (map, instructions)
 }
 
 fn lcm(values: &[u64]) -> u64 {
