@@ -5,44 +5,29 @@ use lazy_static::lazy_static;
 use regex::Regex;
 
 fn part_one() -> String {
-    let lines = read_input("08")
-        .lines()
-        .map(|line| line.to_string())
-        .collect::<Vec<String>>();
-
-    let instructions = lines[0].chars().collect::<Vec<char>>();
-    let mut map: HashMap<String, (String, String)> = HashMap::new();
-    for line in lines[2..].iter() {
-        let captures = NODES_REGEX.captures(line).unwrap();
-        let node = captures.get(1).unwrap().as_str().to_string();
-        let left = captures.get(2).unwrap().as_str().to_string();
-        let right = captures.get(3).unwrap().as_str().to_string();
-        map.insert(node, (left, right));
-    }
+    let (map, instructions) = parse_input(&read_input("08"));
 
     let mut steps = 0;
-    let mut i = 0;
-    let mut current_node = &String::from("AAA");
+    let mut instruction_idx = 0;
+    let mut current_node = "AAA";
     loop {
-        let instruction = instructions[i];
-        let (left, right) = map.get(current_node).unwrap();
-        if instruction == 'L' {
-            current_node = left;
-        } else {
-            current_node = right;
-        }
-
-        steps += 1;
-
         if current_node == "ZZZ" {
             break;
         }
 
-        if i == instructions.len() - 1 {
-            i = 0
-        } else {
-            i += 1;
+        let instruction = instructions[instruction_idx];
+        let (left, right) = map
+            .get(current_node)
+            .expect("all nodes should exist on the map");
+
+        match instruction {
+            'L' => current_node = left,
+            'R' => current_node = right,
+            _ => unreachable!(),
         }
+
+        steps += 1;
+        instruction_idx = (instruction_idx + 1) % instructions.len();
     }
 
     steps.to_string()
@@ -53,12 +38,11 @@ fn part_two() -> String {
     let current_nodes = map
         .keys()
         .filter(|node| node.ends_with('A'))
-        .cloned()
-        .collect::<Vec<String>>();
+        .collect::<Vec<&String>>();
 
     let mut cycles = vec![0_u64; current_nodes.len()];
     for idx in 0..current_nodes.len() {
-        let mut node = current_nodes[idx].clone();
+        let mut node = current_nodes[idx];
 
         let mut step = 0;
         let mut instruction_idx = 0;
@@ -70,11 +54,11 @@ fn part_two() -> String {
                 break;
             }
 
-            let (left, right) = map.get(&node).unwrap();
-            if instruction == 'L' {
-                node = left.clone();
-            } else {
-                node = right.clone();
+            let (left, right) = map.get(node).expect("all nodes should exist on the map");
+            match instruction {
+                'L' => node = left,
+                'R' => node = right,
+                _ => unreachable!(),
             }
 
             step += 1;
