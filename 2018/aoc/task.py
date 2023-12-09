@@ -22,7 +22,7 @@ class Task(ABC):
     def read_input(self, input_name: str = "input") -> str:
         day = self.__class__.__name__.lower()
         path = os.path.dirname(__file__)
-        f = open(f"{path}/{day}/{input_name}.txt", "r")
+        f = open(f"{path}/inputs/{day}_{input_name}.txt", "r")
         return f.read()
 
     @abstractmethod

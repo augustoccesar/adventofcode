@@ -16,16 +16,16 @@ from aoc import (
 
 if __name__ == "__main__":
     days = {
-        "01": Day01(),
-        "02": Day02(),
-        "03": Day03(),
-        "04": Day04(),
-        "05": Day05(),
-        "06": Day06(),
-        "07": Day07(),
-        "08": Day08(),
-        "09": Day09(),
-        "10": Day10(),
+        1: Day01(),
+        2: Day02(),
+        3: Day03(),
+        4: Day04(),
+        5: Day05(),
+        6: Day06(),
+        7: Day07(),
+        8: Day08(),
+        9: Day09(),
+        10: Day10(),
 # SETUP:target_dict
     }
 
@@ -33,9 +33,10 @@ if __name__ == "__main__":
         print("Invalid amount of argument")
         exit(1)
 
-    day_to_run = days.get(sys.argv[1], None)
+    day_arg = int(sys.argv[1])
+    day_to_run = days.get(day_arg, None)
     if day_to_run is None:
-        print(f"Day {sys.argv[1]} not found")
+        print(f"Day {day_arg} not found")
         exit(1)
 
     day_to_run.run()
