@@ -2,6 +2,7 @@
     "2015": {
         "task_file_name": "index",
         "tasks_path": "/src",
+        "inputs_path": "/inputs",
         "extension": "ts",
         "instructions": [
             {
@@ -19,6 +20,7 @@
     "2016": {
         "task_file_name": "mod",
         "tasks_path": "/src",
+        "inputs_path": "/inputs",
         "extension": "rs",
         "instructions": [
             {
@@ -40,6 +42,7 @@
     },
     "2017": {
         "tasks_path": "",
+        "inputs_path": "/inputs",
         "extension": "cpp",
         "instructions": [
             {
@@ -62,6 +65,7 @@
     "2018": {
         "task_file_name": "__init__",
         "tasks_path": "/aoc",
+        "inputs_path": "/aoc/inputs",
         "extension": "py",
         "instructions": [
             {
@@ -83,10 +87,12 @@
     },
     "2021": {
         "tasks_path": "",
+        "inputs_path": "/inputs",
         "extension": "rb"
     },
     "2022": {
         "tasks_path": "/src/main/kotlin/se/augustocesar",
+        "inputs_path": "/src/main/resources/inputs",
         "task_file_name_format": "camel",
         "extension": "kt",
         "instructions": [
@@ -105,6 +111,7 @@
     "2023": {
         "task_file_name": "main",
         "tasks_path": "/src",
+        "inputs_path": "/inputs",
         "extension": "rs",
         "instructions": [
             {

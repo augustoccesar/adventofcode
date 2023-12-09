@@ -27,6 +27,7 @@ def prepare_handler(year_param: str, day_param: str):
         raise ValueError(f"Settings not found for year {year}")
 
     settings: Dict = SETTINGS[str(year)]
+    input_destination = f"./{year}{settings['inputs_path']}"
     task_destination = f"./{year}{settings['tasks_path']}/day{padded_day}"
     if exists(task_destination):
         raise Exception(f"Folder for day {day} in year {year} already exists")
@@ -34,6 +35,7 @@ def prepare_handler(year_param: str, day_param: str):
     os.makedirs(task_destination)
 
     create_readme(year, day, task_destination)
+    create_input(year, day, input_destination)
 
     template = open(template_path, "r").read()
     template = template.replace(
@@ -84,6 +86,17 @@ def create_readme(year: int, day: int, destination: str):
     with open(f"{destination}/README.md", "w") as f:
         f.write(markdown)
 
+def create_input(year: int, day: int, destination: str):
+    session = os.environ["AOC_SESSION"]
+    if session:
+        cookies = {"session": session}
+        body = requests.get(
+            f"https://adventofcode.com/{year}/day/{day}/input",
+            cookies=cookies
+        ).text
+
+        with open(f"{destination}/day{day:02}_input.txt", "w") as f:
+            f.write(body)
 
 # TODO: Look into a CLI library to make this less weird
 SUBCOMMANDS = {
