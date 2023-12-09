@@ -1,4 +1,4 @@
-use aoc2023::{read_input, read_named_input, timed};
+use aoc2023::{read_input, timed};
 
 fn part_one() -> String {
     let histories = read_input("09")
@@ -36,7 +36,43 @@ fn part_one() -> String {
 }
 
 fn part_two() -> String {
-    String::from("part two")
+    let histories = read_input("09")
+        .lines()
+        .map(|line| line.split(' ').collect::<Vec<&str>>())
+        .map(|history| {
+            history
+                .iter()
+                .map(|item| item.parse::<i32>().unwrap())
+                .collect::<Vec<i32>>()
+        })
+        .collect::<Vec<Vec<i32>>>();
+
+    let mut res = 0;
+
+    for history in &histories {
+        let mut diff_sequences: Vec<Vec<i32>> = Vec::new();
+        diff_sequences.push(history.clone());
+
+        generate_diff_sequence(history, &mut diff_sequences);
+
+        for diff_sequence in &mut diff_sequences {
+            diff_sequence.reverse();
+        }
+
+        let mut i = diff_sequences.len() as i32 - 2;
+        while i >= 0 {
+            let inner_i = i as usize;
+            let level_value = diff_sequences[inner_i].last().unwrap()
+                - diff_sequences[inner_i + 1].last().unwrap();
+            diff_sequences[inner_i].push(level_value);
+            i -= 1;
+        }
+
+        let history_value = diff_sequences.first().unwrap().last().unwrap();
+        res += history_value;
+    }
+
+    res.to_string()
 }
 
 fn main() {
