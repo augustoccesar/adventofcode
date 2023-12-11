@@ -11,6 +11,7 @@
 #include "day08/day08.h"
 #include "day09/day09.cpp"
 #include "day10/day10.cpp"
+#include "day11/day11.cpp"
 //SETUP:target_include
 
 AbstractTask* getDay(int i_day) {
@@ -35,6 +36,8 @@ AbstractTask* getDay(int i_day) {
       return new Day09;
     case 10:
       return new Day10;
+    case 11:
+      return new Day11;
 //SETUP:target_case
     default:
       return NULL;

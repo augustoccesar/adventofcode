@@ -21,6 +21,7 @@ add_executable(
         day08/day08.cpp
         day09/day09.cpp
         day10/day10.cpp
+        day11/day11.cpp
 #SETUP:target_executable
 )
 
