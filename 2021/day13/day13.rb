@@ -35,7 +35,27 @@ class Day13
   end
 
   def part_two
-    "-"
+    input = read_input.split("\n\n")
+
+    dots_positions = input[0].lines.map { |it| it.split(",").map(&:to_i) }
+    fold_instructions = input[1].lines.map { |it| /(x|y)=(\d+)/.match(it).captures.collect.to_a }
+
+    fold_instructions.each do |direction, along_idx|
+      dots_positions.each_with_index do |(dot_x, dot_y), dot_idx|
+        if direction == "y" && (dot_y > along_idx.to_i)
+          diff = dot_y - along_idx.to_i
+
+          dots_positions[dot_idx][1] = dot_y - (diff * 2)
+        elsif direction == "x" && (dot_x > along_idx.to_i)
+          diff = dot_x - along_idx.to_i
+          dots_positions[dot_idx][0] = dot_x - (diff * 2)
+        end
+      end
+    end
+
+    print_paper(dots_positions)
+
+    "result printed to the console"
   end
 end
 
