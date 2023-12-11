@@ -1,4 +1,4 @@
-use std::collections::HashSet;
+use std::{collections::HashSet, iter::FromIterator};
 
 use aoc2023::{read_input, timed};
 
@@ -11,7 +11,7 @@ fn part_one() -> String {
 
 fn part_two() -> String {
     let map = parse_input(&read_input("10"));
-    let path = traverse(&map);
+    let path: HashSet<(usize, usize)> = HashSet::from_iter(traverse(&map));
 
     let mut inside_count = 0;
     for y in 0..map.len() {
@@ -98,7 +98,7 @@ fn parse_input(input: &str) -> Vec<Vec<char>> {
         .collect::<Vec<Vec<char>>>()
 }
 
-fn traverse(map: &[Vec<char>]) -> HashSet<(usize, usize)> {
+fn traverse(map: &[Vec<char>]) -> Vec<(usize, usize)> {
     let start_point = map
         .iter()
         .enumerate()
@@ -115,8 +115,8 @@ fn traverse(map: &[Vec<char>]) -> HashSet<(usize, usize)> {
         })
         .unwrap();
 
-    let mut path: HashSet<(usize, usize)> = HashSet::new();
-    path.insert(start_point);
+    let mut path: Vec<(usize, usize)> = Vec::new();
+    path.push(start_point);
 
     let mut direction = Direction::East;
     let mut current_point = start_point;
@@ -133,7 +133,7 @@ fn traverse(map: &[Vec<char>]) -> HashSet<(usize, usize)> {
 
         let current_pipe = map[current_point.1][current_point.0];
         direction = direction.apply_pipe(current_pipe).unwrap();
-        path.insert(current_point);
+        path.push(current_point);
     }
 
     path
