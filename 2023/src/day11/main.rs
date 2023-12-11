@@ -1,87 +1,92 @@
-use std::collections::HashSet;
+use std::cmp;
 
-use aoc2023::{read_input, read_named_input, timed};
+use aoc2023::{read_input, timed};
 
 fn part_one() -> String {
-    let mut map = read_input("11")
+    let (galaxies, rows_has_galaxy, cols_has_galaxy) = parse_input(&read_input("11"));
+
+    distances_sum(&galaxies, 2, &rows_has_galaxy, &cols_has_galaxy).to_string()
+}
+
+fn part_two() -> String {
+    let (galaxies, rows_has_galaxy, cols_has_galaxy) = parse_input(&read_input("11"));
+
+    distances_sum(&galaxies, 1_000_000, &rows_has_galaxy, &cols_has_galaxy).to_string()
+}
+
+fn main() {
+    timed(part_one);
+    timed(part_two);
+}
+
+fn parse_input(input: &str) -> (Vec<(usize, usize)>, Vec<bool>, Vec<bool>) {
+    let map = input
         .lines()
         .map(|line| line.chars().collect::<Vec<char>>())
         .collect::<Vec<Vec<char>>>();
 
+    let mut galaxies: Vec<(usize, usize)> = Vec::new();
     let mut rows_has_galaxy: Vec<bool> = vec![false; map.len()];
     let mut cols_has_galaxy: Vec<bool> = vec![false; map[0].len()];
 
-    for y in 0..map.len() {
-        for x in 0..map[0].len() {
-            if map[y][x] == '#' {
+    for (y, row) in map.iter().enumerate() {
+        for (x, item) in row.iter().enumerate() {
+            if item == &'#' {
+                galaxies.push((x, y));
                 rows_has_galaxy[y] = true;
                 cols_has_galaxy[x] = true;
             }
         }
     }
 
-    let mut mod_x = 0;
-    let mut mod_y = 0;
-    for (i, has_galaxy) in rows_has_galaxy.iter().enumerate() {
-        if *has_galaxy {
-            continue;
-        }
+    (galaxies, rows_has_galaxy, cols_has_galaxy)
+}
 
-        map.insert(i + mod_y, vec!['.'; map[0].len()]);
-        mod_y += 1;
-    }
-
-    for (i, has_galaxy) in cols_has_galaxy.iter().enumerate() {
-        if *has_galaxy {
-            continue;
-        }
-
-        map.iter_mut().for_each(|row| {
-            row.insert(i + mod_x, '.');
-        });
-
-        mod_x += 1;
-    }
-
-    let mut galaxies: Vec<(usize, usize)> = Vec::new();
-    for y in 0..map.len() {
-        for x in 0..map[0].len() {
-            if map[y][x] == '#' {
-                galaxies.push((x, y));
-            }
-        }
-    }
-
-    let mut galaxies_pairs: HashSet<(usize, usize)> = HashSet::new();
+fn distances_sum(
+    galaxies: &[(usize, usize)],
+    expansion_rate: usize,
+    rows_has_galaxy: &[bool],
+    cols_has_galaxy: &[bool],
+) -> usize {
+    let mut sum = 0;
     for i in 0..galaxies.len() {
-        for j in i..galaxies.len() {
-            if j == i {
+        let galaxy_1 = galaxies[i];
+        for galaxy_2 in galaxies.iter().skip(i) {
+            if &galaxy_1 == galaxy_2 {
                 continue;
             }
 
-            let left = if i < j { i } else { j };
-            let right = if i > j { i } else { j };
+            let min_x = cmp::min(galaxy_1.0, galaxy_2.0);
+            let max_x = cmp::max(galaxy_1.0, galaxy_2.0);
+            let min_y = cmp::min(galaxy_1.1, galaxy_2.1);
+            let max_y = cmp::max(galaxy_1.1, galaxy_2.1);
 
-            galaxies_pairs.insert((left, right));
+            let mut expansion_x = 0;
+            let mut expansion_y = 0;
+
+            for (row_ids, has_galaxy) in rows_has_galaxy.iter().enumerate() {
+                if *has_galaxy {
+                    continue;
+                }
+
+                if min_y < row_ids && max_y > row_ids {
+                    expansion_y += expansion_rate - 1;
+                }
+            }
+
+            for (col_idx, has_galaxy) in cols_has_galaxy.iter().enumerate() {
+                if *has_galaxy {
+                    continue;
+                }
+
+                if min_x < col_idx && max_x > col_idx {
+                    expansion_x += expansion_rate - 1;
+                }
+            }
+
+            sum += (max_x - min_x) + (max_y - min_y) + expansion_x + expansion_y;
         }
     }
 
-    let mut res = 0;
-    for (idx_left, idx_right) in galaxies_pairs {
-        let galaxy_1 = galaxies[idx_left];
-        let galaxy_2 = galaxies[idx_right];
-
-        res += galaxy_1.0.abs_diff(galaxy_2.0) + galaxy_1.1.abs_diff(galaxy_2.1);
-    }
-
-    res.to_string()
-}
-
-fn part_two() -> String {
-    String::from("part two")
-}
-
-fn main() {
-    timed(part_one);
-    timed(part_two);
+    sum
 }
