@@ -2,14 +2,25 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "type": "ruby-debug",
+            "type": "rdbg",
+            "name": "Debug",
             "request": "launch",
-            "name": "Launch File",
-            "program": "${workspaceFolder}/${command:AskForProgramName}",
-            "programArgs": [
+            "command": "bundle exec ruby",
+            "script": "${workspaceFolder}/main.rb",
+            "args": [
                 "${input:args}"
-            ]
-        }
+            ],
+        },
+        {
+            "type": "rdbg",
+            "name": "Debug: Day 13",
+            "request": "launch",
+            "command": "bundle exec ruby",
+            "script": "${workspaceFolder}/main.rb",
+            "args": [
+                "13"
+            ],
+        },
     ],
     "inputs": [
         {
