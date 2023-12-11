@@ -9,27 +9,11 @@ class Day13
 
   def part_one
     input = read_input.split("\n\n")
-    desired_folds = 1
 
     dots_positions = input[0].lines.map { |it| it.split(",").map(&:to_i) }
-    fold_instructions = input[1].lines.map { |it| /(x|y)=(\d+)/.match(it).captures.collect.to_a }
+    fold_instruction = input[1].lines.map { |it| INSTRUCTION_REGEX.match(it).captures.collect.to_a }[0]
 
-    folds = 0
-    fold_instructions.each do |direction, along_idx|
-      dots_positions.each_with_index do |(dot_x, dot_y), dot_idx|
-        if direction == "y" && (dot_y > along_idx.to_i)
-          diff = dot_y - along_idx.to_i
-
-          dots_positions[dot_idx][1] = dot_y - (diff * 2)
-        elsif direction == "x" && (dot_x > along_idx.to_i)
-          diff = dot_x - along_idx.to_i
-          dots_positions[dot_idx][0] = dot_x - (diff * 2)
-        end
-      end
-
-      folds += 1
-      break if folds == desired_folds
-    end
+    fold_dots!(dots_positions, fold_instruction[0], fold_instruction[1].to_i)
 
     Set.new(dots_positions).length.to_s
   end
@@ -38,19 +22,10 @@ class Day13
     input = read_input.split("\n\n")
 
     dots_positions = input[0].lines.map { |it| it.split(",").map(&:to_i) }
-    fold_instructions = input[1].lines.map { |it| /(x|y)=(\d+)/.match(it).captures.collect.to_a }
+    fold_instructions = input[1].lines.map { |it| INSTRUCTION_REGEX.match(it).captures.collect.to_a }
 
     fold_instructions.each do |direction, along_idx|
-      dots_positions.each_with_index do |(dot_x, dot_y), dot_idx|
-        if direction == "y" && (dot_y > along_idx.to_i)
-          diff = dot_y - along_idx.to_i
-
-          dots_positions[dot_idx][1] = dot_y - (diff * 2)
-        elsif direction == "x" && (dot_x > along_idx.to_i)
-          diff = dot_x - along_idx.to_i
-          dots_positions[dot_idx][0] = dot_x - (diff * 2)
-        end
-      end
+      fold_dots!(dots_positions, direction, along_idx.to_i)
     end
 
     print_paper(dots_positions)
@@ -59,6 +34,27 @@ class Day13
   end
 end
 
+INSTRUCTION_REGEX = /(x|y)=(\d+)/.freeze
+
+# @param dots [Array<Array<Integer>>]
+# @param fold_direction [String]
+# @param fold_index [Integer]
+# @return [nil]
+def fold_dots!(dots, fold_direction, fold_index)
+  dots.each_with_index do |(dot_x, dot_y), dot_idx|
+    if fold_direction == "y" && (dot_y > fold_index)
+      diff = dot_y - fold_index
+
+      dots[dot_idx][1] = dot_y - (diff * 2)
+    elsif fold_direction == "x" && (dot_x > fold_index)
+      diff = dot_x - fold_index
+      dots[dot_idx][0] = dot_x - (diff * 2)
+    end
+  end
+end
+
+# @param dots [Array<Array<Integer>>]
+# @return [nil]
 def print_paper(dots)
   max_x = 0
   max_y = 0
