@@ -3,97 +3,20 @@ use std::collections::HashSet;
 use aoc2023::{read_input, timed};
 
 fn part_one() -> String {
-    let map = read_input("10")
-        .lines()
-        .map(|line| line.chars().collect::<Vec<char>>())
-        .collect::<Vec<Vec<char>>>();
+    let map = parse_input(&read_input("10"));
+    let path = traverse(&map);
 
-    let start_point = map
-        .iter()
-        .enumerate()
-        .find_map(|(y, row)| {
-            row.iter().enumerate().find_map(
-                |(x, item)| {
-                    if *item == 'S' {
-                        Some((x, y))
-                    } else {
-                        None
-                    }
-                },
-            )
-        })
-        .unwrap();
-
-    let mut direction = Direction::East;
-    let mut current_point = start_point;
-    let mut steps = 0;
-    loop {
-        steps += 1;
-
-        let (modifier_x, modifier_y) = direction.modifier();
-        current_point = (
-            (current_point.0 as i32 + modifier_x) as usize,
-            (current_point.1 as i32 + modifier_y) as usize,
-        );
-
-        if current_point == start_point {
-            break;
-        }
-
-        let current_pipe = map[current_point.1][current_point.0];
-        direction = direction.apply_pipe(current_pipe).unwrap();
-    }
-
-    (steps / 2).to_string()
+    (path.len() / 2).to_string()
 }
 
 fn part_two() -> String {
-    let map = read_input("10")
-        .lines()
-        .map(|line| line.chars().collect::<Vec<char>>())
-        .collect::<Vec<Vec<char>>>();
-
-    let start_point = map
-        .iter()
-        .enumerate()
-        .find_map(|(y, row)| {
-            row.iter().enumerate().find_map(
-                |(x, item)| {
-                    if *item == 'S' {
-                        Some((x, y))
-                    } else {
-                        None
-                    }
-                },
-            )
-        })
-        .unwrap();
-
-    let mut path: HashSet<(usize, usize)> = HashSet::new();
-    path.insert(start_point);
-
-    let mut direction = Direction::East;
-    let mut current_point = start_point;
-    loop {
-        let (modifier_x, modifier_y) = direction.modifier();
-        current_point = (
-            (current_point.0 as i32 + modifier_x) as usize,
-            (current_point.1 as i32 + modifier_y) as usize,
-        );
-
-        if current_point == start_point {
-            break;
-        }
-
-        let current_pipe = map[current_point.1][current_point.0];
-        direction = direction.apply_pipe(current_pipe).unwrap();
-        path.insert(current_point);
-    }
+    let map = parse_input(&read_input("10"));
+    let path = traverse(&map);
 
     let mut inside_count = 0;
     for y in 0..map.len() {
         let mut is_inside = false;
-        let mut last_char = '.';
+        let mut last_char = '#';
         for x in 0..map[0].len() {
             match map[y][x] {
                 current_char if path.contains(&(x, y)) => {
@@ -166,4 +89,52 @@ impl Direction {
             _ => None,
         }
     }
+}
+
+fn parse_input(input: &str) -> Vec<Vec<char>> {
+    input
+        .lines()
+        .map(|line| line.chars().collect::<Vec<char>>())
+        .collect::<Vec<Vec<char>>>()
+}
+
+fn traverse(map: &[Vec<char>]) -> HashSet<(usize, usize)> {
+    let start_point = map
+        .iter()
+        .enumerate()
+        .find_map(|(y, row)| {
+            row.iter().enumerate().find_map(
+                |(x, item)| {
+                    if *item == 'S' {
+                        Some((x, y))
+                    } else {
+                        None
+                    }
+                },
+            )
+        })
+        .unwrap();
+
+    let mut path: HashSet<(usize, usize)> = HashSet::new();
+    path.insert(start_point);
+
+    let mut direction = Direction::East;
+    let mut current_point = start_point;
+    loop {
+        let (modifier_x, modifier_y) = direction.modifier();
+        current_point = (
+            (current_point.0 as i32 + modifier_x) as usize,
+            (current_point.1 as i32 + modifier_y) as usize,
+        );
+
+        if current_point == start_point {
+            break;
+        }
+
+        let current_pipe = map[current_point.1][current_point.0];
+        direction = direction.apply_pipe(current_pipe).unwrap();
+        path.insert(current_point);
+    }
+
+    path
 }
