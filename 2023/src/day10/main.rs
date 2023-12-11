@@ -48,7 +48,7 @@ fn part_one() -> String {
 }
 
 fn part_two() -> String {
-    let mut map = read_input("10")
+    let map = read_input("10")
         .lines()
         .map(|line| line.chars().collect::<Vec<char>>())
         .collect::<Vec<Vec<char>>>();
@@ -88,16 +88,6 @@ fn part_two() -> String {
         let current_pipe = map[current_point.1][current_point.0];
         direction = direction.apply_pipe(current_pipe).unwrap();
         path.insert(current_point);
-    }
-
-    for y in 0..map.len() {
-        for x in 0..map[0].len() {
-            if path.contains(&(x, y)) {
-                continue;
-            }
-
-            map[y][x] = '.';
-        }
     }
 
     let mut inside_count = 0;
