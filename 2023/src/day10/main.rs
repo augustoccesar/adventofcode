@@ -1,4 +1,6 @@
-use aoc2023::{read_input, read_named_input, timed};
+use std::collections::HashSet;
+
+use aoc2023::{read_input, timed};
 
 fn part_one() -> String {
     let map = read_input("10")
@@ -46,7 +48,82 @@ fn part_one() -> String {
 }
 
 fn part_two() -> String {
-    String::from("part two")
+    let mut map = read_input("10")
+        .lines()
+        .map(|line| line.chars().collect::<Vec<char>>())
+        .collect::<Vec<Vec<char>>>();
+
+    let start_point = map
+        .iter()
+        .enumerate()
+        .find_map(|(y, row)| {
+            row.iter().enumerate().find_map(
+                |(x, item)| {
+                    if *item == 'S' {
+                        Some((x, y))
+                    } else {
+                        None
+                    }
+                },
+            )
+        })
+        .unwrap();
+
+    let mut path: HashSet<(usize, usize)> = HashSet::new();
+    path.insert(start_point);
+
+    let mut direction = Direction::East;
+    let mut current_point = start_point;
+    loop {
+        let (modifier_x, modifier_y) = direction.modifier();
+        current_point = (
+            (current_point.0 as i32 + modifier_x) as usize,
+            (current_point.1 as i32 + modifier_y) as usize,
+        );
+
+        if current_point == start_point {
+            break;
+        }
+
+        let current_pipe = map[current_point.1][current_point.0];
+        direction = direction.apply_pipe(current_pipe).unwrap();
+        path.insert(current_point);
+    }
+
+    for y in 0..map.len() {
+        for x in 0..map[0].len() {
+            if path.contains(&(x, y)) {
+                continue;
+            }
+
+            map[y][x] = '.';
+        }
+    }
+
+    let mut inside_count = 0;
+    for y in 0..map.len() {
+        let mut is_inside = false;
+        let mut last_char = '.';
+        for x in 0..map[0].len() {
+            match map[y][x] {
+                current_char if path.contains(&(x, y)) => {
+                    if current_char == '|'
+                        || current_char == 'F'
+                        || current_char == 'L'
+                        || (current_char == 'J' && last_char == 'L')
+                        || (current_char == '7' && last_char == 'F')
+                    {
+                        last_char = current_char;
+                        is_inside ^= true;
+                    }
+                }
+                _ if is_inside => inside_count += 1,
+                _ => (),
+            }
+        }
+    }
+
+    inside_count.to_string()
 }
 
 fn main() {
