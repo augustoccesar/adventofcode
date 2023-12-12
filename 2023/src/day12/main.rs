@@ -1,4 +1,4 @@
-use std::{collections::HashSet, option, thread};
+use std::thread;
 
 use aoc2023::{read_input, read_named_input, timed};
 use regex::Regex;
@@ -38,11 +38,8 @@ fn part_one() -> String {
         let tx_copy = tx.clone();
         let row_copy = row.0.clone();
         thread::spawn(move || {
-            let compact_row = compact_row(&row_copy);
-            let count = find_options(
-                &compact_row.chars().collect::<Vec<char>>(),
-                &packed_version.iter().collect::<String>(),
-            );
+            let compact_row = compact_row(&row_copy.chars().collect::<Vec<char>>());
+            let count = find_options(&compact_row, &packed_version);
 
             tx_copy.send(count).unwrap();
         });
@@ -64,34 +61,49 @@ fn main() {
     timed(part_two);
 }
 
-fn compact_row(row: &str) -> String {
+fn compact_row(row: &[char]) -> Vec<char> {
     let re = Regex::new(r"\.+").unwrap();
-    re.replace_all(row, ".").trim_matches('.').to_string()
+    re.replace_all(&row.iter().collect::<String>(), ".")
+        .trim_matches('.')
+        .chars()
+        .collect::<Vec<char>>()
 }
 
-fn find_options(row: &[char], compact_format: &str) -> u64 {
-    let mut count = 0_u64;
+fn find_options(compacted_row: &[char], compacted_format: &[char]) -> u64 {
+    for (i, c) in compacted_row.iter().enumerate() {
+        match c {
+            '?' => {
+                let mut option_1 = vec!['.'; compacted_row.len()];
+                option_1.copy_from_slice(compacted_row);
+                option_1[i] = '.';
+                let option_1 = compact_row(&option_1);
 
-    for (i, c) in row.iter().enumerate() {
-        if c == &'?' {
-            let mut option_1 = vec!['.'; row.len()];
-            option_1.copy_from_slice(row);
-            option_1[i] = '.';
+                let mut option_2 = vec!['.'; compacted_row.len()];
+                option_2.copy_from_slice(compacted_row);
+                option_2[i] = '#';
+                let option_2 = compact_row(&option_2);
 
-            let mut option_2 = vec!['.'; row.len()];
-            option_2.copy_from_slice(row);
-            option_2[i] = '#';
+                let mut count = 0_u64;
+                count += find_options(&option_1, compacted_format);
+                count += find_options(&option_2, compacted_format);
+                return count;
+            }
+            '.' | '#' => {
+                if i > compacted_format.len() - 1 {
+                    continue;
+                }
 
-            count += find_options(&option_1, compact_format);
-            count += find_options(&option_2, compact_format);
-            return count;
+                if compacted_row[i] != compacted_format[i] {
+                    return 0;
+                }
+            }
+            _ => unreachable!(),
         }
     }
 
-    let compact = compact_row(&row.iter().collect::<String>());
-    if compact == compact_format {
-        count += 1;
+    if compacted_row == compacted_format {
+        1
+    } else {
+        0
     }
-
-    count
 }
