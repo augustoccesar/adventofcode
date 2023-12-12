@@ -18,12 +18,31 @@ class Day11 : public AbstractTask {
                      std::get<1>(current_pos) + std::get<1>(modifier)};
     }
 
-    int res = distance(starting_pos, current_pos);
+    int res = calculate_distance(starting_pos, current_pos);
 
     return std::to_string(res);
   }
 
-  std::string part_two() override { return "-"; }
+  std::string part_two() override {
+    std::string input = read_input("inputs/day11_input.txt");
+    std::vector<std::string> directions = split(input, ',');
+    std::tuple<int, int> starting_pos = {0, 0};
+
+    int furthest = 0;
+    std::tuple<int, int> current_pos = {0, 0};
+    for (int i = 0; i < directions.size(); i++) {
+      std::tuple<int, int> modifier = direction_modifier(directions[i]);
+
+      current_pos = {std::get<0>(current_pos) + std::get<0>(modifier),
+                     std::get<1>(current_pos) + std::get<1>(modifier)};
+      int distance = calculate_distance(starting_pos, current_pos);
+      if (distance > furthest) {
+        furthest = distance;
+      }
+    }
+
+    return std::to_string(furthest);
+  }
 
   const std::tuple<int, int> direction_modifier(std::string& direction) {
     if (direction == "n") {
@@ -43,7 +62,7 @@ class Day11 : public AbstractTask {
     }
   }
 
-  int distance(std::tuple<int, int>& from, std::tuple<int, int>& to) {
+  int calculate_distance(std::tuple<int, int>& from, std::tuple<int, int>& to) {
     int diff_x = std::get<0>(from) - std::get<0>(to);
     int diff_y = std::get<1>(from) - std::get<1>(to);
 
