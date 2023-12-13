@@ -50,45 +50,29 @@ fn main() {
 }
 
 fn summarize_rows(pattern: &[Vec<char>], allowed_smudges: bool) -> usize {
-    let mut fixed_smudge = false;
-
     for y in 0..pattern.len() - 1 {
-        match (pattern[y] == pattern[y + 1], allowed_smudges, fixed_smudge) {
-            (true, _, _) => (),
-            (false, true, false) if has_single_diff(&pattern[y], &pattern[y + 1]) => {
-                fixed_smudge = true
-            }
+        let mut difference = diff(&pattern[y], &pattern[y + 1]);
+
+        match (difference, allowed_smudges) {
+            (0, _) => (),
+            (_, true) => (),
             _ => continue,
         }
 
-        let mut mirrored = true;
         let mut inner_y1 = y as i32 - 1;
         let mut inner_y2 = (y + 1) as i32 + 1;
 
         while inner_y1 >= 0 && inner_y2 < pattern.len() as i32 {
-            if pattern[inner_y1 as usize] != pattern[inner_y2 as usize] {
-                if !fixed_smudge
-                    && allowed_smudges
-                    && has_single_diff(&pattern[inner_y1 as usize], &pattern[inner_y2 as usize])
-                {
-                    fixed_smudge = true;
-                } else {
-                    mirrored = false;
-                    fixed_smudge = false;
-                    break;
-                }
-            }
+            difference += diff(&pattern[inner_y1 as usize], &pattern[inner_y2 as usize]);
 
             inner_y1 -= 1;
             inner_y2 += 1;
         }
 
-        if allowed_smudges {
-            if mirrored && fixed_smudge {
-                return y + 1;
-            }
-        } else if mirrored {
-            return y + 1;
+        match (allowed_smudges, difference) {
+            (false, 0) => return y + 1,
+            (true, d) if d > 0 && d < 2 => return y + 1,
+            _ => continue,
         }
     }
 
@@ -116,21 +100,21 @@ fn rotate_pattern(pattern: &[Vec<char>]) -> Vec<Vec<char>> {
     rotated_pattern
 }
 
-fn has_single_diff(a: &Vec<char>, b: &Vec<char>) -> bool {
+fn diff(a: &Vec<char>, b: &Vec<char>) -> u8 {
     if a == b {
-        return false;
+        return 0;
     }
 
     let mut has_diff = false;
     for i in 0..a.len() {
         if a[i] != b[i] {
             if has_diff {
-                return false;
+                return 2;
             } else {
                 has_diff = true;
             }
         }
     }
 
-    has_diff
+    1
 }
