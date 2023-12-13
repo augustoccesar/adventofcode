@@ -13,8 +13,8 @@ fn part_one() -> String {
 
     let mut summary = 0;
     for pattern in &patterns {
-        match summarize_rows(pattern) {
-            0 => summary += summarize_cols(pattern),
+        match summarize_rows(pattern, false) {
+            0 => summary += summarize_cols(pattern, false),
             rows => summary += rows * 100,
         }
     }
@@ -23,7 +23,25 @@ fn part_one() -> String {
 }
 
 fn part_two() -> String {
-    String::from("part two")
+    let patterns = read_input("13")
+        .split("\n\n")
+        .map(|pattern| {
+            pattern
+                .lines()
+                .map(|line| line.chars().collect::<Vec<char>>())
+                .collect::<Vec<Vec<char>>>()
+        })
+        .collect::<Vec<Vec<Vec<char>>>>();
+
+    let mut summary = 0;
+    for pattern in &patterns {
+        match summarize_rows(pattern, true) {
+            0 => summary += summarize_cols(pattern, true),
+            rows => summary += rows * 100,
+        }
+    }
+
+    summary.to_string()
 }
 
 fn main() {
@@ -31,63 +49,56 @@ fn main() {
     timed(part_two);
 }
 
-fn summarize_rows(pattern: &[Vec<char>]) -> usize {
+fn summarize_rows(pattern: &[Vec<char>], allowed_smudges: bool) -> usize {
     let mut fixed_smudge = false;
 
     for y in 0..pattern.len() - 1 {
-        if pattern[y] == pattern[y + 1] {
-            let mut mirrored = true;
-            let mut inner_y1 = y as i32 - 1;
-            let mut inner_y2 = (y + 1) as i32 + 1;
+        match (pattern[y] == pattern[y + 1], allowed_smudges, fixed_smudge) {
+            (true, _, _) => (),
+            (false, true, false) if has_single_diff(&pattern[y], &pattern[y + 1]) => {
+                fixed_smudge = true
+            }
+            _ => continue,
+        }
 
-            while inner_y1 >= 0 && inner_y2 < pattern.len() as i32 {
-                if pattern[inner_y1 as usize] != pattern[inner_y2 as usize] {
-                    if !fixed_smudge
-                        && has_single_diff(&pattern[inner_y1 as usize], &pattern[inner_y2 as usize])
-                    {
-                        fixed_smudge = true;
-                    } else {
-                        mirrored = false;
-                        fixed_smudge = false;
-                        break;
-                    }
+        let mut mirrored = true;
+        let mut inner_y1 = y as i32 - 1;
+        let mut inner_y2 = (y + 1) as i32 + 1;
+
+        while inner_y1 >= 0 && inner_y2 < pattern.len() as i32 {
+            if pattern[inner_y1 as usize] != pattern[inner_y2 as usize] {
+                if !fixed_smudge
+                    && allowed_smudges
+                    && has_single_diff(&pattern[inner_y1 as usize], &pattern[inner_y2 as usize])
+                {
+                    fixed_smudge = true;
+                } else {
+                    mirrored = false;
+                    fixed_smudge = false;
+                    break;
                 }
-
-                inner_y1 -= 1;
-                inner_y2 += 1;
             }
 
+            inner_y1 -= 1;
+            inner_y2 += 1;
+        }
+
+        if allowed_smudges {
             if mirrored && fixed_smudge {
                 return y + 1;
             }
-        } else if !fixed_smudge && has_single_diff(&pattern[y], &pattern[y + 1]) {
-            let mut mirrored = true;
-            let mut inner_y1 = y as i32 - 1;
-            let mut inner_y2 = (y + 1) as i32 + 1;
-
-            while inner_y1 >= 0 && inner_y2 < pattern.len() as i32 {
-                if pattern[inner_y1 as usize] != pattern[inner_y2 as usize] {
-                    mirrored = false;
-                    break;
-                }
-
-                inner_y1 -= 1;
-                inner_y2 += 1;
-            }
-
-            if mirrored {
-                return y + 1;
-            }
+        } else if mirrored {
+            return y + 1;
         }
     }
 
     0
 }
 
-fn summarize_cols(pattern: &[Vec<char>]) -> usize {
+fn summarize_cols(pattern: &[Vec<char>], allowed_smudges: bool) -> usize {
     let rotated_pattern = rotate_pattern(pattern);
 
-    summarize_rows(&rotated_pattern)
+    summarize_rows(&rotated_pattern, allowed_smudges)
 }
 
 fn rotate_pattern(pattern: &[Vec<char>]) -> Vec<Vec<char>> {
