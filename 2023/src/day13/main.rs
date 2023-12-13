@@ -71,7 +71,7 @@ fn summarize_rows(pattern: &[Vec<char>], allowed_smudges: bool) -> usize {
 
         match (allowed_smudges, difference) {
             (false, 0) => return y + 1,
-            (true, d) if d > 0 && d < 2 => return y + 1,
+            (true, 1) => return y + 1,
             _ => continue,
         }
     }
@@ -85,6 +85,7 @@ fn summarize_cols(pattern: &[Vec<char>], allowed_smudges: bool) -> usize {
     summarize_rows(&rotated_pattern, allowed_smudges)
 }
 
+#[allow(clippy::needless_range_loop)]
 fn rotate_pattern(pattern: &[Vec<char>]) -> Vec<Vec<char>> {
     let col_size = pattern[0].len();
     let row_size = pattern.len();
