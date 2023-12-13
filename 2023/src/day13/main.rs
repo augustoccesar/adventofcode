@@ -1,4 +1,4 @@
-use aoc2023::{read_input, read_named_input, timed};
+use aoc2023::{read_input, timed};
 
 fn part_one() -> String {
     let patterns = read_input("13")
@@ -32,8 +32,35 @@ fn main() {
 }
 
 fn summarize_rows(pattern: &[Vec<char>]) -> usize {
+    let mut fixed_smudge = false;
+
     for y in 0..pattern.len() - 1 {
         if pattern[y] == pattern[y + 1] {
+            let mut mirrored = true;
+            let mut inner_y1 = y as i32 - 1;
+            let mut inner_y2 = (y + 1) as i32 + 1;
+
+            while inner_y1 >= 0 && inner_y2 < pattern.len() as i32 {
+                if pattern[inner_y1 as usize] != pattern[inner_y2 as usize] {
+                    if !fixed_smudge
+                        && has_single_diff(&pattern[inner_y1 as usize], &pattern[inner_y2 as usize])
+                    {
+                        fixed_smudge = true;
+                    } else {
+                        mirrored = false;
+                        fixed_smudge = false;
+                        break;
+                    }
+                }
+
+                inner_y1 -= 1;
+                inner_y2 += 1;
+            }
+
+            if mirrored && fixed_smudge {
+                return y + 1;
+            }
+        } else if !fixed_smudge && has_single_diff(&pattern[y], &pattern[y + 1]) {
             let mut mirrored = true;
             let mut inner_y1 = y as i32 - 1;
             let mut inner_y2 = (y + 1) as i32 + 1;
@@ -76,4 +103,23 @@ fn rotate_pattern(pattern: &[Vec<char>]) -> Vec<Vec<char>> {
     }
 
     rotated_pattern
+}
+
+fn has_single_diff(a: &Vec<char>, b: &Vec<char>) -> bool {
+    if a == b {
+        return false;
+    }
+
+    let mut has_diff = false;
+    for i in 0..a.len() {
+        if a[i] != b[i] {
+            if has_diff {
+                return false;
+            } else {
+                has_diff = true;
+            }
+        }
+    }
+
+    has_diff
 }
