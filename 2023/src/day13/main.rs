@@ -1,52 +1,42 @@
 use aoc2023::{read_input, timed};
 
 fn part_one() -> String {
-    let patterns = read_input("13")
-        .split("\n\n")
-        .map(|pattern| {
-            pattern
-                .lines()
-                .map(|line| line.chars().collect::<Vec<char>>())
-                .collect::<Vec<Vec<char>>>()
-        })
-        .collect::<Vec<Vec<Vec<char>>>>();
-
-    let mut summary = 0;
-    for pattern in &patterns {
-        match summarize_rows(pattern, false) {
-            0 => summary += summarize_cols(pattern, false),
-            rows => summary += rows * 100,
-        }
-    }
-
-    summary.to_string()
+    let patterns = parse_input(&read_input("13"));
+    summarize(&patterns, false).to_string()
 }
 
 fn part_two() -> String {
-    let patterns = read_input("13")
-        .split("\n\n")
-        .map(|pattern| {
-            pattern
-                .lines()
-                .map(|line| line.chars().collect::<Vec<char>>())
-                .collect::<Vec<Vec<char>>>()
-        })
-        .collect::<Vec<Vec<Vec<char>>>>();
-
-    let mut summary = 0;
-    for pattern in &patterns {
-        match summarize_rows(pattern, true) {
-            0 => summary += summarize_cols(pattern, true),
-            rows => summary += rows * 100,
-        }
-    }
-
-    summary.to_string()
+    let patterns = parse_input(&read_input("13"));
+    summarize(&patterns, true).to_string()
 }
 
 fn main() {
     timed(part_one);
     timed(part_two);
+}
+
+fn parse_input(input: &str) -> Vec<Vec<Vec<char>>> {
+    input
+        .split("\n\n")
+        .map(|pattern| {
+            pattern
+                .lines()
+                .map(|line| line.chars().collect::<Vec<char>>())
+                .collect::<Vec<Vec<char>>>()
+        })
+        .collect::<Vec<Vec<Vec<char>>>>()
+}
+
+fn summarize(patterns: &[Vec<Vec<char>>], allow_smudges: bool) -> usize {
+    let mut summary = 0;
+    for pattern in patterns {
+        match summarize_rows(pattern, allow_smudges) {
+            0 => summary += summarize_cols(pattern, allow_smudges),
+            rows => summary += rows * 100,
+        }
+    }
+
+    summary
 }
 
 fn summarize_rows(pattern: &[Vec<char>], allowed_smudges: bool) -> usize {
