@@ -61,4 +61,8 @@ path = "src/day12/main.rs"
 name = "day13"
 path = "src/day13/main.rs"
 
+[[bin]]
+name = "day14"
+path = "src/day14/main.rs"
+
 #SETUP:target_bin
