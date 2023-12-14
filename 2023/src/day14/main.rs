@@ -10,13 +10,7 @@ fn part_one() -> String {
 
     apply_gravity(&mut platform, &Direction::North);
 
-    let mut total_load = 0;
-    for y in 0..platform.len() {
-        total_load +=
-            platform[y].iter().filter(|item| **item == 'O').count() * (platform.len() - y);
-    }
-
-    total_load.to_string()
+    calculate_load(&platform).to_string()
 }
 
 fn part_two() -> String {
