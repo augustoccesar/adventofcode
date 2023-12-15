@@ -14,6 +14,8 @@ ext {
 
 dependencies {
     implementation "org.reflections:reflections:0.10.2"
+    implementation "ch.qos.logback:logback-classic:1.4.14"
+
     compileOnly "org.projectlombok:lombok:${LOMBOK_VERSION}"
     annotationProcessor "org.projectlombok:lombok:${LOMBOK_VERSION}"
 

@@ -16,7 +16,8 @@ public class Main {
         .registeredTasks();
 
     if (!availableTasks.containsKey(dayArg)) {
-      throw new RuntimeException(String.format("Day %d not found", dayArg));
+      System.err.println(String.format("Day %d not found", dayArg));
+      return;
     }
 
     availableTasks.get(dayArg).run();

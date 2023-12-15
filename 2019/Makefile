@@ -1,3 +1,3 @@
 .SILENT:
 run:
-	./gradlew run --args=$(day)
+	./gradlew --console plain --quiet run --args=$(day)
