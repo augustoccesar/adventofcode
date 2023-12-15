@@ -85,6 +85,12 @@
             }
         ]
     },
+    "2019": {
+        "tasks_path": "/src/main/java/se/augustocesar/aoc2019",
+        "inputs_path": "/src/main/resources",
+        "task_file_name_format": "camel",
+        "extension": "java"
+    },
     "2021": {
         "tasks_path": "",
         "inputs_path": "/inputs",
