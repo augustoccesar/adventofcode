@@ -1,4 +1,4 @@
-use std::{collections::HashSet, iter::zip, thread};
+use std::{collections::HashSet, iter::zip, sync::mpsc::Sender, thread};
 
 use aoc2023::{read_input, timed};
 
@@ -21,57 +21,21 @@ fn part_two() -> String {
         .map(|line| line.chars().collect::<Vec<char>>())
         .collect::<Vec<Vec<char>>>();
 
-    let all_y = (0..contraption.len())
-        .map(|item| item as i32)
-        .collect::<Vec<_>>();
-    let all_x = (0..contraption[0].len())
-        .map(|item| item as i32)
-        .collect::<Vec<_>>();
-
     let mut max_path = 0;
 
     let (tx, rx) = std::sync::mpsc::channel::<usize>();
 
     // Left starting
-    let left_tx = tx.clone();
-    let positions = zip(vec![-1; all_x.len()], all_y.clone()).collect::<Vec<_>>();
-    let contraption_copy = contraption.clone();
-    thread::spawn(move || {
-        let max_path = max_from_positions(&contraption_copy, &positions, Direction::East);
-        left_tx.send(max_path).unwrap();
-    });
+    calculate_max_direction(tx.clone(), contraption.clone(), Direction::East);
 
     // Top starting
-    let top_tx = tx.clone();
-    let positions = zip(all_x.clone(), vec![-1; all_y.len()]).collect::<Vec<_>>();
-    let contraption_copy = contraption.clone();
-    thread::spawn(move || {
-        let max_path = max_from_positions(&contraption_copy, &positions, Direction::South);
-        top_tx.send(max_path).unwrap();
-    });
+    calculate_max_direction(tx.clone(), contraption.clone(), Direction::South);
 
     // Right starting
-    let right_tx = tx.clone();
-    let positions = zip(
-        vec![contraption[0].len() as i32; all_x.len()],
-        all_y.clone(),
-    )
-    .collect::<Vec<_>>();
-    let contraption_copy = contraption.clone();
-    thread::spawn(move || {
-        let max_path = max_from_positions(&contraption_copy, &positions, Direction::West);
-        right_tx.send(max_path).unwrap();
-    });
+    calculate_max_direction(tx.clone(), contraption.clone(), Direction::West);
 
     // Bottom starting
-    let bottom_tx = tx.clone();
-    let positions =
-        zip(all_x.clone(), vec![contraption.len() as i32; all_y.len()]).collect::<Vec<_>>();
-    let contraption_copy = contraption.clone();
-    thread::spawn(move || {
-        let max_path = max_from_positions(&contraption_copy, &positions, Direction::North);
-        bottom_tx.send(max_path).unwrap();
-    });
+    calculate_max_direction(tx.clone(), contraption.clone(), Direction::North);
 
     drop(tx);
     while let Ok(val) = rx.recv() {
@@ -187,6 +151,44 @@ fn max_from_positions(
     });
 
     max_path
+}
+
+fn calculate_max_direction(
+    sender: Sender<usize>,
+    contraption: Vec<Vec<char>>,
+    direction: Direction,
+) {
+    thread::spawn(move || {
+        let positions = starting_positions(&contraption, direction);
+        let max_path = max_from_positions(&contraption, &positions, direction);
+
+        sender.send(max_path).unwrap();
+    });
+}
+
+fn starting_positions(contraption: &Vec<Vec<char>>, direction: Direction) -> Vec<(i32, i32)> {
+    match direction {
+        Direction::North => zip(
+            0_i32..contraption[0].len() as i32,
+            vec![contraption.len() as i32; contraption.len()],
+        )
+        .collect::<Vec<_>>(),
+        Direction::East => zip(
+            vec![-1_i32; contraption[0].len()],
+            0_i32..contraption.len() as i32,
+        )
+        .collect::<Vec<_>>(),
+        Direction::South => zip(
+            0_i32..contraption[0].len() as i32,
+            vec![-1; contraption.len()],
+        )
+        .collect::<Vec<_>>(),
+        Direction::West => zip(
+            vec![contraption[0].len() as i32; contraption[0].len()],
+            0_i32..contraption.len() as i32,
+        )
+        .collect::<Vec<_>>(),
+    }
 }
 
 // TODO(augustoccesar)[2021-10-03]: Move this to a common module
