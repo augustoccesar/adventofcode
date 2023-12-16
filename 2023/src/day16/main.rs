@@ -128,31 +128,6 @@ fn trace_path(
     path
 }
 
-fn max_from_positions(
-    contraption: &Vec<Vec<char>>,
-    positions: &Vec<(i32, i32)>,
-    direction: Direction,
-) -> usize {
-    let mut max_path = 0;
-
-    positions.iter().for_each(|position| {
-        let mut split_tracking: HashSet<(i32, i32)> = HashSet::new();
-
-        let path = trace_path(
-            contraption,
-            (position.0, position.1),
-            direction,
-            &mut split_tracking,
-        );
-
-        if path.len() > max_path {
-            max_path = path.len();
-        }
-    });
-
-    max_path
-}
-
 fn calculate_max_direction(
     sender: Sender<usize>,
     contraption: Vec<Vec<char>>,
@@ -160,7 +135,22 @@ fn calculate_max_direction(
 ) {
     thread::spawn(move || {
         let positions = starting_positions(&contraption, direction);
-        let max_path = max_from_positions(&contraption, &positions, direction);
+        let mut max_path = 0;
+
+        positions.iter().for_each(|position| {
+            let mut split_tracking: HashSet<(i32, i32)> = HashSet::new();
+
+            let path = trace_path(
+                &contraption,
+                (position.0, position.1),
+                direction,
+                &mut split_tracking,
+            );
+
+            if path.len() > max_path {
+                max_path = path.len();
+            }
+        });
 
         sender.send(max_path).unwrap();
     });
