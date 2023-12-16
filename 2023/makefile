@@ -1,4 +1,4 @@
 .SILENT:
 run:
 	DAY=$(shell printf "%.2d" $(day)) ;\
-	cargo run -q --bin day$$DAY
+	 cargo build -q --release --bin day$$DAY && ./target/release/day$$DAY
