@@ -1,4 +1,4 @@
-use std::{collections::HashSet, iter::zip};
+use std::{collections::HashSet, iter::zip, thread};
 
 use aoc2023::{read_input, timed};
 
@@ -30,77 +30,55 @@ fn part_two() -> String {
 
     let mut max_path = 0;
 
-    // Left starting
-    zip(vec![-1; all_x.len()], &all_y)
-        .collect::<Vec<_>>()
-        .iter()
-        .for_each(|position| {
-            let mut split_tracking: HashSet<(i32, i32)> = HashSet::new();
-            let path = trace_path(
-                &contraption,
-                (position.0, *position.1),
-                Direction::East,
-                &mut split_tracking,
-            );
+    let (tx, rx) = std::sync::mpsc::channel::<usize>();
 
-            if path.len() > max_path {
-                max_path = path.len();
-            }
-        });
+    // Left starting
+    let left_tx = tx.clone();
+    let positions = zip(vec![-1; all_x.len()], all_y.clone()).collect::<Vec<_>>();
+    let contraption_copy = contraption.clone();
+    thread::spawn(move || {
+        let max_path = max_from_positions(&contraption_copy, &positions, Direction::East);
+        left_tx.send(max_path).unwrap();
+    });
 
     // Top starting
-    zip(&all_x, vec![-1; all_y.len()])
-        .collect::<Vec<_>>()
-        .iter()
-        .for_each(|position| {
-            let mut split_tracking: HashSet<(i32, i32)> = HashSet::new();
-            let path = trace_path(
-                &contraption,
-                (*position.0, position.1),
-                Direction::South,
-                &mut split_tracking,
-            );
-
-            if path.len() > max_path {
-                max_path = path.len();
-            }
-        });
+    let top_tx = tx.clone();
+    let positions = zip(all_x.clone(), vec![-1; all_y.len()]).collect::<Vec<_>>();
+    let contraption_copy = contraption.clone();
+    thread::spawn(move || {
+        let max_path = max_from_positions(&contraption_copy, &positions, Direction::South);
+        top_tx.send(max_path).unwrap();
+    });
 
     // Right starting
-    zip(vec![contraption[0].len() as i32; all_x.len()], &all_y)
-        .collect::<Vec<_>>()
-        .iter()
-        .for_each(|position| {
-            let mut split_tracking: HashSet<(i32, i32)> = HashSet::new();
-            let path = trace_path(
-                &contraption,
-                (position.0, *position.1),
-                Direction::West,
-                &mut split_tracking,
-            );
-
-            if path.len() > max_path {
-                max_path = path.len();
-            }
-        });
+    let right_tx = tx.clone();
+    let positions = zip(
+        vec![contraption[0].len() as i32; all_x.len()],
+        all_y.clone(),
+    )
+    .collect::<Vec<_>>();
+    let contraption_copy = contraption.clone();
+    thread::spawn(move || {
+        let max_path = max_from_positions(&contraption_copy, &positions, Direction::West);
+        right_tx.send(max_path).unwrap();
+    });
 
     // Bottom starting
-    zip(&all_x, vec![contraption.len() as i32; all_y.len()])
-        .collect::<Vec<_>>()
-        .iter()
-        .for_each(|position| {
-            let mut split_tracking: HashSet<(i32, i32)> = HashSet::new();
-            let path = trace_path(
-                &contraption,
-                (*position.0, position.1),
-                Direction::North,
-                &mut split_tracking,
-            );
+    let bottom_tx = tx.clone();
+    let positions =
+        zip(all_x.clone(), vec![contraption.len() as i32; all_y.len()]).collect::<Vec<_>>();
+    let contraption_copy = contraption.clone();
+    thread::spawn(move || {
+        let max_path = max_from_positions(&contraption_copy, &positions, Direction::North);
+        bottom_tx.send(max_path).unwrap();
+    });
 
-            if path.len() > max_path {
-                max_path = path.len();
-            }
-        });
+    drop(tx);
+    while let Ok(val) = rx.recv() {
+        if val > max_path {
+            max_path = val;
+        }
+    }
 
     max_path.to_string()
 }
@@ -184,6 +162,31 @@ fn trace_path(
     }
 
     path
+}
+
+fn max_from_positions(
+    contraption: &Vec<Vec<char>>,
+    positions: &Vec<(i32, i32)>,
+    direction: Direction,
+) -> usize {
+    let mut max_path = 0;
+
+    positions.iter().for_each(|position| {
+        let mut split_tracking: HashSet<(i32, i32)> = HashSet::new();
+
+        let path = trace_path(
+            contraption,
+            (position.0, position.1),
+            direction,
+            &mut split_tracking,
+        );
+
+        if path.len() > max_path {
+            max_path = path.len();
+        }
+    });
+
+    max_path
 }
 
 // TODO(augustoccesar)[2021-10-03]: Move this to a common module
