@@ -1,4 +1,4 @@
-use std::collections::HashSet;
+use std::{collections::HashSet, iter::zip};
 
 use aoc2023::{read_input, timed};
 
@@ -16,7 +16,93 @@ fn part_one() -> String {
 }
 
 fn part_two() -> String {
-    String::from("part two")
+    let contraption = read_input("16")
+        .lines()
+        .map(|line| line.chars().collect::<Vec<char>>())
+        .collect::<Vec<Vec<char>>>();
+
+    let all_y = (0..contraption.len())
+        .map(|item| item as i32)
+        .collect::<Vec<_>>();
+    let all_x = (0..contraption[0].len())
+        .map(|item| item as i32)
+        .collect::<Vec<_>>();
+
+    let mut max_path = 0;
+
+    // Left starting
+    zip(vec![-1; all_x.len()], &all_y)
+        .collect::<Vec<_>>()
+        .iter()
+        .for_each(|position| {
+            let mut split_tracking: HashSet<(i32, i32)> = HashSet::new();
+            let path = trace_path(
+                &contraption,
+                (position.0, *position.1),
+                Direction::East,
+                &mut split_tracking,
+            );
+
+            if path.len() > max_path {
+                max_path = path.len();
+            }
+        });
+
+    // Top starting
+    zip(&all_x, vec![-1; all_y.len()])
+        .collect::<Vec<_>>()
+        .iter()
+        .for_each(|position| {
+            let mut split_tracking: HashSet<(i32, i32)> = HashSet::new();
+            let path = trace_path(
+                &contraption,
+                (*position.0, position.1),
+                Direction::South,
+                &mut split_tracking,
+            );
+
+            if path.len() > max_path {
+                max_path = path.len();
+            }
+        });
+
+    // Right starting
+    zip(vec![contraption[0].len() as i32; all_x.len()], &all_y)
+        .collect::<Vec<_>>()
+        .iter()
+        .for_each(|position| {
+            let mut split_tracking: HashSet<(i32, i32)> = HashSet::new();
+            let path = trace_path(
+                &contraption,
+                (position.0, *position.1),
+                Direction::West,
+                &mut split_tracking,
+            );
+
+            if path.len() > max_path {
+                max_path = path.len();
+            }
+        });
+
+    // Bottom starting
+    zip(&all_x, vec![contraption.len() as i32; all_y.len()])
+        .collect::<Vec<_>>()
+        .iter()
+        .for_each(|position| {
+            let mut split_tracking: HashSet<(i32, i32)> = HashSet::new();
+            let path = trace_path(
+                &contraption,
+                (*position.0, position.1),
+                Direction::North,
+                &mut split_tracking,
+            );
+
+            if path.len() > max_path {
+                max_path = path.len();
+            }
+        });
+
+    max_path.to_string()
 }
 
 fn main() {
