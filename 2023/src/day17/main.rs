@@ -15,6 +15,12 @@ fn part_one() -> String {
         direction: Direction::East,
         steps_same_direction: 0,
     });
+    queue.push(Node {
+        cost: 0,
+        position: (0, 0),
+        direction: Direction::South,
+        steps_same_direction: 0,
+    });
 
     while let Some(node) = queue.pop() {
         if node.position == factory_pos {
@@ -69,7 +75,76 @@ fn part_one() -> String {
 }
 
 fn part_two() -> String {
-    String::from("part two")
+    let map = parse_map(&read_input("17"));
+
+    let factory_pos = (map[0].len() - 1, map.len() - 1);
+    let mut distance_cache: HashMap<NodeDistanceCacheKey, usize> = HashMap::new();
+
+    let mut queue = BinaryHeap::new();
+
+    queue.push(Node {
+        cost: 0,
+        position: (0, 0),
+        direction: Direction::East,
+        steps_same_direction: 0,
+    });
+    queue.push(Node {
+        cost: 0,
+        position: (0, 0),
+        direction: Direction::South,
+        steps_same_direction: 0,
+    });
+
+    while let Some(node) = queue.pop() {
+        if node.position == factory_pos && node.steps_same_direction >= 4 {
+            return node.cost.to_string();
+        }
+
+        match distance_cache.entry(NodeDistanceCacheKey::from(&node)) {
+            Entry::Occupied(entry) if node.cost > *entry.get() => continue,
+            _ => (),
+        }
+
+        for next_direction in node.direction.iter_without_opposite() {
+            let modifier = next_direction.modifier();
+            let next_position = (
+                node.position.0 as i32 + modifier.0,
+                node.position.1 as i32 + modifier.1,
+            );
+
+            if next_position.0 >= map[0].len() as i32
+                || next_position.1 >= map.len() as i32
+                || next_position.0 < 0
+                || next_position.1 < 0
+            {
+                continue;
+            }
+
+            let next_position = (next_position.0 as usize, next_position.1 as usize);
+            let next_node = Node {
+                position: next_position,
+                direction: next_direction,
+                steps_same_direction: if next_direction == node.direction {
+                    node.steps_same_direction + 1
+                } else {
+                    1
+                },
+                cost: node.cost + map[next_position.1][next_position.0],
+            };
+
+            let next_node_cache_key = NodeDistanceCacheKey::from(&next_node);
+            if (node.direction == next_node.direction || node.steps_same_direction >= 4)
+                && next_node.steps_same_direction <= 10
+                && (!distance_cache.contains_key(&next_node_cache_key)
+                    || next_node.cost < distance_cache[&next_node_cache_key])
+            {
+                distance_cache.insert(next_node_cache_key, next_node.cost);
+                queue.push(next_node);
+            }
+        }
+    }
+
+    unreachable!()
 }
 
 fn main() {
@@ -156,10 +231,6 @@ impl Direction {
     }
 
     fn iter_without_opposite(&self) -> impl Iterator<Item = Direction> + '_ {
-        Self::iter().filter(move |direction| *direction != self.opposite())
-    }
-
-    fn iter() -> impl Iterator<Item = Direction> {
         vec![
             Direction::North,
             Direction::West,
@@ -167,5 +238,6 @@ impl Direction {
             Direction::East,
         ]
         .into_iter()
+        .filter(move |&direction| direction != self.opposite())
     }
 }
