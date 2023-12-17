@@ -58,40 +58,16 @@ fn find_min_heat_loss(map: &[Vec<usize>], min_steps: usize, max_steps: usize) ->
         }
 
         for next_direction in node.direction.iter_without_opposite() {
-            let modifier = next_direction.modifier();
-            let next_position = (
-                node.position.0 as i32 + modifier.0,
-                node.position.1 as i32 + modifier.1,
-            );
-
-            if next_position.0 >= map[0].len() as i32
-                || next_position.1 >= map.len() as i32
-                || next_position.0 < 0
-                || next_position.1 < 0
-            {
-                continue;
-            }
-
-            let next_position = (next_position.0 as usize, next_position.1 as usize);
-            let next_node = Node {
-                position: next_position,
-                direction: next_direction,
-                steps_same_direction: if next_direction == node.direction {
-                    node.steps_same_direction + 1
-                } else {
-                    1
-                },
-                cost: node.cost + map[next_position.1][next_position.0],
-            };
-
-            let next_node_cache_key = NodeDistanceCacheKey::from(&next_node);
-            if (node.direction == next_node.direction || node.steps_same_direction >= min_steps)
-                && next_node.steps_same_direction <= max_steps
-                && (!distance_cache.contains_key(&next_node_cache_key)
-                    || next_node.cost < distance_cache[&next_node_cache_key])
-            {
-                distance_cache.insert(next_node_cache_key, next_node.cost);
-                queue.push(next_node);
+            if let Some(next_node) = node.next(map, next_direction) {
+                let next_node_cache_key = NodeDistanceCacheKey::from(&next_node);
+                if (node.direction == next_node.direction || node.steps_same_direction >= min_steps)
+                    && next_node.steps_same_direction <= max_steps
+                    && (!distance_cache.contains_key(&next_node_cache_key)
+                        || next_node.cost < distance_cache[&next_node_cache_key])
+                {
+                    distance_cache.insert(next_node_cache_key, next_node.cost);
+                    queue.push(next_node);
+                }
             }
         }
     }
@@ -105,6 +81,36 @@ struct Node {
     position: (usize, usize),
     direction: Direction,
     steps_same_direction: usize,
+}
+
+impl Node {
+    fn next(&self, map: &[Vec<usize>], direction: Direction) -> Option<Self> {
+        let modifier = direction.modifier();
+        let next_position = (
+            self.position.0 as i32 + modifier.0,
+            self.position.1 as i32 + modifier.1,
+        );
+
+        if next_position.0 >= map[0].len() as i32
+            || next_position.1 >= map.len() as i32
+            || next_position.0 < 0
+            || next_position.1 < 0
+        {
+            return None;
+        }
+
+        let next_position = (next_position.0 as usize, next_position.1 as usize);
+        Some(Node {
+            position: next_position,
+            direction,
+            steps_same_direction: if direction == self.direction {
+                self.steps_same_direction + 1
+            } else {
+                1
+            },
+            cost: self.cost + map[next_position.1][next_position.0],
+        })
+    }
 }
 
 impl PartialOrd for Node {
