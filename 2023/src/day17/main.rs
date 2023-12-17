@@ -4,79 +4,31 @@ use aoc2023::{read_input, timed};
 
 fn part_one() -> String {
     let map = parse_map(&read_input("17"));
-
-    let factory_pos = (map[0].len() - 1, map.len() - 1);
-    let mut distance_cache: HashMap<NodeDistanceCacheKey, usize> = HashMap::new();
-    let mut queue: BinaryHeap<Node> = BinaryHeap::new();
-
-    queue.push(Node {
-        cost: 0,
-        position: (0, 0),
-        direction: Direction::East,
-        steps_same_direction: 0,
-    });
-    queue.push(Node {
-        cost: 0,
-        position: (0, 0),
-        direction: Direction::South,
-        steps_same_direction: 0,
-    });
-
-    while let Some(node) = queue.pop() {
-        if node.position == factory_pos {
-            return node.cost.to_string();
-        }
-
-        match distance_cache.entry(NodeDistanceCacheKey::from(&node)) {
-            Entry::Occupied(entry) if node.cost > *entry.get() => continue,
-            _ => (),
-        }
-
-        for next_direction in node.direction.iter_without_opposite() {
-            let modifier = next_direction.modifier();
-            let next_position = (
-                node.position.0 as i32 + modifier.0,
-                node.position.1 as i32 + modifier.1,
-            );
-
-            if next_position.0 >= map[0].len() as i32
-                || next_position.1 >= map.len() as i32
-                || next_position.0 < 0
-                || next_position.1 < 0
-            {
-                continue;
-            }
-
-            let next_position = (next_position.0 as usize, next_position.1 as usize);
-            let next_node = Node {
-                position: next_position,
-                direction: next_direction,
-                steps_same_direction: if next_direction == node.direction {
-                    node.steps_same_direction + 1
-                } else {
-                    1
-                },
-                cost: node.cost + map[next_position.1][next_position.0],
-            };
-
-            let next_node_cache_key = NodeDistanceCacheKey::from(&next_node);
-            if next_node.steps_same_direction <= 3
-                && (!distance_cache.contains_key(&next_node_cache_key)
-                    || next_node.cost < distance_cache[&next_node_cache_key])
-            {
-                distance_cache.insert(next_node_cache_key, next_node.cost);
-
-                queue.push(next_node);
-            }
-        }
-    }
-
-    unreachable!()
+    find_min_heat_loss(&map, 0, 3).unwrap().to_string()
 }
 
 fn part_two() -> String {
     let map = parse_map(&read_input("17"));
+    find_min_heat_loss(&map, 4, 10).unwrap().to_string()
+}
 
+fn main() {
+    timed(part_one);
+    timed(part_two);
+}
+
+fn parse_map(input: &str) -> Vec<Vec<usize>> {
+    input
+        .lines()
+        .map(|line| {
+            line.chars()
+                .map(|char| char.to_digit(10).unwrap() as usize)
+                .collect::<Vec<usize>>()
+        })
+        .collect::<Vec<Vec<usize>>>()
+}
+
+fn find_min_heat_loss(map: &[Vec<usize>], min_steps: usize, max_steps: usize) -> Option<usize> {
     let factory_pos = (map[0].len() - 1, map.len() - 1);
     let mut distance_cache: HashMap<NodeDistanceCacheKey, usize> = HashMap::new();
 
@@ -96,8 +48,8 @@ fn part_two() -> String {
     });
 
     while let Some(node) = queue.pop() {
-        if node.position == factory_pos && node.steps_same_direction >= 4 {
-            return node.cost.to_string();
+        if node.position == factory_pos && node.steps_same_direction >= min_steps {
+            return Some(node.cost);
         }
 
         match distance_cache.entry(NodeDistanceCacheKey::from(&node)) {
@@ -133,8 +85,8 @@ fn part_two() -> String {
             };
 
             let next_node_cache_key = NodeDistanceCacheKey::from(&next_node);
-            if (node.direction == next_node.direction || node.steps_same_direction >= 4)
-                && next_node.steps_same_direction <= 10
+            if (node.direction == next_node.direction || node.steps_same_direction >= min_steps)
+                && next_node.steps_same_direction <= max_steps
                 && (!distance_cache.contains_key(&next_node_cache_key)
                     || next_node.cost < distance_cache[&next_node_cache_key])
             {
@@ -144,23 +96,7 @@ fn part_two() -> String {
         }
     }
 
-    unreachable!()
-}
-
-fn main() {
-    timed(part_one);
-    timed(part_two);
-}
-
-fn parse_map(input: &str) -> Vec<Vec<usize>> {
-    input
-        .lines()
-        .map(|line| {
-            line.chars()
-                .map(|char| char.to_digit(10).unwrap() as usize)
-                .collect::<Vec<usize>>()
-        })
-        .collect::<Vec<Vec<usize>>>()
+    None
 }
 
 #[derive(Eq, PartialEq)]
