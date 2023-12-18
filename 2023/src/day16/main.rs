@@ -1,6 +1,6 @@
 use std::{collections::HashSet, iter::zip, sync::mpsc::Sender, thread};
 
-use aoc2023::{read_input, timed};
+use aoc2023::{read_input, timed, Direction};
 
 fn part_one() -> String {
     let contraption = read_input("16")
@@ -178,25 +178,5 @@ fn starting_positions(contraption: &Vec<Vec<char>>, direction: Direction) -> Vec
             0_i32..contraption.len() as i32,
         )
         .collect::<Vec<_>>(),
-    }
-}
-
-// TODO(augustoccesar)[2021-10-03]: Move this to a common module
-#[derive(PartialEq, Clone, Copy)]
-enum Direction {
-    North,
-    East,
-    South,
-    West,
-}
-
-impl Direction {
-    const fn modifier(&self) -> (i32, i32) {
-        match self {
-            Direction::North => (0, -1),
-            Direction::East => (1, 0),
-            Direction::South => (0, 1),
-            Direction::West => (-1, 0),
-        }
     }
 }

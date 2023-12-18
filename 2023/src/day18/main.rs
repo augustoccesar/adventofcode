@@ -1,4 +1,6 @@
-use aoc2023::{read_input, timed};
+use std::convert::TryFrom;
+
+use aoc2023::{read_input, timed, Direction};
 
 fn part_one() -> String {
     calculate_area(&parse_input(&read_input("18"), 1)).to_string()
@@ -19,7 +21,7 @@ fn parse_input(input: &str, part: u8) -> Vec<(Direction, i64)> {
         .map(|line| match part {
             1 => {
                 let tokens = line.split(' ').collect::<Vec<_>>();
-                let direction = Direction::from_char(tokens[0].chars().next().unwrap());
+                let direction = Direction::try_from(tokens[0].chars().next().unwrap()).unwrap();
                 let steps = tokens[1].parse::<i64>().unwrap();
 
                 (direction, steps)
@@ -29,8 +31,7 @@ fn parse_input(input: &str, part: u8) -> Vec<(Direction, i64)> {
                 let hex = &tokens[1][0..tokens[1].len() - 1];
                 let steps = i64::from_str_radix(&hex[0..hex.len() - 1], 16).unwrap();
                 let direction =
-                    Direction::from((hex[hex.len() - 1..hex.len()]).parse::<u8>().unwrap());
-
+                    direction_from_u8((hex[hex.len() - 1..hex.len()]).parse::<u8>().unwrap());
                 (direction, steps)
             }
             _ => panic!("invalid part"),
@@ -59,44 +60,12 @@ fn calculate_area(instructions: &[(Direction, i64)]) -> i64 {
     (area / 2).abs() + (perimeter / 2) + 1
 }
 
-// TODO(augustoccesar)[2021-10-03]: Move this to a common module
-#[derive(PartialEq, Clone, Copy)]
-enum Direction {
-    North,
-    East,
-    South,
-    West,
-}
-
-impl Direction {
-    const fn modifier(&self) -> (i32, i32) {
-        match self {
-            Direction::North => (0, -1),
-            Direction::East => (1, 0),
-            Direction::South => (0, 1),
-            Direction::West => (-1, 0),
-        }
-    }
-
-    const fn from_char(c: char) -> Self {
-        match c {
-            'U' => Self::North,
-            'R' => Self::East,
-            'D' => Self::South,
-            'L' => Self::West,
-            _ => panic!("invalid direction char"),
-        }
-    }
-}
-
-impl From<u8> for Direction {
-    fn from(value: u8) -> Self {
-        match value {
-            0 => Self::East,
-            1 => Self::South,
-            2 => Self::West,
-            3 => Self::North,
-            _ => panic!("invalid direction u8"),
-        }
+fn direction_from_u8(value: u8) -> Direction {
+    match value {
+        0 => Direction::East,
+        1 => Direction::South,
+        2 => Direction::West,
+        3 => Direction::North,
+        _ => panic!("invalid direction u8"),
     }
 }

@@ -1,6 +1,6 @@
 use std::collections::{hash_map::Entry, HashMap};
 
-use aoc2023::{read_input, timed};
+use aoc2023::{read_input, timed, Direction};
 
 fn part_one() -> String {
     let mut platform = read_input("14")
@@ -52,35 +52,6 @@ fn part_two() -> String {
 fn main() {
     timed(part_one);
     timed(part_two);
-}
-
-#[derive(Clone, PartialEq, Eq, Hash)]
-enum Direction {
-    North,
-    West,
-    South,
-    East,
-}
-
-impl Direction {
-    fn modifier(&self) -> (i32, i32) {
-        match self {
-            Direction::North => (0, -1),
-            Direction::East => (1, 0),
-            Direction::South => (0, 1),
-            Direction::West => (-1, 0),
-        }
-    }
-
-    fn iter() -> impl Iterator<Item = Direction> {
-        vec![
-            Direction::North,
-            Direction::West,
-            Direction::South,
-            Direction::East,
-        ]
-        .into_iter()
-    }
 }
 
 fn cycle_platform(platform: &mut Vec<Vec<char>>) {

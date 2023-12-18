@@ -1,6 +1,6 @@
 use std::collections::{hash_map::Entry, BinaryHeap, HashMap};
 
-use aoc2023::{read_input, timed};
+use aoc2023::{read_input, timed, Direction};
 
 fn part_one() -> String {
     let map = parse_map(&read_input("17"));
@@ -57,7 +57,7 @@ fn find_min_heat_loss(map: &[Vec<usize>], min_steps: usize, max_steps: usize) ->
             _ => (),
         }
 
-        for next_direction in node.direction.iter_without_opposite() {
+        for next_direction in Direction::iter().filter(|dir| *dir != node.direction.opposite()) {
             if let Some(next_node) = node.next(map, next_direction) {
                 let next_node_cache_key = NodeDistanceCacheKey::from(&next_node);
                 if (node.direction == next_node.direction || node.steps_same_direction >= min_steps)
@@ -142,44 +142,5 @@ impl From<&Node> for NodeDistanceCacheKey {
             direction: value.direction,
             steps_same_direction: value.steps_same_direction,
         }
-    }
-}
-
-#[derive(Eq, PartialEq, Clone, Copy, Hash)]
-enum Direction {
-    North,
-    East,
-    South,
-    West,
-}
-
-impl Direction {
-    const fn modifier(&self) -> (i32, i32) {
-        match self {
-            Direction::North => (0, -1),
-            Direction::East => (1, 0),
-            Direction::South => (0, 1),
-            Direction::West => (-1, 0),
-        }
-    }
-
-    const fn opposite(&self) -> Self {
-        match self {
-            Direction::North => Direction::South,
-            Direction::East => Direction::West,
-            Direction::South => Direction::North,
-            Direction::West => Direction::East,
-        }
-    }
-
-    fn iter_without_opposite(&self) -> impl Iterator<Item = Direction> + '_ {
-        vec![
-            Direction::North,
-            Direction::West,
-            Direction::South,
-            Direction::East,
-        ]
-        .into_iter()
-        .filter(move |&direction| direction != self.opposite())
     }
 }

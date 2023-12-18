@@ -1,6 +1,6 @@
 use std::{collections::HashSet, iter::FromIterator};
 
-use aoc2023::{read_input, timed};
+use aoc2023::{read_input, timed, Direction};
 
 fn part_one() -> String {
     let map = parse_input(&read_input("10"));
@@ -44,50 +44,31 @@ fn main() {
     timed(part_two);
 }
 
-#[derive(PartialEq, Clone, Copy)]
-enum Direction {
-    North,
-    East,
-    South,
-    West,
-}
-
-impl Direction {
-    fn modifier(&self) -> (i32, i32) {
-        match self {
-            Direction::North => (0, -1),
-            Direction::East => (1, 0),
-            Direction::South => (0, 1),
-            Direction::West => (-1, 0),
-        }
-    }
-
-    fn apply_pipe(self, pipe: char) -> Option<Self> {
-        match pipe {
-            '|' => Some(self),
-            '-' => Some(self),
-            'J' => match self {
-                Direction::East => Some(Direction::North),
-                Direction::South => Some(Direction::West),
-                _ => None,
-            },
-            'L' => match self {
-                Direction::West => Some(Direction::North),
-                Direction::South => Some(Direction::East),
-                _ => None,
-            },
-            '7' => match self {
-                Direction::East => Some(Direction::South),
-                Direction::North => Some(Direction::West),
-                _ => None,
-            },
-            'F' => match self {
-                Direction::West => Some(Direction::South),
-                Direction::North => Some(Direction::East),
-                _ => None,
-            },
+fn apply_pipe(direction: Direction, pipe: char) -> Option<Direction> {
+    match pipe {
+        '|' => Some(direction),
+        '-' => Some(direction),
+        'J' => match direction {
+            Direction::East => Some(Direction::North),
+            Direction::South => Some(Direction::West),
             _ => None,
-        }
+        },
+        'L' => match direction {
+            Direction::West => Some(Direction::North),
+            Direction::South => Some(Direction::East),
+            _ => None,
+        },
+        '7' => match direction {
+            Direction::East => Some(Direction::South),
+            Direction::North => Some(Direction::West),
+            _ => None,
+        },
+        'F' => match direction {
+            Direction::West => Some(Direction::South),
+            Direction::North => Some(Direction::East),
+            _ => None,
+        },
+        _ => None,
     }
 }
 
@@ -132,7 +113,7 @@ fn traverse(map: &[Vec<char>]) -> Vec<(usize, usize)> {
         }
 
         let current_pipe = map[current_point.1][current_point.0];
-        direction = direction.apply_pipe(current_pipe).unwrap();
+        direction = apply_pipe(direction, current_pipe).unwrap();
         path.push(current_point);
     }
 
