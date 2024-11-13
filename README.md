@@ -47,3 +47,4 @@ This will install the Python dependencies.
     - Use the template for the year found on `setup/templates` to generate the task file
     - Create a README based on the page on Advent of Code website
     - Update the year project based on the `setup/settings.json` instructions
+    - NOTE: Your AoC Session token must be present on the env variable `AOC_SESSION` to be able to download the input
