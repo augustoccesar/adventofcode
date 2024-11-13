@@ -126,5 +126,11 @@
                 "data": "[[bin]]\nname = \"day$padded_day\"\npath = \"src/day$padded_day/main.rs\"\n\n"
             }
         ]
+    },
+    "2024": {
+        "tasks_path": "",
+        "inputs_path": "/inputs",
+        "task_file_name_format": "camel",
+        "extension": "cs"
     }
 }

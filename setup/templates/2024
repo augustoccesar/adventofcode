@@ -1,0 +1,12 @@
+class Day$padded_day: Task
+{
+    public override string PartOne()
+    {
+        return "-";
+    }
+
+    public override string PartTwo()
+    {
+        return "-";
+    }
+}
