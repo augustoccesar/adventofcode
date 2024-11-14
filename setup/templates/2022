@@ -1,13 +1,4 @@
-package se.augustocesar.day$padded_day
 
-import se.augustocesar.Task
 
-class Day$padded_day : Task() {
-    override fun partOne(): String {
-        return "-"
-    }
 
-    override fun partTwo(): String {
-        return "-"
-    }
 }

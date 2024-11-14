@@ -97,20 +97,8 @@
         "extension": "rb"
     },
     "2022": {
-        "tasks_path": "/src/main/kotlin/se/augustocesar",
-        "inputs_path": "/src/main/resources/inputs",
-        "task_file_name_format": "camel",
-        "extension": "kt",
         "instructions": [
             {
-                "file": "src/main/kotlin/se/augustocesar/Main.kt",
-                "label": "//SETUP:target_import",
-                "data": "import se.augustocesar.day$padded_day.Day$padded_day\n"
-            },
-            {
-                "file": "src/main/kotlin/se/augustocesar/Main.kt",
-                "label": "//SETUP:target_map",
-                "data": "    \"$padded_day\" to Day$padded_day(),\n"
             }
         ]
     },
