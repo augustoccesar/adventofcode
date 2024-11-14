@@ -25,10 +25,30 @@ fn partOne(allocator: std.mem.Allocator, input: []u8) TaskError![]const u8 {
 }
 
 fn partTwo(allocator: std.mem.Allocator, input: []u8) TaskError![]const u8 {
-    _ = allocator;
-    _ = input;
+    var list = std.ArrayList(i64).init(allocator);
+    defer list.deinit();
 
-    return "-";
+    var current: i64 = 0;
+    var lines = linesIterator(input);
+    while (lines.next()) |line| {
+        if (std.mem.eql(u8, line, "")) {
+            try list.append(current);
+            current = 0;
+        } else {
+            const calories = try std.fmt.parseInt(i64, line, 10);
+            current += calories;
+        }
+    }
+
+    var elfs = try list.toOwnedSlice();
+    std.mem.sort(i64, elfs, {}, comptime std.sort.desc(i64));
+
+    var total: i64 = 0;
+    for (elfs[0..3]) |num| {
+        total += num;
+    }
+
+    return std.fmt.allocPrint(allocator, "{d}", .{total});
 }
 
 pub const task = Task{
