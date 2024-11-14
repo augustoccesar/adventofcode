@@ -97,8 +97,16 @@
         "extension": "rb"
     },
     "2022": {
+        "task_file_name": "task",
+        "tasks_path": "/src",
+        "inputs_path": "/inputs",
+        "task_file_name_format": "snake",
+        "extension": "zig",
         "instructions": [
             {
+                "file": "src/main.zig",
+                "label": "//SETUP:target_tasks",
+                "data": "$day => try run(allocator, stdout, @import(\"./day$padded_day/task.zig\").task),\n\t\t"
             }
         ]
     },
