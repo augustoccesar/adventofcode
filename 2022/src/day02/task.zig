@@ -15,7 +15,17 @@ const Result = enum {
             .win => 6,
         };
     }
+
+    fn from_u8(value: u8) Result {
+        return switch (value) {
+            'X' => Result.loss,
+            'Y' => Result.tie,
+            'Z' => Result.win,
+            else => @panic("invalid value for Result"),
+        };
+    }
 };
+
 const Play = enum {
     rock,
     paper,
@@ -34,12 +44,29 @@ const Play = enum {
             'A', 'X' => Play.rock,
             'B', 'Y' => Play.paper,
             'C', 'Z' => Play.scissors,
-            else => @panic("invalid value for play"),
+            else => @panic("invalid value for Play"),
+        };
+    }
+
+    pub fn win_against(self: Play) Play {
+        return switch (self) {
+            Play.rock => Play.scissors,
+            Play.paper => Play.rock,
+            Play.scissors => Play.paper,
+        };
+    }
+
+    pub fn loses_against(self: Play) Play {
+        return switch (self) {
+            Play.rock => Play.paper,
+            Play.paper => Play.scissors,
+            Play.scissors => Play.rock,
         };
     }
 
     pub fn result(left: Play, right: Play) Result {
         if (left == right) return Result.tie;
+
         if (left == Play.rock and right == Play.scissors) return Result.win;
         if (left == Play.rock and right == Play.paper) return Result.loss;
         if (left == Play.paper and right == Play.rock) return Result.win;
@@ -48,6 +75,14 @@ const Play = enum {
         if (left == Play.scissors and right == Play.paper) return Result.win;
 
         unreachable;
+    }
+
+    pub fn matching_play(opponent_play: Play, my_result: Result) Play {
+        return switch (my_result) {
+            .loss => opponent_play.win_against(),
+            .tie => opponent_play,
+            .win => opponent_play.loses_against(),
+        };
     }
 };
 
@@ -72,10 +107,23 @@ fn partOne(allocator: std.mem.Allocator, input: []u8) TaskError![]const u8 {
 }
 
 fn partTwo(allocator: std.mem.Allocator, input: []u8) TaskError![]const u8 {
-    _ = allocator;
-    _ = input;
+    var total: u64 = 0;
+    var iterator = linesIterator(input);
+    while (iterator.next()) |line| {
+        var items = std.mem.splitAny(u8, line, " ");
+        const opponent_play_str = items.next() orelse @panic("failed to decode opponent play");
+        const expected_result_str = items.next() orelse @panic("failed to decode my play");
 
-    return "-";
+        const opponent_play = Play.from_u8(opponent_play_str[0]);
+        const expected_result = Result.from_u8(expected_result_str[0]);
+
+        const my_play = Play.matching_play(opponent_play, expected_result);
+
+        total += expected_result.points();
+        total += my_play.points();
+    }
+
+    return std.fmt.allocPrint(allocator, "{d}", .{total});
 }
 
 pub const task = Task{
@@ -83,13 +131,3 @@ pub const task = Task{
     .p1 = partOne,
     .p2 = partTwo,
 };
-
-fn countPoints(opponent_play: u8, my_play: u8) u64 {
-    if (opponent_play == my_play) {}
-
-    // if (opponent_play == 'A' or opponent_play == 'X') {}
-}
-
-// fn point_from_play(play: u8) {
-//     if (play == 'A' || play == '')
-// }
