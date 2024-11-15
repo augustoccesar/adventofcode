@@ -92,21 +92,18 @@ const Assignment = struct {
     }
 
     fn full_overlap(self: Assignment, other: Assignment) bool {
-        var left: Assignment = self;
-        var right: Assignment = other;
+        const sorted = Assignment.sort(self, other);
 
-        if ((self.from == other.from and self.to > other.to) or (self.from < other.from)) {
-            left = self;
-            right = other;
-        } else {
-            left = other;
-            right = self;
-        }
-
-        return left.from <= right.from and left.to >= right.to;
+        return sorted[0].from <= sorted[1].from and sorted[0].to >= sorted[1].to;
     }
 
     fn any_overlap(self: Assignment, other: Assignment) bool {
+        const sorted = Assignment.sort(self, other);
+
+        return sorted[1].from >= sorted[0].from and sorted[1].from <= sorted[0].to;
+    }
+
+    fn sort(self: Assignment, other: Assignment) std.meta.Tuple(&.{ Assignment, Assignment }) {
         var left: Assignment = self;
         var right: Assignment = other;
 
@@ -118,6 +115,6 @@ const Assignment = struct {
             right = self;
         }
 
-        return right.from >= left.from and right.from <= left.to;
+        return .{ left, right };
     }
 };
