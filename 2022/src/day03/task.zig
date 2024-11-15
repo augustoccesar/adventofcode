@@ -32,10 +32,47 @@ fn partOne(allocator: std.mem.Allocator, input: []u8) TaskError![]const u8 {
 }
 
 fn partTwo(allocator: std.mem.Allocator, input: []u8) TaskError![]const u8 {
-    _ = allocator;
-    _ = input;
+    var total: u64 = 0;
+    var rucksacks = linesIterator(input);
+    while (rucksacks.next()) |rucksack| {
+        const elf_1 = rucksack;
+        const elf_2 = rucksacks.next() orelse @panic("failed to get rucksack for elf 2");
+        const elf_3 = rucksacks.next() orelse @panic("failed to get rucksack for elf 3");
 
-    return "-";
+        var map = std.AutoHashMap(u8, [3]bool).init(allocator);
+        defer map.deinit();
+
+        for (elf_1) |item| {
+            var count = map.get(item) orelse [3]bool{ false, false, false };
+            count[0] = true;
+            try map.put(item, count);
+        }
+
+        for (elf_2) |item| {
+            var count = map.get(item) orelse [3]bool{ false, false, false };
+            count[1] = true;
+            try map.put(item, count);
+        }
+
+        for (elf_3) |item| {
+            var count = map.get(item) orelse [3]bool{ false, false, false };
+            count[2] = true;
+            try map.put(item, count);
+        }
+
+        var matching_item: u8 = 0;
+        var map_iterator = map.iterator();
+        while (map_iterator.next()) |entry| {
+            if (entry.value_ptr.*[0] and entry.value_ptr.*[1] and entry.value_ptr.*[2]) {
+                matching_item = entry.key_ptr.*;
+                break;
+            }
+        }
+
+        total += item_value(matching_item);
+    }
+
+    return std.fmt.allocPrint(allocator, "{d}", .{total});
 }
 
 pub const task = Task{
