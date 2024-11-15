@@ -18,10 +18,17 @@ fn partOne(allocator: std.mem.Allocator, input: []u8) TaskError![]const u8 {
 }
 
 fn partTwo(allocator: std.mem.Allocator, input: []u8) TaskError![]const u8 {
-    _ = allocator;
-    _ = input;
+    var result: usize = 0;
+    for (13..input.len) |i| {
+        const buffer = input[(i - 13)..(i + 1)];
 
-    return "-";
+        if (all_different(buffer)) {
+            result = i + 1;
+            break;
+        }
+    }
+
+    return std.fmt.allocPrint(allocator, "{d}", .{result});
 }
 
 pub const task = Task{

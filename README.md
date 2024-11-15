@@ -4,7 +4,7 @@
 | :-- | :-- | :-: | :-: | :-: | :-: |  :-: |  :-: | 
 | [2024](2024/README.md) | ![C#](https://img.shields.io/badge/C%23-blue) | | ❌❌❌❌❌ | ❌❌❌❌❌ | ❌❌❌❌❌ | ❌❌❌❌❌ | ❌❌❌❌❌ |
 | [2023](2023/README.md) | ![Rust](https://img.shields.io/badge/Rust-A72145) | | ✅✅✅✅✅ | ✅✅✅✅✅ | ✅✅✅✅✅ | ✅✅✅❌❌ | ❌❌❌❌❌ |
-| [2022](2022/README.md) | ![Zig](https://img.shields.io/badge/Zig-orange) | | ✅✅✅✅✅ | 🟡❌❌❌❌ | ❌❌❌❌❌ | ❌❌❌❌❌ | ❌❌❌❌❌ |
+| [2022](2022/README.md) | ![Zig](https://img.shields.io/badge/Zig-orange) | | ✅✅✅✅✅ | ✅❌❌❌❌ | ❌❌❌❌❌ | ❌❌❌❌❌ | ❌❌❌❌❌ |
 | [2021](2021/README.md) | ![Ruby](https://img.shields.io/badge/Ruby-CC342D) | | ✅✅✅✅✅ | ✅✅✅✅✅ | ✅✅✅✅🟡 | ❌❌❌❌❌ | ❌❌❌❌❌ |
 | [2020](2020/README.md) | ![Golang](https://img.shields.io/badge/Go-79D4FD) | [![2020](https://github.com/augustoccesar/adventofcode/actions/workflows/test-2020.yml/badge.svg)](https://github.com/augustoccesar/adventofcode/actions/workflows/test-2020.yml) | ✅✅✅✅✅| ✅✅✅✅✅ | ✅✅✅✅✅ | ✅✅✅✅✅ | ✅✅✅✅✅ |
 | [2019](2019/README.md) | ![Java](https://img.shields.io/badge/Java-F0931C) | [![2019](https://github.com/augustoccesar/adventofcode/actions/workflows/test-2019.yml/badge.svg)](https://github.com/augustoccesar/adventofcode/actions/workflows/test-2019.yml) | ✅✅✅✅✅ | ✅✅✅✅✅ | ✅🟡✅✅❌ | ❌❌❌❌❌ | ❌❌❌❌❌ |
