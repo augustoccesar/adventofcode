@@ -92,8 +92,8 @@ const Assignment = struct {
     }
 
     fn full_overlap(self: Assignment, other: Assignment) bool {
-        var left: ?Assignment = null;
-        var right: ?Assignment = null;
+        var left: Assignment = self;
+        var right: Assignment = other;
 
         if ((self.from == other.from and self.to > other.to) or (self.from < other.from)) {
             left = self;
@@ -103,12 +103,12 @@ const Assignment = struct {
             right = self;
         }
 
-        return left.?.from <= right.?.from and left.?.to >= right.?.to;
+        return left.from <= right.from and left.to >= right.to;
     }
 
     fn any_overlap(self: Assignment, other: Assignment) bool {
-        var left: ?Assignment = null;
-        var right: ?Assignment = null;
+        var left: Assignment = self;
+        var right: Assignment = other;
 
         if ((self.from == other.from and self.to > other.to) or (self.from < other.from)) {
             left = self;
@@ -118,6 +118,6 @@ const Assignment = struct {
             right = self;
         }
 
-        return right.?.from >= left.?.from and right.?.from <= left.?.to;
+        return right.from >= left.from and right.from <= left.to;
     }
 };
