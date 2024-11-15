@@ -39,34 +39,26 @@ fn partTwo(allocator: std.mem.Allocator, input: []u8) TaskError![]const u8 {
         const elf_2 = rucksacks.next() orelse @panic("failed to get rucksack for elf 2");
         const elf_3 = rucksacks.next() orelse @panic("failed to get rucksack for elf 3");
 
-        var map = std.AutoHashMap(u8, [3]bool).init(allocator);
-        defer map.deinit();
+        const elfs = [3][]const u8{ elf_1, elf_2, elf_3 };
 
-        for (elf_1) |item| {
-            var count = map.get(item) orelse [3]bool{ false, false, false };
-            count[0] = true;
-            try map.put(item, count);
-        }
-
-        for (elf_2) |item| {
-            var count = map.get(item) orelse [3]bool{ false, false, false };
-            count[1] = true;
-            try map.put(item, count);
-        }
-
-        for (elf_3) |item| {
-            var count = map.get(item) orelse [3]bool{ false, false, false };
-            count[2] = true;
-            try map.put(item, count);
-        }
+        var items_tracker = std.AutoHashMap(u8, [3]bool).init(allocator);
+        defer items_tracker.deinit();
 
         var matching_item: u8 = 0;
-        var map_iterator = map.iterator();
-        while (map_iterator.next()) |entry| {
-            if (entry.value_ptr.*[0] and entry.value_ptr.*[1] and entry.value_ptr.*[2]) {
-                matching_item = entry.key_ptr.*;
-                break;
+        for (0..elfs.len) |i| {
+            for (elfs[i]) |item| {
+                var count = items_tracker.get(item) orelse [3]bool{ false, false, false };
+                count[i] = true;
+
+                if (count[0] and count[1] and count[2]) {
+                    matching_item = item;
+                    break;
+                }
+
+                try items_tracker.put(item, count);
             }
+
+            if (matching_item > 0) break;
         }
 
         total += item_value(matching_item);
