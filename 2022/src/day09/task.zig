@@ -69,10 +69,10 @@ fn move_towards(from: [2]i16, to: [2]i16) [2]i16 {
         // In same y. Need to move -1 on x
         return .{ from[0] - 1, from[1] };
     } else if (from[0] == to[0] and from[1] < to[1]) {
-        // in same x. Need to move +1 on y
+        // In same x. Need to move +1 on y
         return .{ from[0], from[1] + 1 };
     } else if (from[0] == to[0] and from[1] > to[1]) {
-        // in same x. Need to move -1 on y.
+        // In same x. Need to move -1 on y
         return .{ from[0], from[1] - 1 };
     } else if (from[0] < to[0] and from[1] < to[1]) {
         // Need to move +1 on x and y
