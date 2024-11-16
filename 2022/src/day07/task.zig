@@ -45,12 +45,36 @@ const Folder = struct {
 
         return res.toOwnedSlice();
     }
+
+    fn lookup_gte(self: *Folder, allocator: std.mem.Allocator, lookup_size: u64) ![]std.meta.Tuple(&.{ *Folder, u64 }) {
+        var res = std.ArrayList(std.meta.Tuple(&.{ *Folder, u64 })).init(allocator);
+        const total = self.size();
+
+        if (total >= lookup_size) {
+            try res.append(.{ self, total });
+        }
+
+        for (self.subfolders.items) |subfolder| {
+            try res.appendSlice(try subfolder.lookup_gte(allocator, lookup_size));
+        }
+
+        return res.toOwnedSlice();
+    }
 };
 
-fn partOne(allocator: std.mem.Allocator, input: []u8) TaskError![]const u8 {
-    const lines = try readLines(allocator, input);
-    defer lines.deinit();
+fn is_cd(line: []const u8) bool {
+    return std.mem.eql(u8, line[0..4], "$ cd");
+}
 
+fn is_ls(line: []const u8) bool {
+    return std.mem.eql(u8, line[0..4], "$ ls");
+}
+
+fn is_command(line: []const u8) bool {
+    return is_cd(line) or is_ls(line);
+}
+
+fn parse_filesystem(allocator: std.mem.Allocator, lines: *const std.ArrayList([]const u8)) !*Folder {
     var root: ?*Folder = null;
     var navigation_stack = std.ArrayList(*Folder).init(allocator);
 
@@ -151,8 +175,17 @@ fn partOne(allocator: std.mem.Allocator, input: []u8) TaskError![]const u8 {
         }
     }
 
+    return root.?;
+}
+
+fn partOne(allocator: std.mem.Allocator, input: []u8) TaskError![]const u8 {
+    const lines = try readLines(allocator, input);
+    defer lines.deinit();
+
+    var root = try parse_filesystem(allocator, &lines);
+
     var result: u64 = 0;
-    for (try root.?.lookup_lte(allocator, 100000)) |res| {
+    for (try root.lookup_lte(allocator, 100000)) |res| {
         result += res[1];
     }
 
@@ -160,10 +193,23 @@ fn partOne(allocator: std.mem.Allocator, input: []u8) TaskError![]const u8 {
 }
 
 fn partTwo(allocator: std.mem.Allocator, input: []u8) TaskError![]const u8 {
-    _ = allocator;
-    _ = input;
+    const lines = try readLines(allocator, input);
+    defer lines.deinit();
 
-    return "-";
+    const disk_space: u64 = 70_000_000;
+
+    var root = try parse_filesystem(allocator, &lines);
+    const unused_space: u64 = disk_space - root.size();
+    const needed_space: u64 = 30_000_000 - unused_space;
+
+    var min: u64 = std.math.maxInt(u64);
+    for (try root.lookup_gte(allocator, needed_space)) |option| {
+        if (option[1] < min) {
+            min = option[1];
+        }
+    }
+
+    return std.fmt.allocPrint(allocator, "{d}", .{min});
 }
 
 pub const task = Task{
@@ -171,15 +217,3 @@ pub const task = Task{
     .p1 = partOne,
     .p2 = partTwo,
 };
-
-fn is_cd(line: []const u8) bool {
-    return std.mem.eql(u8, line[0..4], "$ cd");
-}
-
-fn is_ls(line: []const u8) bool {
-    return std.mem.eql(u8, line[0..4], "$ ls");
-}
-
-fn is_command(line: []const u8) bool {
-    return is_cd(line) or is_ls(line);
-}
