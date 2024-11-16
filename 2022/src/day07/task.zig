@@ -10,12 +10,30 @@ const readLines = @import("../input.zig").readLines;
 const File = struct {
     name: []const u8,
     size: u64,
+
+    fn init(allocator: std.mem.Allocator, name: []const u8, size: u64) !*File {
+        const file = try allocator.create(File);
+        file.* = File{ .name = name, .size = size };
+
+        return file;
+    }
 };
 
 const Folder = struct {
     name: []const u8,
     subfolders: std.ArrayList(*Folder),
     files: std.ArrayList(*File),
+
+    fn init(allocator: std.mem.Allocator, name: []const u8) !*Folder {
+        const folder = try allocator.create(Folder);
+        folder.* = Folder{
+            .name = name,
+            .subfolders = std.ArrayList(*Folder).init(allocator),
+            .files = std.ArrayList(*File).init(allocator),
+        };
+
+        return folder;
+    }
 
     fn size(self: *Folder) u64 {
         var total: u64 = 0;
@@ -92,12 +110,7 @@ fn parse_filesystem(allocator: std.mem.Allocator, lines: *const std.ArrayList([]
                 _ = navigation_stack.pop();
             } else if (std.mem.eql(u8, folder_name, "/")) {
                 if (root == null) {
-                    const folder = try allocator.create(Folder);
-                    folder.* = Folder{
-                        .name = try allocator.dupe(u8, folder_name),
-                        .subfolders = std.ArrayList(*Folder).init(allocator),
-                        .files = std.ArrayList(*File).init(allocator),
-                    };
+                    const folder = try Folder.init(allocator, folder_name);
                     root = folder;
                     try navigation_stack.append(folder);
                 } else {
@@ -117,12 +130,7 @@ fn parse_filesystem(allocator: std.mem.Allocator, lines: *const std.ArrayList([]
                 if (existing_folder) |f| {
                     try navigation_stack.append(f);
                 } else {
-                    const folder = try allocator.create(Folder);
-                    folder.* = Folder{
-                        .name = try allocator.dupe(u8, folder_name),
-                        .subfolders = std.ArrayList(*Folder).init(allocator),
-                        .files = std.ArrayList(*File).init(allocator),
-                    };
+                    const folder = try Folder.init(allocator, folder_name);
 
                     try current_folder.*.subfolders.append(folder);
                     try navigation_stack.append(folder);
@@ -149,12 +157,7 @@ fn parse_filesystem(allocator: std.mem.Allocator, lines: *const std.ArrayList([]
                     }
 
                     if (!already_exist) {
-                        const folder = try allocator.create(Folder);
-                        folder.* = Folder{
-                            .name = try allocator.dupe(u8, folder_name),
-                            .subfolders = std.ArrayList(*Folder).init(allocator),
-                            .files = std.ArrayList(*File).init(allocator),
-                        };
+                        const folder = try Folder.init(allocator, folder_name);
 
                         try current_folder.*.subfolders.append(folder);
                     }
@@ -162,8 +165,7 @@ fn parse_filesystem(allocator: std.mem.Allocator, lines: *const std.ArrayList([]
                     const file_size = try std.fmt.parseInt(u64, first, 10);
                     const file_name = parts.next().?;
 
-                    const file = try allocator.create(File);
-                    file.* = File{ .name = try allocator.dupe(u8, file_name), .size = file_size };
+                    const file = try File.init(allocator, file_name, file_size);
 
                     try current_folder.*.files.append(file);
                 }
