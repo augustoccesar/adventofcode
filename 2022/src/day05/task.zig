@@ -5,16 +5,17 @@ const readLines = @import("../input.zig").readLines;
 
 fn partOne(allocator: std.mem.Allocator, input: []u8) TaskError![]const u8 {
     const lines = try readLines(allocator, input);
+    defer lines.deinit();
 
     var end_of_stacks_idx: usize = 0;
-    for (0..lines.len) |i| {
-        if (std.mem.eql(u8, lines[i][0..3], " 1 ")) {
+    for (0..lines.items.len) |i| {
+        if (std.mem.eql(u8, lines.items[i][0..3], " 1 ")) {
             end_of_stacks_idx = i;
             break;
         }
     }
 
-    const stacks_count = (lines[0].len / 4) + 1;
+    const stacks_count = (lines.items[0].len / 4) + 1;
     var stacks = std.ArrayList(std.ArrayList(u8)).init(allocator);
     for (0..stacks_count) |_| {
         try stacks.append(std.ArrayList(u8).init(allocator));
@@ -25,9 +26,9 @@ fn partOne(allocator: std.mem.Allocator, input: []u8) TaskError![]const u8 {
         i -= 1;
 
         var j: usize = 1;
-        while (j < lines[i].len) : (j += 4) {
+        while (j < lines.items[i].len) : (j += 4) {
             const stack_idx = j / 4;
-            const item = lines[i][j];
+            const item = lines.items[i][j];
 
             if (item != 32) {
                 try stacks.items[stack_idx].append(item);
@@ -35,8 +36,8 @@ fn partOne(allocator: std.mem.Allocator, input: []u8) TaskError![]const u8 {
         }
     }
 
-    for ((end_of_stacks_idx + 2)..lines.len) |j| {
-        const procedure = lines[j];
+    for ((end_of_stacks_idx + 2)..lines.items.len) |j| {
+        const procedure = lines.items[j];
         var parts = std.mem.splitAny(u8, procedure, " ");
 
         var amount: u8 = 0;
@@ -71,16 +72,17 @@ fn partOne(allocator: std.mem.Allocator, input: []u8) TaskError![]const u8 {
 
 fn partTwo(allocator: std.mem.Allocator, input: []u8) TaskError![]const u8 {
     const lines = try readLines(allocator, input);
+    defer lines.deinit();
 
     var end_of_stacks_idx: usize = 0;
-    for (0..lines.len) |i| {
-        if (std.mem.eql(u8, lines[i][0..3], " 1 ")) {
+    for (0..lines.items.len) |i| {
+        if (std.mem.eql(u8, lines.items[i][0..3], " 1 ")) {
             end_of_stacks_idx = i;
             break;
         }
     }
 
-    const stacks_count = (lines[0].len / 4) + 1;
+    const stacks_count = (lines.items[0].len / 4) + 1;
     var stacks = std.ArrayList(std.ArrayList(u8)).init(allocator);
     for (0..stacks_count) |_| {
         try stacks.append(std.ArrayList(u8).init(allocator));
@@ -91,9 +93,9 @@ fn partTwo(allocator: std.mem.Allocator, input: []u8) TaskError![]const u8 {
         i -= 1;
 
         var j: usize = 1;
-        while (j < lines[i].len) : (j += 4) {
+        while (j < lines.items[i].len) : (j += 4) {
             const stack_idx = j / 4;
-            const item = lines[i][j];
+            const item = lines.items[i][j];
 
             if (item != 32) {
                 try stacks.items[stack_idx].append(item);
@@ -101,8 +103,8 @@ fn partTwo(allocator: std.mem.Allocator, input: []u8) TaskError![]const u8 {
         }
     }
 
-    for ((end_of_stacks_idx + 2)..lines.len) |j| {
-        const procedure = lines[j];
+    for ((end_of_stacks_idx + 2)..lines.items.len) |j| {
+        const procedure = lines.items[j];
         var parts = std.mem.splitAny(u8, procedure, " ");
 
         var amount: u8 = 0;

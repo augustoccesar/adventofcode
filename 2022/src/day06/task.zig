@@ -1,7 +1,6 @@
 const std = @import("std");
 const Task = @import("../task.zig").Task;
 const TaskError = @import("../task.zig").TaskError;
-const linesIterator = @import("../input.zig").linesIterator;
 
 fn partOne(allocator: std.mem.Allocator, input: []u8) TaskError![]const u8 {
     var result: usize = 0;
