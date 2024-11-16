@@ -92,13 +92,13 @@ fn is_command(line: []const u8) bool {
     return is_cd(line) or is_ls(line);
 }
 
-fn parse_filesystem(allocator: std.mem.Allocator, lines: *const std.ArrayList([]const u8)) !*Folder {
+fn parse_filesystem(allocator: std.mem.Allocator, lines: *const [][]const u8) !*Folder {
     var root: ?*Folder = null;
     var navigation_stack = std.ArrayList(*Folder).init(allocator);
 
     var i: usize = 0;
-    while (i < lines.items.len) {
-        const line = lines.items[i];
+    while (i < lines.len) {
+        const line = lines.*[i];
 
         if (is_cd(line)) {
             var parts = std.mem.splitAny(u8, line, " ");
@@ -142,8 +142,8 @@ fn parse_filesystem(allocator: std.mem.Allocator, lines: *const std.ArrayList([]
             const current_folder = navigation_stack.getLast();
 
             var j: usize = 1;
-            while (j + i < lines.items.len and !is_command(lines.items[j + i])) : (j += 1) {
-                var parts = std.mem.splitAny(u8, lines.items[j + i], " ");
+            while (j + i < lines.len and !is_command(lines.*[j + i])) : (j += 1) {
+                var parts = std.mem.splitAny(u8, lines.*[j + i], " ");
                 const first = parts.next().?;
 
                 if (std.mem.eql(u8, first, "dir")) {
@@ -182,7 +182,7 @@ fn parse_filesystem(allocator: std.mem.Allocator, lines: *const std.ArrayList([]
 
 fn partOne(allocator: std.mem.Allocator, input: []u8) TaskError![]const u8 {
     const lines = try readLines(allocator, input);
-    defer lines.deinit();
+    defer allocator.free(lines);
 
     var root = try parse_filesystem(allocator, &lines);
 
@@ -196,7 +196,7 @@ fn partOne(allocator: std.mem.Allocator, input: []u8) TaskError![]const u8 {
 
 fn partTwo(allocator: std.mem.Allocator, input: []u8) TaskError![]const u8 {
     const lines = try readLines(allocator, input);
-    defer lines.deinit();
+    defer allocator.free(lines);
 
     const disk_space: u64 = 70_000_000;
 
