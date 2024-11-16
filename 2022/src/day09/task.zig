@@ -22,17 +22,13 @@ const Direction = enum {
         };
     }
 
-    fn modifer(self: Direction) [2]i8 {
-        return switch (self) {
+    fn apply_to(self: Direction, xy: [2]i16) [2]i16 {
+        const modifier = switch (self) {
             .up => [2]i8{ 0, 1 },
             .down => [2]i8{ 0, -1 },
             .left => [2]i8{ -1, 0 },
             .right => [2]i8{ 1, 0 },
         };
-    }
-
-    fn apply_to(self: Direction, xy: [2]i16) [2]i16 {
-        const modifier = self.modifer();
 
         return .{
             xy[0] + modifier[0],
