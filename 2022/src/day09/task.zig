@@ -6,6 +6,22 @@ const TaskError = @import("../task.zig").TaskError;
 
 const linesIterator = @import("../input.zig").linesIterator;
 
+const Instruction = struct {
+    direction: Direction,
+    steps: u8,
+
+    fn from_str(str: *const []const u8) !Instruction {
+        var parts = std.mem.splitAny(u8, str.*, " ");
+        const direction = Direction.from_u8(parts.next().?[0]);
+        const steps = try std.fmt.parseInt(u8, parts.next().?, 10);
+
+        return .{
+            .direction = direction,
+            .steps = steps,
+        };
+    }
+};
+
 const Direction = enum {
     up,
     down,
@@ -86,13 +102,11 @@ fn partOne(allocator: std.mem.Allocator, input: []u8) TaskError![]const u8 {
 
     var lines_iter = linesIterator(input);
     while (lines_iter.next()) |line| {
-        var parts = std.mem.splitAny(u8, line, " ");
-        const direction = Direction.from_u8(parts.next().?[0]);
-        const steps = try std.fmt.parseInt(u8, parts.next().?, 10);
+        const instruction = try Instruction.from_str(&line);
 
-        for (0..steps) |_| {
+        for (0..instruction.steps) |_| {
             const prev_head_pos = head;
-            head = direction.apply_to(head);
+            head = instruction.direction.apply_to(head);
 
             if (!is_touching(head, tail)) {
                 tail = prev_head_pos;
@@ -118,27 +132,26 @@ fn partTwo(allocator: std.mem.Allocator, input: []u8) TaskError![]const u8 {
         .{ 0, 0 },
     };
     const head = &rope[0];
-    const tail = &rope[9];
 
     var position_tracker = std.StringHashMap(bool).init(allocator);
     defer position_tracker.deinit();
 
-    try position_tracker.put(try xy_id(allocator, tail.*), true);
+    try position_tracker.put(try xy_id(allocator, .{ 0, 0 }), true);
 
     var lines_iter = linesIterator(input);
     while (lines_iter.next()) |line| {
-        var parts = std.mem.splitAny(u8, line, " ");
-        const direction = Direction.from_u8(parts.next().?[0]);
-        const steps = try std.fmt.parseInt(u8, parts.next().?, 10);
+        const instruction = try Instruction.from_str(&line);
 
-        for (0..steps) |_| {
-            head.* = direction.apply_to(head.*);
+        for (0..instruction.steps) |_| {
+            head.* = instruction.direction.apply_to(head.*);
 
             var previous_node = head.*;
             for (1..10) |tail_idx| {
                 const current_node = &rope[tail_idx];
+
                 if (!is_touching(previous_node, current_node.*)) {
                     current_node.* = move_towards(current_node.*, previous_node);
+
                     if (tail_idx == 9) {
                         try position_tracker.put(try xy_id(allocator, current_node.*), true);
                     }
