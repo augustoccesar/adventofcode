@@ -6,50 +6,39 @@ const TaskError = @import("../task.zig").TaskError;
 
 const linesIterator = @import("../input.zig").linesIterator;
 
-const Point2D = struct {
-    x: i8,
-    y: i8,
-
-    fn from_xy(x: usize, y: usize) Point2D {
-        return .{
-            .x = @intCast(x),
-            .y = @intCast(y),
-        };
-    }
-
-    fn to_xy(self: Point2D) std.meta.Tuple(&.{ usize, usize }) {
-        if (self.x < 0 or self.y < 0) {
-            @panic("oops");
-        }
-
-        return .{ @intCast(self.x), @intCast(self.y) };
-    }
-
-    fn move(self: Point2D, direction: Direction) Point2D {
-        const modifier = direction.modifier();
-
-        return .{
-            .x = self.x + modifier.x,
-            .y = self.y + modifier.y,
-        };
-    }
-};
-
 const Direction = enum {
     north,
     east,
     south,
     west,
 
-    fn modifier(self: Direction) Point2D {
+    fn modifier(self: Direction) [2]i8 {
         return switch (self) {
-            .north => Point2D{ .x = 0, .y = -1 },
-            .east => Point2D{ .x = 1, .y = 0 },
-            .south => Point2D{ .x = 0, .y = 1 },
-            .west => Point2D{ .x = -1, .y = 0 },
+            .north => .{ 0, -1 },
+            .east => .{ 1, 0 },
+            .south => .{ 0, 1 },
+            .west => .{ -1, 0 },
         };
     }
 };
+
+fn move(map: *const [][]u8, xy: [2]usize, direction: Direction) ?[2]usize {
+    const modifier = direction.modifier();
+    const x_i8: i8 = @intCast(xy[0]);
+    const y_i8: i8 = @intCast(xy[1]);
+
+    const new_x = x_i8 + modifier[0];
+    const new_y = y_i8 + modifier[1];
+
+    if (new_x >= map.*[0].len or new_x < 0 or new_y >= map.*.len or new_y < 0) {
+        return null;
+    }
+
+    return .{
+        @intCast(new_x),
+        @intCast(new_y),
+    };
+}
 
 fn build_map(allocator: std.mem.Allocator, input: *const []u8) ![][]u8 {
     var map = std.ArrayList([]u8).init(allocator);
@@ -75,25 +64,23 @@ fn id_from_xy(allocator: std.mem.Allocator, x: usize, y: usize) ![]const u8 {
     return try std.fmt.allocPrint(allocator, "{d},{d}", .{ x, y });
 }
 
-fn walk(map: *const [][]u8, x: usize, y: usize, direction: Direction) u64 {
+fn viewing_distance(map: *const [][]u8, x: usize, y: usize, direction: Direction) u64 {
     const base_height = map.*[y][x];
     var visibles: u64 = 0;
 
-    var current_point = Point2D.from_xy(x, y);
+    var current_point = [2]usize{ x, y };
     while (true) {
-        const new_point = current_point.move(direction);
-        if (new_point.x >= map.*[0].len or new_point.x < 0 or new_point.y >= map.*.len or new_point.y < 0) {
-            break;
-        }
+        if (move(map, current_point, direction)) |new_point| {
+            current_point = new_point;
 
-        current_point = new_point;
+            const new_point_height = map.*[new_point[1]][new_point[0]];
 
-        const xy = new_point.to_xy();
-        const new_point_height = map.*[xy[1]][xy[0]];
+            visibles += 1;
 
-        visibles += 1;
-
-        if (new_point_height >= base_height) {
+            if (new_point_height >= base_height) {
+                break;
+            }
+        } else {
             break;
         }
     }
@@ -102,10 +89,10 @@ fn walk(map: *const [][]u8, x: usize, y: usize, direction: Direction) u64 {
 }
 
 fn scenic_score(map: *const [][]u8, x: usize, y: usize) u64 {
-    const north = walk(map, x, y, .north);
-    const east = walk(map, x, y, .east);
-    const south = walk(map, x, y, .south);
-    const west = walk(map, x, y, .west);
+    const north = viewing_distance(map, x, y, .north);
+    const east = viewing_distance(map, x, y, .east);
+    const south = viewing_distance(map, x, y, .south);
+    const west = viewing_distance(map, x, y, .west);
 
     return north * east * south * west;
 }
