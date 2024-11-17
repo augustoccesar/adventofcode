@@ -43,7 +43,7 @@ pub fn main() !void {
         8 => try run(allocator, stdout, @import("./day08/task.zig").task, &input_name),
         9 => try run(allocator, stdout, @import("./day09/task.zig").task, &input_name),
         10 => try run(allocator, stdout, @import("./day10/task.zig").task, &input_name),
-		//SETUP:target_tasks
+        //SETUP:target_tasks
         else => {
             std.debug.print("Unknown day {d}\n", .{day_u8});
             std.process.exit(1);

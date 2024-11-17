@@ -106,7 +106,7 @@
             {
                 "file": "src/main.zig",
                 "label": "//SETUP:target_tasks",
-                "data": "$day => try run(allocator, stdout, @import(\"./day$padded_day/task.zig\").task, &input_name),\n\t\t"
+                "data": "$day => try run(allocator, stdout, @import(\"./day$padded_day/task.zig\").task, &input_name),\n        "
             }
         ]
     },
