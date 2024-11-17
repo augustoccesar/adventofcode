@@ -6,7 +6,7 @@ const Task = @import("../task.zig").Task;
 const TaskError = @import("../task.zig").TaskError;
 
 fn partOne(allocator: std.mem.Allocator, input_path: []u8) TaskError![]const u8 {
-    const input = try helpers.input.readString(allocator, input_path);
+    const input = helpers.input.readString(allocator, input_path);
 
     var result: usize = 0;
     for (3..input.len) |i| {
@@ -22,7 +22,7 @@ fn partOne(allocator: std.mem.Allocator, input_path: []u8) TaskError![]const u8 
 }
 
 fn partTwo(allocator: std.mem.Allocator, input_path: []u8) TaskError![]const u8 {
-    const input = try helpers.input.readString(allocator, input_path);
+    const input = helpers.input.readString(allocator, input_path);
 
     var result: usize = 0;
     for (13..input.len) |i| {

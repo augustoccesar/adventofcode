@@ -22,7 +22,7 @@ pub fn linesIterator(allocator: std.mem.Allocator, input_path: []u8) std.mem.Spl
     return std.mem.splitAny(u8, input, "\n");
 }
 
-pub fn readString(allocator: std.mem.Allocator, input_path: []u8) ![]const u8 {
+pub fn readString(allocator: std.mem.Allocator, input_path: []u8) []const u8 {
     return readFileAlloc(allocator, input_path);
 }
 
