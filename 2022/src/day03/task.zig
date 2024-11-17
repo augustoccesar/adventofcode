@@ -3,9 +3,9 @@ const Task = @import("../task.zig").Task;
 const TaskError = @import("../task.zig").TaskError;
 const linesIterator = @import("../input.zig").linesIterator;
 
-fn partOne(allocator: std.mem.Allocator, input: []u8) TaskError![]const u8 {
+fn partOne(allocator: std.mem.Allocator, input_path: []u8) TaskError![]const u8 {
     var total: u64 = 0;
-    var rucksacks = linesIterator(input);
+    var rucksacks = linesIterator(allocator, input_path);
     while (rucksacks.next()) |rucksack| {
         const mid = rucksack.len / 2;
         const left_compartment = rucksack[0..mid];
@@ -31,9 +31,9 @@ fn partOne(allocator: std.mem.Allocator, input: []u8) TaskError![]const u8 {
     return std.fmt.allocPrint(allocator, "{d}", .{total});
 }
 
-fn partTwo(allocator: std.mem.Allocator, input: []u8) TaskError![]const u8 {
+fn partTwo(allocator: std.mem.Allocator, input_path: []u8) TaskError![]const u8 {
     var total: u64 = 0;
-    var rucksacks = linesIterator(input);
+    var rucksacks = linesIterator(allocator, input_path);
     while (rucksacks.next()) |rucksack| {
         const elf_1 = rucksack;
         const elf_2 = rucksacks.next() orelse @panic("failed to get rucksack for elf 2");

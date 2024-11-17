@@ -3,10 +3,10 @@ const Task = @import("../task.zig").Task;
 const TaskError = @import("../task.zig").TaskError;
 const linesIterator = @import("../input.zig").linesIterator;
 
-fn partOne(allocator: std.mem.Allocator, input: []u8) TaskError![]const u8 {
+fn partOne(allocator: std.mem.Allocator, input_path: []u8) TaskError![]const u8 {
     var total: u64 = 0;
 
-    var lines = linesIterator(input);
+    var lines = linesIterator(allocator, input_path);
     while (lines.next()) |line| {
         const assignments = try parse_line(line);
 
@@ -18,10 +18,10 @@ fn partOne(allocator: std.mem.Allocator, input: []u8) TaskError![]const u8 {
     return std.fmt.allocPrint(allocator, "{d}", .{total});
 }
 
-fn partTwo(allocator: std.mem.Allocator, input: []u8) TaskError![]const u8 {
+fn partTwo(allocator: std.mem.Allocator, input_path: []u8) TaskError![]const u8 {
     var total: u64 = 0;
 
-    var lines = linesIterator(input);
+    var lines = linesIterator(allocator, input_path);
     while (lines.next()) |line| {
         const assignments = try parse_line(line);
 

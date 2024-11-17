@@ -91,7 +91,7 @@ fn move_towards(from: [2]i16, to: [2]i16) [2]i16 {
     unreachable;
 }
 
-fn partOne(allocator: std.mem.Allocator, input: []u8) TaskError![]const u8 {
+fn partOne(allocator: std.mem.Allocator, input_path: []u8) TaskError![]const u8 {
     var head = [2]i16{ 0, 0 };
     var tail = [2]i16{ 0, 0 };
 
@@ -100,7 +100,7 @@ fn partOne(allocator: std.mem.Allocator, input: []u8) TaskError![]const u8 {
 
     try position_tracker.put(try xy_id(allocator, tail), true);
 
-    var lines_iter = linesIterator(input);
+    var lines_iter = linesIterator(allocator, input_path);
     while (lines_iter.next()) |line| {
         const instruction = try Instruction.from_str(&line);
 
@@ -118,7 +118,7 @@ fn partOne(allocator: std.mem.Allocator, input: []u8) TaskError![]const u8 {
     return std.fmt.allocPrint(allocator, "{d}", .{position_tracker.count()});
 }
 
-fn partTwo(allocator: std.mem.Allocator, input: []u8) TaskError![]const u8 {
+fn partTwo(allocator: std.mem.Allocator, input_path: []u8) TaskError![]const u8 {
     var rope = [10][2]i16{
         .{ 0, 0 },
         .{ 0, 0 },
@@ -138,7 +138,7 @@ fn partTwo(allocator: std.mem.Allocator, input: []u8) TaskError![]const u8 {
 
     try position_tracker.put(try xy_id(allocator, .{ 0, 0 }), true);
 
-    var lines_iter = linesIterator(input);
+    var lines_iter = linesIterator(allocator, input_path);
     while (lines_iter.next()) |line| {
         const instruction = try Instruction.from_str(&line);
 

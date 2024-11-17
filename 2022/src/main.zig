@@ -60,10 +60,11 @@ fn run(allocator: std.mem.Allocator, stdout: anytype, task: anytype, input_name:
             input_name.*,
         },
     );
-    const input = try std.fs.cwd().readFileAlloc(allocator, path, 1024 * 1000);
 
-    const res_part_one = try task.p1(allocator, input);
-    const res_part_two = try task.p2(allocator, input);
+    const input_real_path = try std.fs.realpathAlloc(allocator, path);
+
+    const res_part_one = try task.p1(allocator, input_real_path);
+    const res_part_two = try task.p2(allocator, input_real_path);
 
     try stdout.print("Part one: {s}\n", .{res_part_one});
     try stdout.print("Part two: {s}\n", .{res_part_two});

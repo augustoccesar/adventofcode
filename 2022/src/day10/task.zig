@@ -57,13 +57,13 @@ fn print_crt(crt: *const [240]u8) void {
     print("\n\n", .{});
 }
 
-fn partOne(allocator: std.mem.Allocator, input: []u8) TaskError![]const u8 {
+fn partOne(allocator: std.mem.Allocator, input_path: []u8) TaskError![]const u8 {
     var result: i64 = 0;
 
     var register_x: i64 = 1;
     var cycle: i64 = 0;
 
-    var lines_iter = linesIterator(input);
+    var lines_iter = linesIterator(allocator, input_path);
     while (lines_iter.next()) |line| {
         var instruction = try Instruction.from_str(&line);
         instruction.start(cycle);
@@ -92,7 +92,7 @@ fn partTwo(allocator: std.mem.Allocator, input: []u8) TaskError![]const u8 {
 
     var crt = [_]u8{'.'} ** 240;
 
-    var lines_iter = linesIterator(input);
+    var lines_iter = linesIterator(allocator, input);
     while (lines_iter.next()) |line| {
         var instruction = try Instruction.from_str(&line);
         instruction.start(cycle);

@@ -86,9 +86,9 @@ const Play = enum {
     }
 };
 
-fn partOne(allocator: std.mem.Allocator, input: []u8) TaskError![]const u8 {
+fn partOne(allocator: std.mem.Allocator, input_path: []u8) TaskError![]const u8 {
     var total: u64 = 0;
-    var iterator = linesIterator(input);
+    var iterator = linesIterator(allocator, input_path);
     while (iterator.next()) |line| {
         var items = std.mem.splitAny(u8, line, " ");
         const opponent_play_str = items.next() orelse @panic("failed to decode opponent play");
@@ -106,9 +106,9 @@ fn partOne(allocator: std.mem.Allocator, input: []u8) TaskError![]const u8 {
     return std.fmt.allocPrint(allocator, "{d}", .{total});
 }
 
-fn partTwo(allocator: std.mem.Allocator, input: []u8) TaskError![]const u8 {
+fn partTwo(allocator: std.mem.Allocator, input_path: []u8) TaskError![]const u8 {
     var total: u64 = 0;
-    var iterator = linesIterator(input);
+    var iterator = linesIterator(allocator, input_path);
     while (iterator.next()) |line| {
         var items = std.mem.splitAny(u8, line, " ");
         const opponent_play_str = items.next() orelse @panic("failed to decode opponent play");

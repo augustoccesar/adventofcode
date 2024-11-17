@@ -2,7 +2,11 @@ const std = @import("std");
 const Task = @import("../task.zig").Task;
 const TaskError = @import("../task.zig").TaskError;
 
-fn partOne(allocator: std.mem.Allocator, input: []u8) TaskError![]const u8 {
+const readString = @import("../input.zig").readString;
+
+fn partOne(allocator: std.mem.Allocator, input_path: []u8) TaskError![]const u8 {
+    const input = try readString(allocator, input_path);
+
     var result: usize = 0;
     for (3..input.len) |i| {
         const buffer = input[(i - 3)..(i + 1)];
@@ -16,7 +20,9 @@ fn partOne(allocator: std.mem.Allocator, input: []u8) TaskError![]const u8 {
     return std.fmt.allocPrint(allocator, "{d}", .{result});
 }
 
-fn partTwo(allocator: std.mem.Allocator, input: []u8) TaskError![]const u8 {
+fn partTwo(allocator: std.mem.Allocator, input_path: []u8) TaskError![]const u8 {
+    const input = try readString(allocator, input_path);
+
     var result: usize = 0;
     for (13..input.len) |i| {
         const buffer = input[(i - 13)..(i + 1)];

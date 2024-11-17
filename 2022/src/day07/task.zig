@@ -180,8 +180,8 @@ fn parse_filesystem(allocator: std.mem.Allocator, lines: *const [][]const u8) !*
     return root.?;
 }
 
-fn partOne(allocator: std.mem.Allocator, input: []u8) TaskError![]const u8 {
-    const lines = try readLines(allocator, input);
+fn partOne(allocator: std.mem.Allocator, input_path: []u8) TaskError![]const u8 {
+    const lines = try readLines(allocator, input_path);
     defer allocator.free(lines);
 
     var root = try parse_filesystem(allocator, &lines);
@@ -194,8 +194,8 @@ fn partOne(allocator: std.mem.Allocator, input: []u8) TaskError![]const u8 {
     return std.fmt.allocPrint(allocator, "{d}", .{result});
 }
 
-fn partTwo(allocator: std.mem.Allocator, input: []u8) TaskError![]const u8 {
-    const lines = try readLines(allocator, input);
+fn partTwo(allocator: std.mem.Allocator, input_path: []u8) TaskError![]const u8 {
+    const lines = try readLines(allocator, input_path);
     defer allocator.free(lines);
 
     const disk_space: u64 = 70_000_000;

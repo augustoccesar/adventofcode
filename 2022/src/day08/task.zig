@@ -40,9 +40,9 @@ fn move(map: *const [][]u8, xy: [2]usize, direction: Direction) ?[2]usize {
     };
 }
 
-fn build_map(allocator: std.mem.Allocator, input: *const []u8) ![][]u8 {
+fn build_map(allocator: std.mem.Allocator, input_path: *const []u8) ![][]u8 {
     var map = std.ArrayList([]u8).init(allocator);
-    var lines_iter = linesIterator(input.*);
+    var lines_iter = linesIterator(allocator, input_path.*);
 
     var y: usize = 0;
     while (lines_iter.next()) |line| {
@@ -97,8 +97,8 @@ fn scenic_score(map: *const [][]u8, x: usize, y: usize) u64 {
     return north * east * south * west;
 }
 
-fn partOne(allocator: std.mem.Allocator, input: []u8) TaskError![]const u8 {
-    const map = try build_map(allocator, &input);
+fn partOne(allocator: std.mem.Allocator, input_path: []u8) TaskError![]const u8 {
+    const map = try build_map(allocator, &input_path);
 
     var visible = std.StringHashMap(bool).init(allocator);
 
@@ -164,8 +164,8 @@ fn partOne(allocator: std.mem.Allocator, input: []u8) TaskError![]const u8 {
     return std.fmt.allocPrint(allocator, "{d}", .{visible.count()});
 }
 
-fn partTwo(allocator: std.mem.Allocator, input: []u8) TaskError![]const u8 {
-    const map = try build_map(allocator, &input);
+fn partTwo(allocator: std.mem.Allocator, input_path: []u8) TaskError![]const u8 {
+    const map = try build_map(allocator, &input_path);
 
     var max_scenic: u64 = 0;
     for (0..map.len) |y| {
