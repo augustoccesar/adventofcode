@@ -1,10 +1,10 @@
 const std = @import("std");
 const print = std.debug.print;
 
+const helpers = @import("../helpers.zig");
+
 const Task = @import("../task.zig").Task;
 const TaskError = @import("../task.zig").TaskError;
-
-const linesIterator = @import("../input.zig").linesIterator;
 
 const InstructionType = enum { noop, addx };
 
@@ -63,7 +63,7 @@ fn partOne(allocator: std.mem.Allocator, input_path: []u8) TaskError![]const u8 
     var register_x: i64 = 1;
     var cycle: i64 = 0;
 
-    var lines_iter = linesIterator(allocator, input_path);
+    var lines_iter = helpers.input.linesIterator(allocator, input_path);
     while (lines_iter.next()) |line| {
         var instruction = try Instruction.from_str(&line);
         instruction.start(cycle);
@@ -92,7 +92,7 @@ fn partTwo(allocator: std.mem.Allocator, input: []u8) TaskError![]const u8 {
 
     var crt = [_]u8{'.'} ** 240;
 
-    var lines_iter = linesIterator(allocator, input);
+    var lines_iter = helpers.input.linesIterator(allocator, input);
     while (lines_iter.next()) |line| {
         var instruction = try Instruction.from_str(&line);
         instruction.start(cycle);

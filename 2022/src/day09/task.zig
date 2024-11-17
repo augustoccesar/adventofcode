@@ -1,10 +1,10 @@
 const std = @import("std");
 const print = std.debug.print;
 
+const helpers = @import("../helpers.zig");
+
 const Task = @import("../task.zig").Task;
 const TaskError = @import("../task.zig").TaskError;
-
-const linesIterator = @import("../input.zig").linesIterator;
 
 const Instruction = struct {
     direction: Direction,
@@ -100,7 +100,7 @@ fn partOne(allocator: std.mem.Allocator, input_path: []u8) TaskError![]const u8 
 
     try position_tracker.put(try xy_id(allocator, tail), true);
 
-    var lines_iter = linesIterator(allocator, input_path);
+    var lines_iter = helpers.input.linesIterator(allocator, input_path);
     while (lines_iter.next()) |line| {
         const instruction = try Instruction.from_str(&line);
 
@@ -138,7 +138,7 @@ fn partTwo(allocator: std.mem.Allocator, input_path: []u8) TaskError![]const u8 
 
     try position_tracker.put(try xy_id(allocator, .{ 0, 0 }), true);
 
-    var lines_iter = linesIterator(allocator, input_path);
+    var lines_iter = helpers.input.linesIterator(allocator, input_path);
     while (lines_iter.next()) |line| {
         const instruction = try Instruction.from_str(&line);
 

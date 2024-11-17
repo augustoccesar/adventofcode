@@ -1,10 +1,10 @@
 const std = @import("std");
 const print = std.debug.print;
 
+const helpers = @import("../helpers.zig");
+
 const Task = @import("../task.zig").Task;
 const TaskError = @import("../task.zig").TaskError;
-
-const linesIterator = @import("../input.zig").linesIterator;
 
 const Direction = enum {
     north,
@@ -42,7 +42,7 @@ fn move(map: *const [][]u8, xy: [2]usize, direction: Direction) ?[2]usize {
 
 fn build_map(allocator: std.mem.Allocator, input_path: *const []u8) ![][]u8 {
     var map = std.ArrayList([]u8).init(allocator);
-    var lines_iter = linesIterator(allocator, input_path.*);
+    var lines_iter = helpers.input.linesIterator(allocator, input_path.*);
 
     var y: usize = 0;
     while (lines_iter.next()) |line| {

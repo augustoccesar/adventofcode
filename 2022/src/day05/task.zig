@@ -1,10 +1,12 @@
 const std = @import("std");
+
+const helpers = @import("../helpers.zig");
+
 const Task = @import("../task.zig").Task;
 const TaskError = @import("../task.zig").TaskError;
-const readLines = @import("../input.zig").readLines;
 
 fn partOne(allocator: std.mem.Allocator, input_path: []u8) TaskError![]const u8 {
-    const lines = try readLines(allocator, input_path);
+    const lines = try helpers.input.readLines(allocator, input_path);
     defer allocator.free(lines);
 
     var end_of_stacks_idx: usize = 0;
@@ -71,7 +73,7 @@ fn partOne(allocator: std.mem.Allocator, input_path: []u8) TaskError![]const u8 
 }
 
 fn partTwo(allocator: std.mem.Allocator, input_path: []u8) TaskError![]const u8 {
-    const lines = try readLines(allocator, input_path);
+    const lines = try helpers.input.readLines(allocator, input_path);
     defer allocator.free(lines);
 
     var end_of_stacks_idx: usize = 0;

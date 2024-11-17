@@ -1,7 +1,9 @@
 const std = @import("std");
+
+const helpers = @import("../helpers.zig");
+
 const Task = @import("../task.zig").Task;
 const TaskError = @import("../task.zig").TaskError;
-const linesIterator = @import("../input.zig").linesIterator;
 
 const Result = enum {
     loss,
@@ -88,7 +90,7 @@ const Play = enum {
 
 fn partOne(allocator: std.mem.Allocator, input_path: []u8) TaskError![]const u8 {
     var total: u64 = 0;
-    var iterator = linesIterator(allocator, input_path);
+    var iterator = helpers.input.linesIterator(allocator, input_path);
     while (iterator.next()) |line| {
         var items = std.mem.splitAny(u8, line, " ");
         const opponent_play_str = items.next() orelse @panic("failed to decode opponent play");
@@ -108,7 +110,7 @@ fn partOne(allocator: std.mem.Allocator, input_path: []u8) TaskError![]const u8 
 
 fn partTwo(allocator: std.mem.Allocator, input_path: []u8) TaskError![]const u8 {
     var total: u64 = 0;
-    var iterator = linesIterator(allocator, input_path);
+    var iterator = helpers.input.linesIterator(allocator, input_path);
     while (iterator.next()) |line| {
         var items = std.mem.splitAny(u8, line, " ");
         const opponent_play_str = items.next() orelse @panic("failed to decode opponent play");

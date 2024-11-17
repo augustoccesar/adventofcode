@@ -1,11 +1,10 @@
 const std = @import("std");
 const print = std.debug.print;
 
+const helpers = @import("../helpers.zig");
+
 const Task = @import("../task.zig").Task;
 const TaskError = @import("../task.zig").TaskError;
-
-const linesIterator = @import("../input.zig").linesIterator;
-const readLines = @import("../input.zig").readLines;
 
 const File = struct {
     name: []const u8,
@@ -181,7 +180,7 @@ fn parse_filesystem(allocator: std.mem.Allocator, lines: *const [][]const u8) !*
 }
 
 fn partOne(allocator: std.mem.Allocator, input_path: []u8) TaskError![]const u8 {
-    const lines = try readLines(allocator, input_path);
+    const lines = try helpers.input.readLines(allocator, input_path);
     defer allocator.free(lines);
 
     var root = try parse_filesystem(allocator, &lines);
@@ -195,7 +194,7 @@ fn partOne(allocator: std.mem.Allocator, input_path: []u8) TaskError![]const u8 
 }
 
 fn partTwo(allocator: std.mem.Allocator, input_path: []u8) TaskError![]const u8 {
-    const lines = try readLines(allocator, input_path);
+    const lines = try helpers.input.readLines(allocator, input_path);
     defer allocator.free(lines);
 
     const disk_space: u64 = 70_000_000;

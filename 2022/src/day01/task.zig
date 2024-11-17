@@ -1,13 +1,15 @@
 const std = @import("std");
+
+const helpers = @import("../helpers.zig");
+
 const Task = @import("../task.zig").Task;
 const TaskError = @import("../task.zig").TaskError;
-const linesIterator = @import("../input.zig").linesIterator;
 
 fn partOne(allocator: std.mem.Allocator, input_path: []u8) TaskError![]const u8 {
     var max: i64 = -1;
     var current: i64 = 0;
 
-    var lines = linesIterator(allocator, input_path);
+    var lines = helpers.input.linesIterator(allocator, input_path);
     while (lines.next()) |line| {
         if (std.mem.eql(u8, line, "")) {
             if (current > max) {
@@ -29,7 +31,7 @@ fn partTwo(allocator: std.mem.Allocator, input_path: []u8) TaskError![]const u8 
     defer list.deinit();
 
     var current: i64 = 0;
-    var lines = linesIterator(allocator, input_path);
+    var lines = helpers.input.linesIterator(allocator, input_path);
     while (lines.next()) |line| {
         if (std.mem.eql(u8, line, "")) {
             try list.append(current);
