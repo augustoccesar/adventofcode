@@ -1,4 +1,5 @@
 const std = @import("std");
+const print = std.debug.print;
 
 const Task = @import("../task.zig").Task;
 const TaskError = @import("../task.zig").TaskError;
@@ -44,6 +45,18 @@ const Instruction = struct {
     }
 };
 
+fn print_crt(crt: *const [240]u8) void {
+    for (0..crt.len) |i| {
+        if (i > 0 and i % 40 == 0) {
+            print("\n", .{});
+        }
+
+        print("{c}", .{crt[i]});
+    }
+
+    print("\n\n", .{});
+}
+
 fn partOne(allocator: std.mem.Allocator, input: []u8) TaskError![]const u8 {
     var result: i64 = 0;
 
@@ -74,10 +87,39 @@ fn partOne(allocator: std.mem.Allocator, input: []u8) TaskError![]const u8 {
 }
 
 fn partTwo(allocator: std.mem.Allocator, input: []u8) TaskError![]const u8 {
-    _ = allocator;
-    _ = input;
+    var register_x: i64 = 1;
+    var cycle: i64 = 0;
 
-    return "-";
+    var crt = [_]u8{'.'} ** 240;
+
+    var lines_iter = linesIterator(input);
+    while (lines_iter.next()) |line| {
+        var instruction = try Instruction.from_str(&line);
+        instruction.start(cycle);
+
+        while (!instruction.is_finished(cycle)) {
+            cycle += 1;
+            const cycle_usize: usize = @intCast(cycle);
+
+            const crt_idx = cycle_usize - 1;
+            const sprite_idx = crt_idx % 40;
+
+            if (sprite_idx >= register_x - 1 and sprite_idx <= register_x + 1) {
+                crt[crt_idx] = '#';
+            }
+        }
+
+        switch (instruction.ty) {
+            .noop => {},
+            .addx => {
+                register_x += instruction.value.?;
+            },
+        }
+    }
+
+    print_crt(&crt);
+
+    return std.fmt.allocPrint(allocator, "Check terminal output", .{});
 }
 
 pub const task = Task{
