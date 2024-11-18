@@ -132,8 +132,8 @@ fn run_simulation(allocator: std.mem.Allocator, input_path: []u8, target_rounds:
         try inspections.append(0);
     }
 
-    var round: u64 = 1;
-    while (true) {
+    var round: u64 = 0;
+    while (round < target_rounds) : (round += 1) {
         for (monkeys.items) |monkey| {
             while (monkey.holding_items.items.len > 0) {
                 const item = monkey.holding_items.orderedRemove(0);
@@ -165,12 +165,6 @@ fn run_simulation(allocator: std.mem.Allocator, input_path: []u8, target_rounds:
                 }
             }
         }
-
-        if (round == target_rounds) {
-            break;
-        }
-
-        round += 1;
     }
 
     const inspections_slice = inspections.items;
