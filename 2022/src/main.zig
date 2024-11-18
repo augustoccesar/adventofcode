@@ -1,5 +1,7 @@
 const std = @import("std");
 
+const days = @import("./days.zig");
+
 pub fn main() !void {
     var gpa = std.heap.GeneralPurposeAllocator(.{}){};
     const allocator = gpa.allocator();
@@ -31,24 +33,11 @@ pub fn main() !void {
 
     const day_u8 = try std.fmt.parseInt(u8, args[1], 10);
 
-    switch (day_u8) {
-        0 => try run(allocator, stdout, @import("./day00/task.zig").task, &input_name),
-        1 => try run(allocator, stdout, @import("./day01/task.zig").task, &input_name),
-        2 => try run(allocator, stdout, @import("./day02/task.zig").task, &input_name),
-        3 => try run(allocator, stdout, @import("./day03/task.zig").task, &input_name),
-        4 => try run(allocator, stdout, @import("./day04/task.zig").task, &input_name),
-        5 => try run(allocator, stdout, @import("./day05/task.zig").task, &input_name),
-        6 => try run(allocator, stdout, @import("./day06/task.zig").task, &input_name),
-        7 => try run(allocator, stdout, @import("./day07/task.zig").task, &input_name),
-        8 => try run(allocator, stdout, @import("./day08/task.zig").task, &input_name),
-        9 => try run(allocator, stdout, @import("./day09/task.zig").task, &input_name),
-        10 => try run(allocator, stdout, @import("./day10/task.zig").task, &input_name),
-        11 => try run(allocator, stdout, @import("./day11/task.zig").task, &input_name),
-        //SETUP:target_tasks
-        else => {
-            std.debug.print("Unknown day {d}\n", .{day_u8});
-            std.process.exit(1);
-        },
+    if (days.get_task(day_u8)) |task| {
+        try run(allocator, stdout, task, &input_name);
+    } else {
+        std.debug.print("Unknown day {d}\n", .{day_u8});
+        std.process.exit(1);
     }
 }
 
