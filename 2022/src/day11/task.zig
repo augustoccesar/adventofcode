@@ -120,10 +120,9 @@ fn run_simulation(allocator: std.mem.Allocator, input_path: []u8, target_rounds:
 
     while (monkey_data.next()) |data| {
         const monkey = try Monkey.parse(allocator, data);
+        try monkeys.append(monkey);
 
         control_mod *= monkey.test_value;
-
-        try monkeys.append(monkey);
     }
 
     var inspections = try std.ArrayList(u64).initCapacity(allocator, monkeys.items.len);
@@ -136,32 +135,25 @@ fn run_simulation(allocator: std.mem.Allocator, input_path: []u8, target_rounds:
     while (round < target_rounds) : (round += 1) {
         for (monkeys.items) |monkey| {
             while (monkey.holding_items.items.len > 0) {
-                const item = monkey.holding_items.orderedRemove(0);
+                var item = monkey.holding_items.orderedRemove(0);
 
                 inspections.items[monkey.idx] += 1;
 
-                const operation_target = monkey.operation.value orelse item;
-                const new_item = blk: switch (monkey.operation.ty) {
-                    .add => {
-                        if (target_rounds > 20) {
-                            break :blk (item + operation_target) % control_mod;
-                        } else {
-                            break :blk ((item + operation_target) / 3);
-                        }
-                    },
-                    .mult => {
-                        if (target_rounds > 20) {
-                            break :blk (item * operation_target) % control_mod;
-                        } else {
-                            break :blk ((item * operation_target) / 3);
-                        }
-                    },
-                };
+                switch (monkey.operation.ty) {
+                    .add => item += monkey.operation.value orelse item,
+                    .mult => item *= monkey.operation.value orelse item,
+                }
 
-                if (new_item % monkey.test_value == 0) {
-                    try monkeys.items[monkey.true_idx].holding_items.append(new_item);
+                if (target_rounds > 20) {
+                    item %= control_mod;
                 } else {
-                    try monkeys.items[monkey.false_idx].holding_items.append(new_item);
+                    item /= 3;
+                }
+
+                if (item % monkey.test_value == 0) {
+                    try monkeys.items[monkey.true_idx].holding_items.append(item);
+                } else {
+                    try monkeys.items[monkey.false_idx].holding_items.append(item);
                 }
             }
         }
