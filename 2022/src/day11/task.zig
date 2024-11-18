@@ -106,65 +106,7 @@ const Monkey = struct {
     }
 };
 
-fn partOne(allocator: std.mem.Allocator, input_path: []u8) TaskError![]const u8 {
-    const input = helpers.input.readString(allocator, input_path);
-    var monkey_data = std.mem.splitSequence(u8, input, "\n\n");
-
-    var monkeys = std.ArrayList(*Monkey).init(allocator);
-    defer {
-        for (monkeys.items) |monkey| monkey.deinit();
-        monkeys.deinit();
-    }
-
-    while (monkey_data.next()) |data| {
-        const monkey = try Monkey.parse(allocator, data);
-
-        try monkeys.append(monkey);
-    }
-
-    var inspections = try std.ArrayList(u64).initCapacity(allocator, monkeys.items.len);
-    defer inspections.deinit();
-    for (0..monkeys.items.len) |_| {
-        try inspections.append(0);
-    }
-
-    var round: u64 = 1;
-    while (true) {
-        for (monkeys.items) |monkey| {
-            while (monkey.holding_items.items.len > 0) {
-                const item = monkey.holding_items.orderedRemove(0);
-
-                inspections.items[monkey.idx] += 1;
-
-                const operation_target = monkey.operation.value orelse item;
-                const new_item = switch (monkey.operation.ty) {
-                    .add => (item + operation_target) / 3,
-                    .mult => (item * operation_target) / 3,
-                };
-
-                if (new_item % monkey.test_value == 0) {
-                    try monkeys.items[monkey.true_idx].holding_items.append(new_item);
-                } else {
-                    try monkeys.items[monkey.false_idx].holding_items.append(new_item);
-                }
-            }
-        }
-
-        if (round == 20) {
-            break;
-        }
-
-        round += 1;
-    }
-
-    const inspections_slice = inspections.items;
-    std.mem.sort(u64, inspections_slice, {}, comptime std.sort.desc(u64));
-    const result = inspections_slice[0] * inspections_slice[1];
-
-    return std.fmt.allocPrint(allocator, "{d}", .{result});
-}
-
-fn partTwo(allocator: std.mem.Allocator, input_path: []u8) TaskError![]const u8 {
+fn run_simulation(allocator: std.mem.Allocator, input_path: []u8, target_rounds: u64) TaskError![]const u8 {
     const input = helpers.input.readString(allocator, input_path);
     var monkey_data = std.mem.splitSequence(u8, input, "\n\n");
 
@@ -199,9 +141,21 @@ fn partTwo(allocator: std.mem.Allocator, input_path: []u8) TaskError![]const u8 
                 inspections.items[monkey.idx] += 1;
 
                 const operation_target = monkey.operation.value orelse item;
-                const new_item = switch (monkey.operation.ty) {
-                    .add => (item + operation_target) % control_mod,
-                    .mult => (item * operation_target) % control_mod,
+                const new_item = blk: switch (monkey.operation.ty) {
+                    .add => {
+                        if (target_rounds > 20) {
+                            break :blk (item + operation_target) % control_mod;
+                        } else {
+                            break :blk ((item + operation_target) / 3);
+                        }
+                    },
+                    .mult => {
+                        if (target_rounds > 20) {
+                            break :blk (item * operation_target) % control_mod;
+                        } else {
+                            break :blk ((item * operation_target) / 3);
+                        }
+                    },
                 };
 
                 if (new_item % monkey.test_value == 0) {
@@ -212,7 +166,7 @@ fn partTwo(allocator: std.mem.Allocator, input_path: []u8) TaskError![]const u8 
             }
         }
 
-        if (round == 10_000) {
+        if (round == target_rounds) {
             break;
         }
 
@@ -224,6 +178,14 @@ fn partTwo(allocator: std.mem.Allocator, input_path: []u8) TaskError![]const u8 
     const result = inspections_slice[0] * inspections_slice[1];
 
     return std.fmt.allocPrint(allocator, "{d}", .{result});
+}
+
+fn partOne(allocator: std.mem.Allocator, input_path: []u8) TaskError![]const u8 {
+    return try run_simulation(allocator, input_path, 20);
+}
+
+fn partTwo(allocator: std.mem.Allocator, input_path: []u8) TaskError![]const u8 {
+    return try run_simulation(allocator, input_path, 10_000);
 }
 
 pub const task = Task{
