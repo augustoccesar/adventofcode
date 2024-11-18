@@ -8,7 +8,7 @@ pub fn readLines(allocator: std.mem.Allocator, input_path: []u8) ![][]const u8 {
     var list = std.ArrayList([]const u8).init(allocator);
     defer list.deinit();
 
-    var lines = std.mem.splitAny(u8, input, "\n");
+    var lines = std.mem.splitScalar(u8, input, '\n');
     while (lines.next()) |line| {
         try list.append(line);
     }
@@ -16,10 +16,10 @@ pub fn readLines(allocator: std.mem.Allocator, input_path: []u8) ![][]const u8 {
     return try list.toOwnedSlice();
 }
 
-pub fn linesIterator(allocator: std.mem.Allocator, input_path: []u8) std.mem.SplitIterator(u8, .any) {
+pub fn linesIterator(allocator: std.mem.Allocator, input_path: []u8) std.mem.SplitIterator(u8, .scalar) {
     const input = readFileAlloc(allocator, input_path);
 
-    return std.mem.splitAny(u8, input, "\n");
+    return std.mem.splitScalar(u8, input, '\n');
 }
 
 pub fn readString(allocator: std.mem.Allocator, input_path: []u8) []const u8 {

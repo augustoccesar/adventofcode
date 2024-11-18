@@ -11,7 +11,7 @@ const Instruction = struct {
     steps: u8,
 
     fn from_str(str: *const []const u8) !Instruction {
-        var parts = std.mem.splitAny(u8, str.*, " ");
+        var parts = std.mem.splitScalar(u8, str.*, ' ');
         const direction = Direction.from_u8(parts.next().?[0]);
         const steps = try std.fmt.parseInt(u8, parts.next().?, 10);
 

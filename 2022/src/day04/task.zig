@@ -83,10 +83,10 @@ fn parse_line(line: []const u8) ![2]Assignment {
         [2]u8{ 0, 0 },
     };
 
-    var sections = std.mem.splitAny(u8, line, ",");
+    var sections = std.mem.splitScalar(u8, line, ',');
     var section_idx: usize = 0;
     while (sections.next()) |section| {
-        var ids = std.mem.splitAny(u8, section, "-");
+        var ids = std.mem.splitScalar(u8, section, '-');
         var id_idx: usize = 0;
         while (ids.next()) |id| {
             const value = try std.fmt.parseInt(u8, id, 10);

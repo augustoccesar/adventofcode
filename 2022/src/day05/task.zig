@@ -40,7 +40,7 @@ fn partOne(allocator: std.mem.Allocator, input_path: []u8) TaskError![]const u8 
 
     for ((end_of_stacks_idx + 2)..lines.len) |j| {
         const procedure = lines[j];
-        var parts = std.mem.splitAny(u8, procedure, " ");
+        var parts = std.mem.splitScalar(u8, procedure, ' ');
 
         var amount: u8 = 0;
         var from_stack_idx: usize = 0;
@@ -107,7 +107,7 @@ fn partTwo(allocator: std.mem.Allocator, input_path: []u8) TaskError![]const u8 
 
     for ((end_of_stacks_idx + 2)..lines.len) |j| {
         const procedure = lines[j];
-        var parts = std.mem.splitAny(u8, procedure, " ");
+        var parts = std.mem.splitScalar(u8, procedure, ' ');
 
         var amount: u8 = 0;
         var from_stack_idx: usize = 0;

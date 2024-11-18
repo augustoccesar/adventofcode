@@ -92,7 +92,7 @@ fn partOne(allocator: std.mem.Allocator, input_path: []u8) TaskError![]const u8 
     var total: u64 = 0;
     var iterator = helpers.input.linesIterator(allocator, input_path);
     while (iterator.next()) |line| {
-        var items = std.mem.splitAny(u8, line, " ");
+        var items = std.mem.splitScalar(u8, line, ' ');
         const opponent_play_str = items.next() orelse @panic("failed to decode opponent play");
         const my_play_str = items.next() orelse @panic("failed to decode my play");
 
@@ -112,7 +112,7 @@ fn partTwo(allocator: std.mem.Allocator, input_path: []u8) TaskError![]const u8 
     var total: u64 = 0;
     var iterator = helpers.input.linesIterator(allocator, input_path);
     while (iterator.next()) |line| {
-        var items = std.mem.splitAny(u8, line, " ");
+        var items = std.mem.splitScalar(u8, line, ' ');
         const opponent_play_str = items.next() orelse @panic("failed to decode opponent play");
         const expected_result_str = items.next() orelse @panic("failed to decode my play");
 

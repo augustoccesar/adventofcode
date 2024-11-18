@@ -14,7 +14,7 @@ const Instruction = struct {
     started_at: ?i64 = null,
 
     fn from_str(str: *const []const u8) !Instruction {
-        var parts = std.mem.splitAny(u8, str.*, " ");
+        var parts = std.mem.splitScalar(u8, str.*, ' ');
         const instruction_cmd = parts.next().?;
 
         if (std.mem.eql(u8, instruction_cmd, "noop")) {

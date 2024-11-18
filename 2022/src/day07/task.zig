@@ -100,7 +100,7 @@ fn parse_filesystem(allocator: std.mem.Allocator, lines: *const [][]const u8) !*
         const line = lines.*[i];
 
         if (is_cd(line)) {
-            var parts = std.mem.splitAny(u8, line, " ");
+            var parts = std.mem.splitScalar(u8, line, ' ');
             _ = parts.next(); // Dollar sign
             _ = parts.next(); // Command itself
             const folder_name = parts.next().?;
@@ -142,7 +142,7 @@ fn parse_filesystem(allocator: std.mem.Allocator, lines: *const [][]const u8) !*
 
             var j: usize = 1;
             while (j + i < lines.len and !is_command(lines.*[j + i])) : (j += 1) {
-                var parts = std.mem.splitAny(u8, lines.*[j + i], " ");
+                var parts = std.mem.splitScalar(u8, lines.*[j + i], ' ');
                 const first = parts.next().?;
 
                 if (std.mem.eql(u8, first, "dir")) {

@@ -62,7 +62,7 @@ const Monkey = struct {
     false_idx: usize,
 
     fn parse(allocator: std.mem.Allocator, data: []const u8) !*Self {
-        var parts = std.mem.splitAny(u8, data, "\n");
+        var parts = std.mem.splitScalar(u8, data, '\n');
         const monkey_idx = parts.next().?[7] - '0';
 
         var items_parts = std.mem.splitBackwardsScalar(u8, parts.next().?, ':');
