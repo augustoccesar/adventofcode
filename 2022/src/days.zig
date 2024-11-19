@@ -16,6 +16,7 @@ pub fn get_task(day: u8) ?Task {
         9 => @import("./day09/task.zig").task,
         10 => @import("./day10/task.zig").task,
         11 => @import("./day11/task.zig").task,
+        12 => @import("./day12/task.zig").task,
         else => null,
     };
 }
