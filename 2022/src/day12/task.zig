@@ -147,51 +147,18 @@ const Coord = struct {
     }
 };
 
-const Frontier = struct {
-    const Self = @This();
-    const Item = struct { coord: Coord, cost: usize };
-
-    allocator: std.mem.Allocator,
-    arr: std.ArrayList(Item),
-
-    fn init(allocator: std.mem.Allocator) Self {
-        const arr = std.ArrayList(Item).init(allocator);
-
-        return .{
-            .allocator = allocator,
-            .arr = arr,
-        };
-    }
-
-    fn add(self: *Frontier, coord: Coord, cost: usize) !void {
-        const new_item = Item{
-            .coord = coord,
-            .cost = cost,
-        };
-
-        try self.*.arr.append(new_item);
-    }
-
-    // TODO: Improve this one. Probably can have frontier be a linked list.
-    fn pop(self: *Frontier) ?Coord {
-        if (self.arr.items.len == 0) {
-            return null;
-        }
-
-        var lowest_cost_idx: usize = 0;
-        for (self.arr.items, 0..) |item, i| {
-            if (item.cost < self.arr.items[lowest_cost_idx].cost) {
-                lowest_cost_idx = i;
-            }
-        }
-
-        return self.arr.orderedRemove(lowest_cost_idx).coord;
-    }
+const FrontierCoord = struct {
+    coord: Coord,
+    cost: usize,
 };
 
+fn frontier_fn(_: void, coord_a: FrontierCoord, coord_b: FrontierCoord) std.math.Order {
+    return std.math.order(coord_a.cost, coord_b.cost);
+}
+
 fn walk_to_target(allocator: std.mem.Allocator, map: *const Map, from: Coord) !usize {
-    var frontier = Frontier.init(allocator);
-    try frontier.add(from, from.distance(&map.target));
+    var frontier = std.PriorityQueue(FrontierCoord, void, frontier_fn).init(allocator, {});
+    try frontier.add(FrontierCoord{ .coord = from, .cost = from.distance(&map.target) });
 
     var costs = std.StringHashMap(usize).init(allocator);
     try costs.put(try from.key(allocator), 0);
@@ -199,7 +166,9 @@ fn walk_to_target(allocator: std.mem.Allocator, map: *const Map, from: Coord) !u
     var came_from = std.StringHashMap(?Coord).init(allocator);
     try came_from.put(try from.key(allocator), null);
 
-    while (frontier.pop()) |current| {
+    while (frontier.count() > 0) {
+        const current = frontier.remove().coord;
+
         if (current.x == map.target.x and current.y == map.target.y) {
             break;
         }
@@ -216,7 +185,7 @@ fn walk_to_target(allocator: std.mem.Allocator, map: *const Map, from: Coord) !u
                 try came_from.put(neighbor_key, current);
 
                 const neighbor_total_cost = cost_to_neighbor + neighbor.distance(&map.target);
-                try frontier.add(neighbor, neighbor_total_cost);
+                try frontier.add(FrontierCoord{ .coord = neighbor, .cost = neighbor_total_cost });
             }
         }
     }
