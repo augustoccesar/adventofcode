@@ -102,6 +102,23 @@ const Map = struct {
 
         return possible_neighbors.toOwnedSlice();
     }
+
+    fn possible_starts(self: *const Self) ![]Coord {
+        var starts = std.ArrayList(Coord).init(self.allocator);
+
+        for (0..self.inner.len) |y| {
+            for (0..self.inner[0].len) |x| {
+                if (self.inner[y][x] == 0) {
+                    try starts.append(Coord{
+                        .x = @intCast(x),
+                        .y = @intCast(y),
+                    });
+                }
+            }
+        }
+
+        return starts.toOwnedSlice();
+    }
 };
 
 const Coord = struct {
@@ -172,18 +189,15 @@ const Frontier = struct {
     }
 };
 
-fn partOne(allocator: std.mem.Allocator, input_path: []u8) TaskError![]const u8 {
-    const map_data = helpers.input.readString(allocator, input_path);
-    const map = try Map.init(allocator, map_data);
-
+fn walk_to_target(allocator: std.mem.Allocator, map: *const Map, from: Coord) !usize {
     var frontier = Frontier.init(allocator);
-    try frontier.add(map.start, map.start.distance(&map.target));
+    try frontier.add(from, from.distance(&map.target));
 
     var costs = std.StringHashMap(usize).init(allocator);
-    try costs.put(try map.start.key(allocator), 0);
+    try costs.put(try from.key(allocator), 0);
 
     var came_from = std.StringHashMap(?Coord).init(allocator);
-    try came_from.put(try map.start.key(allocator), null);
+    try came_from.put(try from.key(allocator), null);
 
     while (frontier.pop()) |current| {
         if (current.x == map.target.x and current.y == map.target.y) {
@@ -207,27 +221,42 @@ fn partOne(allocator: std.mem.Allocator, input_path: []u8) TaskError![]const u8 
         }
     }
 
-    const steps = track_back: {
-        var current: Coord = map.target;
-        var path = std.ArrayList(Coord).init(allocator);
+    var current: Coord = map.target;
+    var path = std.ArrayList(Coord).init(allocator);
 
-        while (current.x != map.start.x or current.y != map.start.y) {
-            try path.append(current);
-            const came_from_pos = came_from.get(try current.key(allocator)).?.?;
+    while (current.x != from.x or current.y != from.y) {
+        try path.append(current);
+        const came_from_pos = came_from.get(try current.key(allocator)) orelse return std.math.maxInt(usize);
 
-            current = came_from_pos;
-        }
+        current = came_from_pos.?;
+    }
 
-        break :track_back path.items.len;
-    };
+    return path.items.len;
+}
+
+fn partOne(allocator: std.mem.Allocator, input_path: []u8) TaskError![]const u8 {
+    const map_data = helpers.input.readString(allocator, input_path);
+    const map = try Map.init(allocator, map_data);
+
+    const steps = try walk_to_target(allocator, &map, map.start);
 
     return std.fmt.allocPrint(allocator, "{d}", .{steps});
 }
 
+// TODO: Improve this. It is very slow...
 fn partTwo(allocator: std.mem.Allocator, input_path: []u8) TaskError![]const u8 {
-    _ = input_path;
+    const map_data = helpers.input.readString(allocator, input_path);
+    const map = try Map.init(allocator, map_data);
 
-    return std.fmt.allocPrint(allocator, "-", .{});
+    var shortest_path: usize = std.math.maxInt(usize);
+    for (try map.possible_starts()) |start| {
+        const steps = try walk_to_target(allocator, &map, start);
+        if (steps < shortest_path) {
+            shortest_path = steps;
+        }
+    }
+
+    return std.fmt.allocPrint(allocator, "{d}", .{shortest_path});
 }
 
 pub const task = Task{
