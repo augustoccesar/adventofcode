@@ -34,4 +34,9 @@ class Input
         var input = ReadString(fileName);
         return input.Split("\n");
     }
+
+    public static List<T> ReadLinesAs<T>(string fileName, Converter<string, T> converter)
+    {
+        return ReadLines(fileName).ToList().ConvertAll(converter);
+    }
 }
