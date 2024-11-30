@@ -30,17 +30,17 @@ class Program
             Environment.Exit(1);
         }
 
-        var inputStream = Input.GetStream(day, inputName);
-        if (inputStream == null)
+        var inputFileName = Input.GetFileName(day, inputName);
+        if (inputFileName == null)
         {
             Console.WriteLine($"Input '{inputName}' not found.");
             Environment.Exit(1);
         }
 
-        var partOne = task.PartOne(inputStream);
+        var partOne = task.PartOne(inputFileName);
         Console.WriteLine($"Part One: {partOne}");
 
-        var partTwo = task.PartTwo(inputStream);
+        var partTwo = task.PartTwo(inputFileName);
         Console.WriteLine($"Part Two: {partTwo}");
     }
 

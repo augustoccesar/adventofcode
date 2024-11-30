@@ -1,11 +1,11 @@
 class Day$padded_day: Task
 {
-    public override string PartOne(Stream fileStream)
+    public override string PartOne(string fileName)
     {
         return "-";
     }
 
-    public override string PartTwo(Stream fileStream)
+    public override string PartTwo(string fileName)
     {
         return "-";
     }
