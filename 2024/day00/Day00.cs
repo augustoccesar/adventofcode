@@ -1,23 +1,22 @@
 class Day00 : Task
 {
-    public override string PartOne()
+    public override string PartOne(Stream fileStream)
     {
-        var result = ParsedInput().Aggregate("", (acc, item) => acc + item);
+        var result = ParsedInput(fileStream).Aggregate("", (acc, item) => acc + item);
 
         return result.ToString();
     }
 
-    public override string PartTwo()
+    public override string PartTwo(Stream fileStream)
     {
-        var result = ParsedInput().Aggregate(1, (acc, item) => acc + item);
+        var result = ParsedInput(fileStream).Aggregate(0, (acc, item) => acc + item);
 
         return result.ToString();
     }
 
-    private List<int> ParsedInput()
+    private static List<int> ParsedInput(Stream fileStream)
     {
-        return Input
-                    .Split('\n')
+        return Input.ReadLines(fileStream)
                     .ToList()
                     .ConvertAll(int.Parse);
     }
