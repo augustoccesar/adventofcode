@@ -24,6 +24,30 @@ class Day01 : Task
 
     public override string PartTwo(string fileName)
     {
-        return "-";
+        var list = new List<int>();
+        var occurenceDict = new Dictionary<int, int>();
+
+        foreach (var line in Input.ReadLines(fileName).Select(line => line.Split("   ").ToList().ConvertAll(int.Parse)))
+        {
+            list.Add(line[0]);
+
+            if (occurenceDict.ContainsKey(line[1]))
+            {
+                occurenceDict.TryGetValue(line[1], out int value);
+                occurenceDict[line[1]] = value + 1;
+            }
+            else
+            {
+                occurenceDict.Add(line[1], 1);
+            }
+        }
+
+        var res = 0;
+        foreach (var item in list)
+        {
+            res += item * occurenceDict.GetValueOrDefault(item, 0);
+        }
+
+        return res.ToString();
     }
 }
