@@ -4,7 +4,7 @@ class Day01 : Task
     {
         var lists = new List<int>[2] { [], [] };
 
-        foreach (var line in Input.ReadLines(fileName).Select(line => line.Split("   ").ToList().ConvertAll(int.Parse)))
+        foreach (var line in ParseInput(fileName))
         {
             lists[0].Add(line[0]);
             lists[1].Add(line[1]);
@@ -27,7 +27,7 @@ class Day01 : Task
         var list = new List<int>();
         var occurenceDict = new Dictionary<int, int>();
 
-        foreach (var line in Input.ReadLines(fileName).Select(line => line.Split("   ").ToList().ConvertAll(int.Parse)))
+        foreach (var line in ParseInput(fileName))
         {
             list.Add(line[0]);
 
@@ -46,5 +46,17 @@ class Day01 : Task
             .Sum();
 
         return res.ToString();
+    }
+
+    private static List<List<int>> ParseInput(string fileName)
+    {
+        return Input
+            .ReadLines(fileName)
+            .Select(line =>
+                line.Split("   ")
+                    .ToList()
+                    .ConvertAll(int.Parse)
+            )
+            .ToList();
     }
 }
