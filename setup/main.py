@@ -34,7 +34,6 @@ def prepare_handler(year_param: str, day_param: str):
 
     os.makedirs(task_destination)
 
-    create_readme(year, day, task_destination)
     create_input(year, day, input_destination)
 
     template = open(template_path, "r").read()
@@ -66,25 +65,6 @@ def prepare_handler(year_param: str, day_param: str):
 
             file.seek(0)
             file.write(file_content)
-
-
-def create_readme(year: int, day: int, destination: str):
-    body = requests.get(f"https://adventofcode.com/{year}/day/{day}").text
-    soup = BeautifulSoup(body, 'html.parser')
-
-    article = str(soup.find("article"))
-    article = article.replace("h2", "h1")
-
-    markdown = markdownify.markdownify(
-        article, heading_style="ATX", strip=["a"])
-    markdown = markdown.replace("--- ", "").replace(" ---", "")
-    markdown = re.sub(r"\n{2,}", "\n\n", markdown)
-
-    if (markdown[-2:] == "\n\n"):
-        markdown = markdown[:-1]
-
-    with open(f"{destination}/README.md", "w") as f:
-        f.write(markdown)
 
 def create_input(year: int, day: int, destination: str):
     session = os.environ["AOC_SESSION"]
