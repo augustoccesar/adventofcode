@@ -31,22 +31,19 @@ class Day01 : Task
         {
             list.Add(line[0]);
 
-            if (occurenceDict.ContainsKey(line[1]))
+            if (occurenceDict.TryGetValue(line[1], out int value))
             {
-                occurenceDict.TryGetValue(line[1], out int value);
                 occurenceDict[line[1]] = value + 1;
             }
             else
             {
-                occurenceDict.Add(line[1], 1);
+                occurenceDict[line[1]] = 1;
             }
         }
 
-        var res = 0;
-        foreach (var item in list)
-        {
-            res += item * occurenceDict.GetValueOrDefault(item, 0);
-        }
+        var res = list
+            .Select(item => item * occurenceDict.GetValueOrDefault(item, 0))
+            .Sum();
 
         return res.ToString();
     }
