@@ -34,7 +34,7 @@ def prepare_handler(year_param: str, day_param: str):
 
     os.makedirs(task_destination)
 
-    create_input(year, day, input_destination)
+    create_inputs(year, day, input_destination)
 
     template = open(template_path, "r").read()
     template = template.replace(
@@ -66,7 +66,7 @@ def prepare_handler(year_param: str, day_param: str):
             file.seek(0)
             file.write(file_content)
 
-def create_input(year: int, day: int, destination: str):
+def create_inputs(year: int, day: int, destination: str):
     session = os.environ["AOC_SESSION"]
     if session:
         cookies = {"session": session}
@@ -77,6 +77,8 @@ def create_input(year: int, day: int, destination: str):
 
         with open(f"{destination}/day{day:02}_input.txt", "w") as f:
             f.write(body)
+    
+    open(f"{destination}/day{day:02}_example.txt", "w").close()
 
 # TODO: Look into a CLI library to make this less weird
 SUBCOMMANDS = {
