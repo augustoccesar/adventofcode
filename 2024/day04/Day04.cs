@@ -1,5 +1,3 @@
-using System.Collections;
-
 class Day04 : Task
 {
     public override string PartOne(string fileName)
@@ -64,17 +62,11 @@ class Day04 : Task
                     input[from.Item2 + direction[0].Item2][from.Item1 + direction[0].Item1],
                     input[from.Item2 + direction[1].Item2][from.Item1 + direction[1].Item1],
                     input[from.Item2 + direction[2].Item2][from.Item1 + direction[2].Item1],
-            ];
+                ];
 
-                if (new string(txt) == "XMAS")
-                {
-                    count += 1;
-                }
+                if (new string(txt) == "XMAS") { count += 1; };
             }
-            catch (System.IndexOutOfRangeException)
-            {
-                continue;
-            }
+            catch (IndexOutOfRangeException) { continue; }
         }
 
         return count;
@@ -91,20 +83,17 @@ class Day04 : Task
                 input[from.Item2 + diag1[0].Item2][from.Item1 + diag1[0].Item1],
                 input[from.Item2][from.Item1],
                 input[from.Item2 + diag1[1].Item2][from.Item1 + diag1[1].Item1],
-        ]);
+            ]);
 
             string txt2 = new([
                 input[from.Item2 + diag2[0].Item2][from.Item1 + diag2[0].Item1],
                 input[from.Item2][from.Item1],
                 input[from.Item2 + diag2[1].Item2][from.Item1 + diag2[1].Item1],
-        ]);
+            ]);
 
             return (txt1 == "MAS" || txt1 == "SAM") && (txt2 == "MAS" || txt2 == "SAM");
         }
-        catch (System.IndexOutOfRangeException)
-        {
-            return false;
-        }
+        catch (IndexOutOfRangeException) { return false; }
     }
 
 }
