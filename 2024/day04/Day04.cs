@@ -23,7 +23,21 @@ class Day04 : Task
 
     public override string PartTwo(string fileName)
     {
-        return "-";
+        var input = Input.ReadLines(fileName);
+
+        int result = 0;
+        for (int y = 0; y < input.Length; y++)
+        {
+            for (int x = 0; x < input[0].Length; x++)
+            {
+                if (input[y][x] == 'A' && IsCrossedMas(input, (x, y)))
+                {
+                    result += 1;
+                }
+            }
+        }
+
+        return result.ToString();
     }
 
     private static int CountXmas(string[] input, (int, int) from)
@@ -64,6 +78,33 @@ class Day04 : Task
         }
 
         return count;
+    }
+
+    private static bool IsCrossedMas(string[] input, (int, int) from)
+    {
+        (int, int)[] diag1 = [(-1, -1), (1, 1)];
+        (int, int)[] diag2 = [(-1, 1), (1, -1)];
+
+        try
+        {
+            string txt1 = new([
+                input[from.Item2 + diag1[0].Item2][from.Item1 + diag1[0].Item1],
+                input[from.Item2][from.Item1],
+                input[from.Item2 + diag1[1].Item2][from.Item1 + diag1[1].Item1],
+        ]);
+
+            string txt2 = new([
+                input[from.Item2 + diag2[0].Item2][from.Item1 + diag2[0].Item1],
+                input[from.Item2][from.Item1],
+                input[from.Item2 + diag2[1].Item2][from.Item1 + diag2[1].Item1],
+        ]);
+
+            return (txt1 == "MAS" || txt1 == "SAM") && (txt2 == "MAS" || txt2 == "SAM");
+        }
+        catch (System.IndexOutOfRangeException)
+        {
+            return false;
+        }
     }
 
 }
