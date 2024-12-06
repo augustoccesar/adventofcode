@@ -4,7 +4,41 @@ class Day06 : Task
 {
     public override string PartOne(string fileName)
     {
-        var map = Input.ReadLines(fileName);
+        var map = Input.ReadLines(fileName).Select(line => line.ToCharArray()).ToArray();
+        var startingPosition = StartingPosition(map);
+
+        var patrolResult = Patrol(map, startingPosition, Direction.Up);
+        var result = patrolResult.Path.Keys.Select(p => p.Item1).ToHashSet().Count;
+
+        return result.ToString();
+    }
+
+    public override string PartTwo(string fileName)
+    {
+        var map = Input.ReadLines(fileName).Select(line => line.ToCharArray()).ToArray();
+        var startingPosition = StartingPosition(map);
+
+        var patrolResult = Patrol(map, startingPosition, Direction.Up);
+        var possibleObstacles = patrolResult.Path.Keys.Select(p => p.Item1).ToHashSet();
+
+        var loops = 0;
+        foreach (var possibleObstacle in possibleObstacles)
+        {
+            var newMap = map.Select(row => row.ToArray()).ToArray();
+            newMap[possibleObstacle.Item2][possibleObstacle.Item1] = '#';
+
+            var result = Patrol(newMap, startingPosition, Direction.Up);
+            if (result.IsLoop)
+            {
+                loops++;
+            }
+        }
+
+        return loops.ToString();
+    }
+
+    private static (int, int) StartingPosition(char[][] map)
+    {
         var startPosition = (-1, -1);
         for (int y = 0; y < map.Length && startPosition == (-1, -1); y++)
         {
@@ -18,12 +52,18 @@ class Day06 : Task
             }
         }
 
-        var trackingPositions = new Dictionary<(int, int), bool>();
-        var facing = Direction.Up;
+        return startPosition;
+    }
+
+    private static PatrolResult Patrol(char[][] map, (int, int) startPosition, Direction startDirection)
+    {
+        var trackingPositions = new Dictionary<((int, int), Direction), bool>();
+        var facing = startDirection;
         var currentPosition = startPosition;
+        var isLoop = false;
         while (true)
         {
-            trackingPositions[currentPosition] = true;
+            trackingPositions[(currentPosition, facing)] = true;
 
             var directionModifier = facing.Modifier();
             var nextPosition = (
@@ -41,21 +81,24 @@ class Day06 : Task
 
             if (map[nextPosition.Item2][nextPosition.Item1] == '#')
             {
-                facing = facing.Turn90Right();
+                facing = facing.TurnRight();
                 continue;
+            }
+
+            if (trackingPositions.ContainsKey((nextPosition, facing)))
+            {
+                isLoop = true;
+                break;
             }
 
             currentPosition = nextPosition;
         }
 
-        return trackingPositions.Count.ToString();
-    }
-
-    public override string PartTwo(string fileName)
-    {
-        return "-";
+        return new PatrolResult(trackingPositions, isLoop);
     }
 }
+
+readonly record struct PatrolResult(Dictionary<((int, int), Direction), bool> Path, bool IsLoop);
 
 enum Direction
 {
@@ -79,7 +122,7 @@ static class Extensions
         };
     }
 
-    public static Direction Turn90Right(this Direction direction)
+    public static Direction TurnRight(this Direction direction)
     {
         return direction switch
         {
@@ -89,5 +132,15 @@ static class Extensions
             Direction.Left => Direction.Up,
             _ => throw new UnreachableException(),
         };
+    }
+
+    public static (int, int) Move(this Direction direction, (int, int) position)
+    {
+        var modifier = direction.Modifier();
+
+        return (
+            position.Item1 + modifier.Item1,
+            position.Item2 + modifier.Item2
+        );
     }
 }
