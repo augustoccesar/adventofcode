@@ -3,24 +3,7 @@ class Day08 : Task
     public override string PartOne(string fileName)
     {
         var map = Input.ReadLines(fileName).Select(line => line.ToCharArray()).ToArray();
-        var antenasLocations = new Dictionary<char, (int, int)[]>();
-        for (var y = 0; y < map.Length; y++)
-        {
-            for (var x = 0; x < map[0].Length; x++)
-            {
-                if (map[y][x] != '.')
-                {
-                    if (antenasLocations.TryGetValue(map[y][x], out var locations))
-                    {
-                        antenasLocations[map[y][x]] = [.. locations, (x, y)];
-                    }
-                    else
-                    {
-                        antenasLocations[map[y][x]] = [(x, y)];
-                    }
-                }
-            }
-        }
+        var antenasLocations = FindAllAntenas(map);
 
         var antinodesPositions = new HashSet<(int, int)>();
         foreach (var entry in antenasLocations)
@@ -53,6 +36,31 @@ class Day08 : Task
     public override string PartTwo(string fileName)
     {
         var map = Input.ReadLines(fileName).Select(line => line.ToCharArray()).ToArray();
+        var antenasLocations = FindAllAntenas(map);
+
+        var antinodesPositions = new HashSet<(int, int)>();
+        foreach (var entry in antenasLocations)
+        {
+            if (entry.Value.Length > 1)
+            {
+                for (var i = 0; i < entry.Value.Length; i++)
+                {
+                    for (var j = i + 1; j < entry.Value.Length; j++)
+                    {
+                        var antinodesDir1 = AllValidAntinodesFromTo(map, entry.Value[i], entry.Value[j]);
+                        var antinodesDir2 = AllValidAntinodesFromTo(map, entry.Value[j], entry.Value[i]);
+
+                        antinodesPositions = [.. antinodesPositions, .. antinodesDir1, .. antinodesDir2];
+                    }
+                }
+            }
+        }
+
+        return antinodesPositions.Count.ToString();
+    }
+
+    private static Dictionary<char, (int, int)[]> FindAllAntenas(char[][] map)
+    {
         var antenasLocations = new Dictionary<char, (int, int)[]>();
         for (var y = 0; y < map.Length; y++)
         {
@@ -72,26 +80,9 @@ class Day08 : Task
             }
         }
 
-        var antinodesPositions = new HashSet<(int, int)>();
-        foreach (var entry in antenasLocations)
-        {
-            if (entry.Value.Length > 1)
-            {
-                for (var i = 0; i < entry.Value.Length; i++)
-                {
-                    for (var j = i + 1; j < entry.Value.Length; j++)
-                    {
-                        var antinodesDir1 = AllAntinodesFromTo(map, entry.Value[i], entry.Value[j]);
-                        var antinodesDir2 = AllAntinodesFromTo(map, entry.Value[j], entry.Value[i]);
-
-                        antinodesPositions = [.. antinodesPositions, .. antinodesDir1, .. antinodesDir2];
-                    }
-                }
-            }
-        }
-
-        return antinodesPositions.Count.ToString();
+        return antenasLocations;
     }
+
 
     private static bool IsPositionInRange((int, int) position, char[][] map)
     {
@@ -106,7 +97,7 @@ class Day08 : Task
         return (target.Item1 + modX, target.Item2 + modY);
     }
 
-    private static HashSet<(int, int)> AllAntinodesFromTo(char[][] map, (int, int) source, (int, int) target)
+    private static HashSet<(int, int)> AllValidAntinodesFromTo(char[][] map, (int, int) source, (int, int) target)
     {
         HashSet<(int, int)> result = [];
         result.Add(source);
