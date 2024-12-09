@@ -2,22 +2,7 @@ class Day09 : Task
 {
     public override string PartOne(string fileName)
     {
-        var diskmap = Input.ReadString(fileName).AsEnumerable().Select(c => c - '0').ToList();
-        var disk = new int?[diskmap.Sum()];
-        for (int i = 0, diskIdx = 0; i < diskmap.Count; i++)
-        {
-            for (int j = 0; j < diskmap[i]; j++, diskIdx++)
-            {
-                if (i % 2 == 0)
-                {
-                    disk[diskIdx] = i / 2;
-                }
-                else
-                {
-                    disk[diskIdx] = null;
-                }
-            }
-        }
+        var disk = BuildDisk(fileName);
 
         for (int i = 0, j = disk.Length - 1; i < disk.Length && i < j; i++)
         {
@@ -42,33 +27,11 @@ class Day09 : Task
 
     public override string PartTwo(string fileName)
     {
-        var diskmap = Input.ReadString(fileName).AsEnumerable().Select(c => c - '0').ToList();
-        var filesSizes = new List<(int, int)>();
+        var disk = BuildDisk(fileName);
 
-        var disk = new int?[diskmap.Sum()];
-        for (int i = 0, diskIdx = 0; i < diskmap.Count; i++)
+        for (int i = disk.Files.Count - 1; i >= 0; i--)
         {
-            if (i % 2 == 0)
-            {
-                filesSizes.Add((diskmap[i], diskIdx));
-            }
-
-            for (int j = 0; j < diskmap[i]; j++, diskIdx++)
-            {
-                if (i % 2 == 0)
-                {
-                    disk[diskIdx] = i / 2;
-                }
-                else
-                {
-                    disk[diskIdx] = null;
-                }
-            }
-        }
-
-        for (int i = filesSizes.Count - 1; i >= 0; i--)
-        {
-            var lookupSize = filesSizes[i].Item1;
+            var lookupSize = disk.Files[i].Size;
             var currentEmptySize = 0;
             var currentEmptyIdx = -1;
             for (int j = 0; j < disk.Length; j++)
@@ -85,13 +48,9 @@ class Day09 : Task
                     currentEmptySize = 0;
                 }
 
-                if (currentEmptySize == lookupSize && filesSizes[i].Item2 > currentEmptyIdx)
+                if (currentEmptySize == lookupSize && disk.Files[i].DiskPosition > currentEmptyIdx)
                 {
-                    for (int l = currentEmptyIdx; l < currentEmptyIdx + currentEmptySize; l++) disk[l] = disk[filesSizes[i].Item2];
-                    for (int k = filesSizes[i].Item2; k < filesSizes[i].Item2 + currentEmptySize; k++) disk[k] = null;
-
-                    currentEmptyIdx = -1;
-                    currentEmptySize = 0;
+                    disk.MoveFile(disk.Files[i], currentEmptyIdx);
                     break;
                 }
             }
@@ -104,5 +63,88 @@ class Day09 : Task
         }
 
         return total.ToString();
+    }
+
+    private static Disk BuildDisk(string inputName)
+    {
+        var diskMap = Input.ReadString(inputName).AsEnumerable().Select(c => c - '0').ToList();
+        var files = new List<File>();
+
+        var diskData = new int?[diskMap.Sum()];
+        for (int i = 0, diskIdx = 0; i < diskMap.Count; i++)
+        {
+            if (i % 2 == 0)
+            {
+                files.Add(new File(i / 2, diskIdx, diskMap[i]));
+            }
+
+            for (int j = 0; j < diskMap[i]; j++, diskIdx++)
+            {
+                if (i % 2 == 0)
+                {
+                    diskData[diskIdx] = i / 2;
+                }
+                else
+                {
+                    diskData[diskIdx] = null;
+                }
+            }
+        }
+
+        return new Disk(diskData, files);
+    }
+}
+
+class Disk
+{
+    public int?[] Data { get; }
+
+    public List<File> Files { get; }
+
+    public int Length
+    {
+        get => Data.Length;
+    }
+
+    public Disk(int?[] Data, List<File> Files)
+    {
+        this.Data = Data;
+        this.Files = Files;
+    }
+
+    public int? this[int i]
+    {
+        get => Data[i];
+        set => Data[i] = value;
+    }
+
+    public void MoveFile(File file, int idx)
+    {
+        if (Data[idx..(idx + file.Size)].All(x => x == null))
+        {
+            for (int i = idx; i < idx + file.Size; i++) Data[i] = file.ID;
+            for (int i = file.DiskPosition; i < file.DiskPosition + file.Size; i++) Data[i] = null;
+            file.MoveTo(idx);
+        }
+        else throw new Exception("Invalid move");
+    }
+};
+
+class File
+{
+    public int ID { get; }
+    public int DiskPosition { get; private set; }
+    public int Size { get; }
+
+    public File(int ID, int DiskPosition, int Size)
+    {
+        this.ID = ID;
+        this.DiskPosition = DiskPosition;
+        this.Size = Size;
+    }
+
+    public void MoveTo(int idx)
+    {
+        this.DiskPosition = idx;
     }
 }
