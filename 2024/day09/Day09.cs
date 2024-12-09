@@ -43,16 +43,14 @@ class Day09 : Task
     public override string PartTwo(string fileName)
     {
         var diskmap = Input.ReadString(fileName).AsEnumerable().Select(c => c - '0').ToList();
-        var fileMap = new Dictionary<int, Stack<int>>();
+        var filesSizes = new List<(int, int)>();
 
         var disk = new int?[diskmap.Sum()];
         for (int i = 0, diskIdx = 0; i < diskmap.Count; i++)
         {
             if (i % 2 == 0)
             {
-                if (!fileMap.ContainsKey(diskmap[i])) fileMap.Add(diskmap[i], new Stack<int>());
-
-                fileMap[diskmap[i]].Push(diskIdx);
+                filesSizes.Add((diskmap[i], diskIdx));
             }
 
             for (int j = 0; j < diskmap[i]; j++, diskIdx++)
@@ -68,29 +66,43 @@ class Day09 : Task
             }
         }
 
-        for (int i = 0; i < disk.Length;)
+        for (int i = filesSizes.Count - 1; i >= 0; i--)
         {
-            if (disk[i] == null)
+            var lookupSize = filesSizes[i].Item1;
+            var currentEmptySize = 0;
+            var currentEmptyIdx = -1;
+            for (int j = 0; j < disk.Length; j++)
             {
-                var startIdx = i;
-                var size = 0;
-                while (disk[i] == null)
+                if (disk[j] == null)
                 {
-                    size += 1;
-                    i++;
+                    if (currentEmptyIdx == -1) currentEmptyIdx = j;
+
+                    currentEmptySize++;
+                }
+                else
+                {
+                    currentEmptyIdx = -1;
+                    currentEmptySize = 0;
                 }
 
-                var idxToMove = fileMap[size].Pop();
+                if (currentEmptySize == lookupSize && filesSizes[i].Item2 > currentEmptyIdx)
+                {
+                    for (int l = currentEmptyIdx; l < currentEmptyIdx + currentEmptySize; l++) disk[l] = disk[filesSizes[i].Item2];
+                    for (int k = filesSizes[i].Item2; k < filesSizes[i].Item2 + currentEmptySize; k++) disk[k] = null;
 
-                for (int j = startIdx; j < (startIdx + size); j++) disk[j] = disk[idxToMove];
-                for (int j = idxToMove; j < (idxToMove + size); j++) disk[j] = null;
-            }
-            else
-            {
-                i++;
+                    currentEmptyIdx = -1;
+                    currentEmptySize = 0;
+                    break;
+                }
             }
         }
 
-        return "-";
+        var total = 0L;
+        for (int i = 0; i < disk.Length; i++)
+        {
+            total += i * (disk[i] ?? 0);
+        }
+
+        return total.ToString();
     }
 }
