@@ -68,14 +68,14 @@ class Day09 : Task
     private static Disk BuildDisk(string inputName)
     {
         var diskMap = Input.ReadString(inputName).AsEnumerable().Select(c => c - '0').ToList();
-        var files = new List<File>();
+        var files = new List<Disk.File>();
 
         var diskData = new int?[diskMap.Sum()];
         for (int i = 0, diskIdx = 0; i < diskMap.Count; i++)
         {
             if (i % 2 == 0)
             {
-                files.Add(new File(i / 2, diskIdx, diskMap[i]));
+                files.Add(new Disk.File(i / 2, diskIdx, diskMap[i]));
             }
 
             for (int j = 0; j < diskMap[i]; j++, diskIdx++)
@@ -128,23 +128,23 @@ class Disk
         }
         else throw new Exception("Invalid move");
     }
+
+    public class File
+    {
+        public int ID { get; }
+        public int DiskPosition { get; private set; }
+        public int Size { get; }
+
+        public File(int ID, int DiskPosition, int Size)
+        {
+            this.ID = ID;
+            this.DiskPosition = DiskPosition;
+            this.Size = Size;
+        }
+
+        public void MoveTo(int idx)
+        {
+            this.DiskPosition = idx;
+        }
+    }
 };
-
-class File
-{
-    public int ID { get; }
-    public int DiskPosition { get; private set; }
-    public int Size { get; }
-
-    public File(int ID, int DiskPosition, int Size)
-    {
-        this.ID = ID;
-        this.DiskPosition = DiskPosition;
-        this.Size = Size;
-    }
-
-    public void MoveTo(int idx)
-    {
-        this.DiskPosition = idx;
-    }
-}
