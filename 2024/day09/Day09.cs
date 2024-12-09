@@ -16,13 +16,7 @@ class Day09 : Task
             }
         }
 
-        var total = 0L;
-        for (int i = 0; i < disk.Length; i++)
-        {
-            total += i * (disk[i] ?? 0);
-        }
-
-        return total.ToString();
+        return disk.Checksum().ToString();
     }
 
     public override string PartTwo(string fileName)
@@ -56,13 +50,7 @@ class Day09 : Task
             }
         }
 
-        var total = 0L;
-        for (int i = 0; i < disk.Length; i++)
-        {
-            total += i * (disk[i] ?? 0);
-        }
-
-        return total.ToString();
+        return disk.Checksum().ToString();
     }
 
     private static Disk BuildDisk(string inputName)
@@ -116,6 +104,17 @@ class Disk
     {
         get => Data[i];
         set => Data[i] = value;
+    }
+
+    public long Checksum()
+    {
+        var total = 0L;
+        for (int i = 0; i < Data.Length; i++)
+        {
+            total += i * (Data[i] ?? 0);
+        }
+
+        return total;
     }
 
     public void MoveFile(File file, int idx)
