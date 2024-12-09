@@ -34,7 +34,7 @@ class Day09 : Task
             var lookupSize = disk.Files[i].Size;
             var currentEmptySize = 0;
             var currentEmptyIdx = -1;
-            for (int j = 0; j < disk.Length; j++)
+            for (int j = 0; j < disk.Files[i].DiskPosition; j++)
             {
                 if (disk[j] == null)
                 {
