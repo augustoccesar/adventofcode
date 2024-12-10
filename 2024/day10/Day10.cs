@@ -2,22 +2,9 @@ using Position = (int, int);
 
 class Day10 : Task
 {
-
     public override string PartOne(string fileName)
     {
-        var map = Input
-            .ReadLines(fileName)
-            .ToList()
-            .ConvertAll(line => line.ToCharArray().ToList().Select(c => c - '0').ToList());
-
-        List<Position> trailheads = [];
-        for (int y = 0; y < map.Count; y++)
-        {
-            for (int x = 0; x < map[0].Count; x++)
-            {
-                if (map[y][x] == 0) trailheads.Add((x, y));
-            }
-        }
+        var (map, trailheads) = ParseInput(fileName);
 
         var total = 0;
         foreach (var trailhead in trailheads)
@@ -31,8 +18,22 @@ class Day10 : Task
 
     public override string PartTwo(string fileName)
     {
+        var (map, trailheads) = ParseInput(fileName);
+
+        var total = 0;
+        foreach (var trailhead in trailheads)
+        {
+            var trails = Trails(map, trailhead);
+            total += trails.Item1.Count;
+        }
+
+        return total.ToString();
+    }
+
+    private (List<List<int>>, List<Position>) ParseInput(string inputName)
+    {
         var map = Input
-            .ReadLines(fileName)
+            .ReadLines(inputName)
             .ToList()
             .ConvertAll(line => line.ToCharArray().ToList().Select(c => c - '0').ToList());
 
@@ -45,17 +46,10 @@ class Day10 : Task
             }
         }
 
-        var total = 0;
-        foreach (var trailhead in trailheads)
-        {
-            var trails = Trails(map, trailhead);
-            total += trails.Item1.Count;
-        }
-
-        return total.ToString();
+        return (map, trailheads);
     }
 
-    private (List<List<Position>>, HashSet<Position>) Trails(List<List<int>> map, Position trailhead)
+    private static (List<List<Position>>, HashSet<Position>) Trails(List<List<int>> map, Position trailhead)
     {
         List<List<Position>> trails = [];
         List<Position> pathSoFar = [trailhead];
@@ -66,7 +60,7 @@ class Day10 : Task
         return (trails, reachedNines);
     }
 
-    private void TrailsRecursive(
+    private static void TrailsRecursive(
         List<List<int>> map,
         List<Position> pathSoFar,
         ref List<List<Position>> trails,
