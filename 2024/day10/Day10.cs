@@ -10,7 +10,7 @@ class Day10 : Task
         foreach (var trailhead in trailheads)
         {
             var trails = Trails(map, trailhead);
-            total += trails.Item2.Count;
+            total += trails.ReachedEnds.Count;
         }
 
         return total.ToString();
@@ -24,13 +24,13 @@ class Day10 : Task
         foreach (var trailhead in trailheads)
         {
             var trails = Trails(map, trailhead);
-            total += trails.Item1.Count;
+            total += trails.PossibleTrails.Count;
         }
 
         return total.ToString();
     }
 
-    private (List<List<int>>, List<Position>) ParseInput(string inputName)
+    private static ParsedInput ParseInput(string inputName)
     {
         var map = Input
             .ReadLines(inputName)
@@ -46,10 +46,10 @@ class Day10 : Task
             }
         }
 
-        return (map, trailheads);
+        return new ParsedInput(map, trailheads);
     }
 
-    private static (List<List<Position>>, HashSet<Position>) Trails(List<List<int>> map, Position trailhead)
+    private static TrailsResult Trails(List<List<int>> map, Position trailhead)
     {
         List<List<Position>> trails = [];
         List<Position> pathSoFar = [trailhead];
@@ -57,7 +57,7 @@ class Day10 : Task
 
         TrailsRecursive(map, pathSoFar, ref trails, ref reachedNines);
 
-        return (trails, reachedNines);
+        return new TrailsResult(trails, reachedNines);
     }
 
     private static void TrailsRecursive(
@@ -102,4 +102,8 @@ class Day10 : Task
     {
         return position.Item1 >= 0 && position.Item1 < map[0].Count && position.Item2 >= 0 && position.Item2 < map.Count;
     }
+
+    internal readonly record struct ParsedInput(List<List<int>> Map, List<Position> TrailHeads);
+
+    internal readonly record struct TrailsResult(List<List<Position>> PossibleTrails, HashSet<Position> ReachedEnds);
 }
