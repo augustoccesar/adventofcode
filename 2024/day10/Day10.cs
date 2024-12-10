@@ -31,7 +31,28 @@ class Day10 : Task
 
     public override string PartTwo(string fileName)
     {
-        return "-";
+        var map = Input
+            .ReadLines(fileName)
+            .ToList()
+            .ConvertAll(line => line.ToCharArray().ToList().Select(c => c - '0').ToList());
+
+        List<Position> trailheads = [];
+        for (int y = 0; y < map.Count; y++)
+        {
+            for (int x = 0; x < map[0].Count; x++)
+            {
+                if (map[y][x] == 0) trailheads.Add((x, y));
+            }
+        }
+
+        var total = 0;
+        foreach (var trailhead in trailheads)
+        {
+            var trails = Trails(map, trailhead);
+            total += trails.Item1.Count;
+        }
+
+        return total.ToString();
     }
 
     private (List<List<Position>>, HashSet<Position>) Trails(List<List<int>> map, Position trailhead)
