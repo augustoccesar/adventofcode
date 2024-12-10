@@ -100,6 +100,7 @@ class Day06 : Task
 
 readonly record struct PatrolResult(Dictionary<((int, int), Direction), bool> Path, bool IsLoop);
 
+// TODO: Move these to another file
 enum Direction
 {
     Up,
