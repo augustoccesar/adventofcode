@@ -2,7 +2,7 @@ class Day13 : Task
 {
     public override string PartOne(string fileName)
     {
-        var machines = ReadMachines(fileName);
+        var machines = ReadMachines(fileName, 0);
 
         var tokens = 0;
         foreach (var machine in machines)
@@ -36,13 +36,32 @@ class Day13 : Task
 
         return tokens.ToString();
     }
-
     public override string PartTwo(string fileName)
     {
-        return "-";
+        var machines = ReadMachines(fileName, 10_000_000_000_000);
+
+        long tokens = 0;
+        foreach (var machine in machines)
+        {
+            // Cramer's rule
+            var determinant = machine.A.MovX * machine.B.MovY - machine.B.MovX * machine.A.MovY;
+            var a = (machine.Prize.X * machine.B.MovY - machine.B.MovX * machine.Prize.Y) / determinant;
+            var b = (machine.A.MovX * machine.Prize.Y - machine.Prize.X * machine.A.MovY) / determinant;
+
+            var x = a * machine.A.MovX + b * machine.B.MovX;
+            var y = a * machine.A.MovY + b * machine.B.MovY;
+            var price = (a * 3) + (b * 1);
+
+            if (x == machine.Prize.X && y == machine.Prize.Y)
+            {
+                tokens += price;
+            }
+        }
+
+        return tokens.ToString();
     }
 
-    private static List<Machine> ReadMachines(string fileName)
+    private static List<Machine> ReadMachines(string fileName, long addedPrizePos)
     {
         var lines = Input.ReadLines(fileName);
         List<Machine> machines = [];
@@ -62,7 +81,7 @@ class Day13 : Task
                 machines.Add(new Machine(
                     new Button(int.Parse(buttonALineTokens[2]), int.Parse(buttonALineTokens[4])),
                     new Button(int.Parse(buttonBLineTokens[2]), int.Parse(buttonBLineTokens[4])),
-                    new Position(int.Parse(prizeLineTokens[2]), int.Parse(prizeLineTokens[4]))
+                    new Position(int.Parse(prizeLineTokens[2]) + addedPrizePos, int.Parse(prizeLineTokens[4]) + addedPrizePos)
                 ));
 
                 i += 3;
@@ -74,7 +93,7 @@ class Day13 : Task
 
     private static readonly char[] separators = [':', ',', '+', '='];
 
-    private readonly record struct Position(int X, int Y);
+    private readonly record struct Position(long X, long Y);
     private readonly record struct Button(int MovX, int MovY);
     private readonly record struct Machine(Button A, Button B, Position Prize);
 }
