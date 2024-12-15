@@ -2,35 +2,12 @@ class Day13 : Task
 {
     public override string PartOne(string fileName)
     {
-        var machines = ReadMachines(fileName, 0);
-
-        var tokens = 0;
-        foreach (var machine in machines)
+        long tokens = 0;
+        foreach (var machine in ReadMachines(fileName, 0))
         {
-            var solution = (0, 0);
-            var cheapestSolution = int.MaxValue;
-            for (int a = 0; a < 100; a++)
+            if (Winnable(machine, out var price))
             {
-                for (int b = 0; b < 100; b++)
-                {
-                    var x = a * machine.A.MovX + b * machine.B.MovX;
-                    var y = a * machine.A.MovY + b * machine.B.MovY;
-                    var price = (a * 3) + (b * 1);
-
-                    if (x == machine.Prize.X && y == machine.Prize.Y)
-                    {
-                        if (price < cheapestSolution)
-                        {
-                            solution = (a, b);
-                            cheapestSolution = price;
-                        }
-                    }
-                }
-            }
-
-            if (solution != (0, 0))
-            {
-                tokens += cheapestSolution;
+                tokens += price;
             }
         }
 
@@ -38,21 +15,10 @@ class Day13 : Task
     }
     public override string PartTwo(string fileName)
     {
-        var machines = ReadMachines(fileName, 10_000_000_000_000);
-
         long tokens = 0;
-        foreach (var machine in machines)
+        foreach (var machine in ReadMachines(fileName, 10_000_000_000_000))
         {
-            // Cramer's rule
-            var determinant = machine.A.MovX * machine.B.MovY - machine.B.MovX * machine.A.MovY;
-            var a = (machine.Prize.X * machine.B.MovY - machine.B.MovX * machine.Prize.Y) / determinant;
-            var b = (machine.A.MovX * machine.Prize.Y - machine.Prize.X * machine.A.MovY) / determinant;
-
-            var x = a * machine.A.MovX + b * machine.B.MovX;
-            var y = a * machine.A.MovY + b * machine.B.MovY;
-            var price = (a * 3) + (b * 1);
-
-            if (x == machine.Prize.X && y == machine.Prize.Y)
+            if (Winnable(machine, out var price))
             {
                 tokens += price;
             }
@@ -89,6 +55,26 @@ class Day13 : Task
         }
 
         return machines;
+    }
+
+    private static bool Winnable(Machine machine, out long price)
+    {
+        price = 0;
+
+        var determinant = machine.A.MovX * machine.B.MovY - machine.B.MovX * machine.A.MovY;
+        var a = (machine.Prize.X * machine.B.MovY - machine.B.MovX * machine.Prize.Y) / determinant;
+        var b = (machine.A.MovX * machine.Prize.Y - machine.Prize.X * machine.A.MovY) / determinant;
+
+        var x = a * machine.A.MovX + b * machine.B.MovX;
+        var y = a * machine.A.MovY + b * machine.B.MovY;
+
+        if (x == machine.Prize.X && y == machine.Prize.Y)
+        {
+            price = (a * 3) + (b * 1);
+            return true;
+        }
+
+        return false;
     }
 
     private static readonly char[] separators = [':', ',', '+', '='];
