@@ -1,13 +1,14 @@
 import json
 import os
 import re
+import subprocess
 import sys
 from os.path import exists
+from pathlib import Path
 from typing import Dict
 
 import markdownify
 import requests
-from bs4 import BeautifulSoup
 
 SETTINGS = json.load(open("./setup/settings.json", "r"))
 
@@ -32,8 +33,6 @@ def prepare_handler(year_param: str, day_param: str):
     if exists(task_destination):
         raise Exception(f"Folder for day {day} in year {year} already exists")
 
-    os.makedirs(task_destination)
-
     create_inputs(year, day, input_destination)
 
     template = open(template_path, "r").read()
@@ -45,28 +44,33 @@ def prepare_handler(year_param: str, day_param: str):
     if task_file_name_format and task_file_name_format == "camel":
         task_file_name = task_file_name.title()
 
+    Path(task_destination).mkdir(parents=True, exist_ok=True)
     task_full_path = f"{task_destination}/{task_file_name}.{settings['extension']}"
     with open(task_full_path, "w") as file:
         file.write(template)
 
-    if "instructions" not in settings.keys():
-        return
+    if "instructions" in settings.keys():
+        for instruction in settings['instructions']:
+            with open(f"./{year}/{instruction['file']}", "r+") as file:
+                file_content = file.read()
+
+                label_idx = file_content.find(instruction["label"])
+                file_content = file_content[:label_idx] + instruction["data"] + \
+                    instruction["label"] + \
+                    file_content[label_idx+len(instruction["label"]):]
+                file_content = file_content.replace(
+                    "$padded_day", padded_day).replace("$day", str(day))
+
+                file.seek(0)
+                file.write(file_content)
     
-    for instruction in settings['instructions']:
-        with open(f"./{year}/{instruction['file']}", "r+") as file:
-            file_content = file.read()
-
-            label_idx = file_content.find(instruction["label"])
-            file_content = file_content[:label_idx] + instruction["data"] + \
-                instruction["label"] + \
-                file_content[label_idx+len(instruction["label"]):]
-            file_content = file_content.replace(
-                "$padded_day", padded_day).replace("$day", str(day))
-
-            file.seek(0)
-            file.write(file_content)
+    if "post_command" in settings.keys():
+        subprocess.run(settings["post_command"], cwd=f"./{year}", shell=True)
 
 def create_inputs(year: int, day: int, destination: str):
+    # Ensure that destination path exists 
+    Path(destination).mkdir(parents=True, exist_ok=True)
+
     session = os.environ["AOC_SESSION"]
     if session:
         cookies = {"session": session}

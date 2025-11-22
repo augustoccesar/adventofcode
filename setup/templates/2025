@@ -1,0 +1,11 @@
+package day$padded_day
+
+type Day$padded_day struct{}
+
+func (d *Day$padded_day) PartOne(input string) string {
+	return "-"
+}
+
+func (d *Day$padded_day) PartTwo(input string) string {
+	return "-"
+}

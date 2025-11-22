@@ -121,5 +121,24 @@
         "inputs_path": "/inputs",
         "task_file_name_format": "camel",
         "extension": "cs"
+    },
+    "2025": {
+        "task_file_name": "main",
+        "tasks_path": "",
+        "inputs_path": "/inputs",
+        "extension": "go",
+        "instructions": [
+            {
+                "file": "main.go",
+                "label": "// SETUP:target_import",
+                "data": "\"com.github.augustoccesar.adventofcode.2025/day$padded_day\"\n"
+            },
+            {
+                "file": "main.go",
+                "label": "// SETUP:target_dict",
+                "data": "\"$padded_day\": &day$padded_day.Day$padded_day{},\n"
+            }
+        ],
+        "post_command": "go fmt"
     }
 }
