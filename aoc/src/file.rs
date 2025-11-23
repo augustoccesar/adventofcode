@@ -13,4 +13,6 @@ pub fn insert_codegen(file: &mut File, key: &str, insert_content: &str) {
     file.rewind().unwrap();
     file.set_len(0).unwrap();
     file.write_all(file_content.as_bytes()).unwrap();
+
+    file.rewind().unwrap();
 }
