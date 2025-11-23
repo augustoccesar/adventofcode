@@ -1,0 +1,21 @@
+platform="unknown"
+
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    platform="apple-darwin"
+else
+    echo "Unsupported OS"
+    exit 1
+fi
+
+arch=$(uname -m)
+if [[ "$arch" == "arm64" ]]; then
+    arch="aarch64"
+else
+    echo "Unsupported architecture"
+    exit 1
+fi
+
+cd aoc
+cargo build --release
+
+mv "./target/release/aoc" "../bin/aoc-$arch-$platform"
