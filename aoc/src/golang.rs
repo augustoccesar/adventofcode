@@ -38,7 +38,7 @@ pub fn prepare_day(year: u16, day: u8) {
         crate::file::insert_codegen(
             &mut main_file,
             "target_dict",
-            &format!("DayMapKey{{{year}, {day}}}: &y{year}.Day{day:0>2}{{}},\n"),
+            &format!("{{{year}, {day}}}: &y{year}.Day{day:0>2}{{}},\n"),
         );
 
         if !year_package_exists {
