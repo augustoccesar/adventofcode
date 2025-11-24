@@ -4,6 +4,20 @@ use std::{
     process,
 };
 
+pub fn run(year: u16, day: u8) {
+    process::Command::new("go")
+        .args([
+            "run",
+            "main.go",
+            "run",
+            &format!("{}", year),
+            &format!("{}", day),
+        ])
+        .current_dir(crate::base_path().join("golang"))
+        .status()
+        .unwrap();
+}
+
 pub fn prepare_day(year: u16, day: u8) {
     let day_file_path = crate::base_path().join(&format!("golang/y{year}/d{day:0>2}.go"));
     let year_package_exists = day_file_path.parent().unwrap().exists();

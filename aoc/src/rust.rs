@@ -5,6 +5,20 @@ use std::{
     process,
 };
 
+pub fn run(year: u16, day: u8) {
+    process::Command::new("cargo")
+        .args([
+            "run",
+            "--",
+            "run",
+            &format!("{}", year),
+            &format!("{}", day),
+        ])
+        .current_dir(crate::base_path().join("rust"))
+        .status()
+        .unwrap();
+}
+
 pub fn prepare_day(year: u16, day: u8) {
     let year_module_path = crate::base_path().join(&format!("rust/src/y{year}/mod.rs"));
 
