@@ -17,6 +17,7 @@ pub fn build(b: *std.Build) void {
             "src/main.cpp",
             "src/Day.cpp",
             "src/commands/RunCommand.cpp",
+            "src/y2017/d01.cpp",
             // CODEGEN:register_day
         },
         .flags = &[_][]const u8{
