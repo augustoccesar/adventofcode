@@ -19,9 +19,19 @@ public abstract class Day
         return attribute?.Day ?? 0;
     }
 
-    protected string[] ReadInputLines(string? name = null)
+    protected string[] ReadInputLines(string? suffix = null)
     {
-        var fileName = GetFileName(name);
+        return File.ReadAllLines(GetFilePath(suffix));
+    }
+
+    protected string ReadInput(string? suffix = null)
+    {
+        return File.ReadAllText(GetFilePath(suffix));
+    }
+
+    private string GetFilePath(string? suffix = null)
+    {
+        var fileName = GetFileName(suffix);
         var path = $"../inputs/{fileName}";
 
         if (!File.Exists(path))
@@ -29,22 +39,17 @@ public abstract class Day
             throw new FileNotFoundException($"Input file not found: {path}");
         }
 
-        return File.ReadAllLines(path);
+        return path;
     }
 
-    protected string ReadInput(string? name = null)
-    {
-        return string.Join("", ReadInputLines(name));
-    }
-
-    private string GetFileName(string? name)
+    private string GetFileName(string? suffix)
     {
         var year = GetYear();
         var day = GetDay();
         var dayPadded = day.ToString("D2");
 
-        return name == null
+        return suffix == null
             ? $"{year}_{dayPadded}.txt"
-            : $"{year}_{dayPadded}_{name}.txt";
+            : $"{year}_{dayPadded}_{suffix}.txt";
     }
 }
