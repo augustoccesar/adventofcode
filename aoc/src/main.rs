@@ -128,7 +128,7 @@ impl DownloadInputArgs {
             .create(true)
             .truncate(true)
             .write(true)
-            .open(format!("../inputs/{}_{:0>2}.txt", self.year, self.day))
+            .open(base_path().join(format!("inputs/{}_{:0>2}.txt", self.year, self.day)))
             .unwrap();
 
         input_file.write_all(input.as_bytes()).unwrap();
