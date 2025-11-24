@@ -1,4 +1,6 @@
-use std::{collections::HashMap, env::args, fs, process::exit};
+use std::{collections::HashMap, fs, process::exit};
+
+use clap::Parser;
 
 // CODEGEN:year_module
 
@@ -14,36 +16,37 @@ pub trait Day {
     }
 }
 
+#[derive(Parser)]
+enum Cli {
+    Run(RunArgs),
+}
+
+#[derive(clap::Args)]
+struct RunArgs {
+    year: u16,
+    day: u8,
+}
+
 fn main() {
     let days_map: HashMap<(u16, u8), Box<dyn Day>> = HashMap::from([
         // CODEGEN:day_map
     ]);
 
-    // TODO: Better handling of args. Worth Clap?
-    let args = args().collect::<Vec<_>>();
-    if args.len() < 3 {
-        eprintln!("Invalid amount of arguments");
-        exit(1);
-    }
+    let cli = Cli::parse();
 
-    let year = &args[0]
-        .parse::<u16>()
-        .expect("Year argument is not a valid u16");
-    let day = &args[1]
-        .parse::<u8>()
-        .expect("Day argument is not a valid u8");
+    match cli {
+        Cli::Run(run_args) => match days_map.get(&(run_args.year, run_args.day)) {
+            Some(day_handler) => {
+                let part_one_result = day_handler.part_one();
+                println!("{part_one_result}");
 
-    match days_map.get(&(*year, *day)) {
-        Some(day_handler) => {
-            let part_one_result = day_handler.part_one();
-            println!("Part one: {part_one_result}");
-
-            let part_two_result = day_handler.part_two();
-            println!("Part two: {part_two_result}");
-        }
-        None => {
-            eprintln!("Day {day} not found for year {year}");
-            exit(1);
-        }
+                let part_two_result = day_handler.part_two();
+                println!("{part_two_result}");
+            }
+            None => {
+                eprintln!("Day {} not found for year {}", run_args.day, run_args.year);
+                exit(1);
+            }
+        },
     }
 }
