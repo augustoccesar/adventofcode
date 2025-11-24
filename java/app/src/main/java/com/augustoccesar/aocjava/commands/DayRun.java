@@ -1,7 +1,7 @@
 package com.augustoccesar.aocjava.commands;
 
 import com.augustoccesar.aocjava.Day;
-import com.augustoccesar.aocjava.DayLoader;
+import com.augustoccesar.aocjava.DayRegistry;
 import java.util.Optional;
 import java.util.concurrent.Callable;
 import picocli.CommandLine.Command;
@@ -17,7 +17,7 @@ public class DayRun implements Callable<Integer> {
 
   @Override
   public Integer call() throws Exception {
-    var dayLoader = DayLoader.load();
+    var dayLoader = DayRegistry.load();
     Optional<Day> day = dayLoader.getDay(this.year, this.day);
 
     if (day.isEmpty()) {

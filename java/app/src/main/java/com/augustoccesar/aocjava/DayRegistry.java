@@ -9,12 +9,12 @@ import java.util.Optional;
 import java.util.Set;
 import org.reflections.Reflections;
 
-public class DayLoader {
+public class DayRegistry {
   private HashMap<String, Day> dayMap;
 
-  public static DayLoader load() {
+  public static DayRegistry load() {
     HashMap<String, Day> dayMap = new HashMap<>();
-    var dayLoader = new DayLoader(dayMap);
+    var dayLoader = new DayRegistry(dayMap);
 
     Reflections reflections = new Reflections("com.augustoccesar.aocjava");
 
@@ -43,14 +43,14 @@ public class DayLoader {
       }
     }
 
-    return new DayLoader(dayMap);
+    return new DayRegistry(dayMap);
   }
 
   public Optional<Day> getDay(int year, int day) {
     return Optional.ofNullable(this.dayMap.get(dayKey(year, day)));
   }
 
-  private DayLoader(HashMap<String, Day> dayMap) {
+  private DayRegistry(HashMap<String, Day> dayMap) {
     this.dayMap = dayMap;
   }
 
