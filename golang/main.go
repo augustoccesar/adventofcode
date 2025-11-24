@@ -8,6 +8,7 @@ import (
 	"github.com/urfave/cli/v3"
 
 	"com.github/augustoccesar/adventofcode/golang/structure"
+	"com.github/augustoccesar/adventofcode/golang/y2020"
 	// CODEGEN:target_import
 )
 
@@ -17,6 +18,7 @@ type DayMapKey struct {
 }
 
 var daysMap = map[DayMapKey]structure.Day{
+	{2020, 1}: &y2020.Day01{},
 	// CODEGEN:target_dict
 }
 

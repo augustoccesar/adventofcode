@@ -2,6 +2,7 @@ use std::{collections::HashMap, fs, process::exit};
 
 use clap::Parser;
 
+mod y2023;
 // CODEGEN:year_module
 
 pub trait Day {
@@ -36,6 +37,7 @@ struct RunArgs {
 
 fn main() {
     let days_map: HashMap<(u16, u8), Box<dyn Day>> = HashMap::from([
+        ((2023, 1), Box::new(y2023::d01::Day01 {}) as Box<dyn Day>),
         // CODEGEN:day_map
     ]);
 
