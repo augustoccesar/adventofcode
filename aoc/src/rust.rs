@@ -20,7 +20,7 @@ pub fn run(year: u16, day: u8) {
 }
 
 pub fn prepare_day(year: u16, day: u8) {
-    let year_module_path = crate::base_path().join(&format!("rust/src/y{year}/mod.rs"));
+    let year_module_path = crate::base_path().join(format!("rust/src/y{year}/mod.rs"));
 
     if !year_module_path.exists() {
         create_year_module(year, &year_module_path);
@@ -42,13 +42,14 @@ pub fn prepare_day(year: u16, day: u8) {
 
 fn create_year_module(year: u16, year_module_path: &Path) {
     // Create the base module for the year
-    year_module_path
-        .parent()
-        .map(|path| fs::create_dir_all(path).unwrap());
+    if let Some(path) = year_module_path.parent() {
+        fs::create_dir_all(path).unwrap();
+    }
 
     let mut year_module = OpenOptions::new()
         .write(true)
         .create(true)
+        .truncate(true)
         .open(year_module_path)
         .unwrap();
 
@@ -68,14 +69,15 @@ fn create_year_module(year: u16, year_module_path: &Path) {
 
 fn create_day_module(year: u16, day: u8, year_module_path: &Path, day_module_path: &Path) {
     // Create the base module for the day
-    day_module_path
-        .parent()
-        .map(|path| fs::create_dir_all(path).unwrap());
+    if let Some(path) = day_module_path.parent() {
+        fs::create_dir_all(path).unwrap();
+    }
 
     // Write the template for a day
     let mut day_module = OpenOptions::new()
         .write(true)
         .create(true)
+        .truncate(true)
         .open(day_module_path)
         .unwrap();
 

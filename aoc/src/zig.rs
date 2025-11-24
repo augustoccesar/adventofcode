@@ -20,16 +20,17 @@ pub fn run(year: u16, day: u8) {
 }
 
 pub fn prepare_day(year: u16, day: u8) {
-    let day_file_path = crate::base_path().join(&format!("zig/src/y{year}/d{day:0>2}.zig"));
+    let day_file_path = crate::base_path().join(format!("zig/src/y{year}/d{day:0>2}.zig"));
 
     if !day_file_path.exists() {
-        day_file_path
-            .parent()
-            .map(|path| fs::create_dir_all(path).unwrap());
+        if let Some(path) = day_file_path.parent() {
+            fs::create_dir_all(path).unwrap();
+        }
 
         let mut day_file = OpenOptions::new()
             .write(true)
             .create(true)
+            .truncate(true)
             .open(day_file_path)
             .unwrap();
 
