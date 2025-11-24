@@ -6,3 +6,4 @@ uv = { version = "0.9.11" }
 python = { version = "3.13.2" }
 gradle = { version = "9.2.1" }
 java = { version = "25.0.1" }
+zig = { version = "0.15.2" }
