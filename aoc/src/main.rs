@@ -8,6 +8,7 @@ mod cpp;
 mod golang;
 mod java;
 mod python;
+mod ruby;
 mod rust;
 mod typescript;
 
@@ -19,6 +20,8 @@ enum Language {
     Java,
     #[value(alias("py"))]
     Python,
+    #[value(alias("rb"))]
+    Ruby,
     #[value(alias("rs"))]
     Rust,
     #[value(alias("ts"))]
@@ -32,6 +35,7 @@ impl ManagedLanguage for Language {
             Language::Golang => golang::prepare_day(year, day),
             Language::Java => java::prepare_day(year, day),
             Language::Python => python::prepare_day(year, day),
+            Language::Ruby => ruby::prepare_day(year, day),
             Language::Rust => rust::prepare_day(year, day),
             Language::Typescript => typescript::prepare_day(year, day),
         }
@@ -43,6 +47,7 @@ impl ManagedLanguage for Language {
             Language::Golang => golang::run(year, day),
             Language::Java => java::run(year, day),
             Language::Python => python::run(year, day),
+            Language::Ruby => ruby::run(year, day),
             Language::Rust => rust::run(year, day),
             Language::Typescript => typescript::run(year, day),
         }
