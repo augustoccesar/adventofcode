@@ -6,11 +6,13 @@ mod file;
 
 mod golang;
 mod rust;
+mod typescript;
 
 #[derive(Clone, Debug, clap::ValueEnum)]
 enum Language {
     Rust,
     Golang,
+    Typescript,
 }
 
 impl ManagedLanguage for Language {
@@ -18,6 +20,7 @@ impl ManagedLanguage for Language {
         match self {
             Language::Rust => rust::prepare_day(year, day),
             Language::Golang => golang::prepare_day(year, day),
+            Language::Typescript => typescript::prepare_day(year, day),
         }
     }
 
@@ -25,6 +28,7 @@ impl ManagedLanguage for Language {
         match self {
             Language::Rust => rust::run(year, day),
             Language::Golang => golang::run(year, day),
+            Language::Typescript => typescript::run(year, day),
         }
     }
 }
