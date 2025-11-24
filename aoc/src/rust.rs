@@ -27,7 +27,7 @@ pub fn prepare_day(year: u16, day: u8) {
     }
 
     let mut day_module_path = PathBuf::from(year_module_path.parent().unwrap());
-    day_module_path.push(format!("d{day:0>2}/mod.rs"));
+    day_module_path.push(format!("d{day:0>2}.rs"));
 
     if !day_module_path.exists() {
         create_day_module(year, day, &year_module_path, &day_module_path);
