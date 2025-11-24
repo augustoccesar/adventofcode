@@ -10,8 +10,11 @@ mod typescript;
 
 #[derive(Clone, Debug, clap::ValueEnum)]
 enum Language {
+    #[value(alias("rs"))]
     Rust,
+    #[value(alias("go"))]
     Golang,
+    #[value(alias("ts"))]
     Typescript,
 }
 
@@ -46,10 +49,9 @@ enum ManagementCli {
 
 #[derive(clap::Args)]
 struct PrepareDayArgs {
+    language: Language,
     year: u16,
     day: u8,
-    #[clap(long)]
-    language: Language,
 }
 
 impl PrepareDayArgs {
@@ -60,10 +62,9 @@ impl PrepareDayArgs {
 
 #[derive(clap::Args)]
 struct RunArgs {
+    language: Language,
     year: u16,
     day: u8,
-    #[clap(long)]
-    language: Language,
 }
 
 impl RunArgs {
