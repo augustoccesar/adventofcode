@@ -1,9 +1,11 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"os"
-	"strconv"
+
+	"github.com/urfave/cli/v3"
 
 	"com.github/augustoccesar/adventofcode/golang/structure"
 	// CODEGEN:target_import
@@ -19,22 +21,42 @@ var daysMap = map[DayMapKey]structure.Day{
 }
 
 func main() {
-	yearInput, err := strconv.Atoi(os.Args[1])
-	if err != nil {
-		panic(fmt.Sprintf("Invalid format for year: %+v", os.Args[1]))
+	cmd := &cli.Command{
+		Commands: []*cli.Command{
+			{
+				Name:  "run",
+				Usage: "run a specific day of a year",
+				Arguments: []cli.Argument{
+					&cli.IntArg{Name: "year"},
+					&cli.IntArg{Name: "day"},
+				},
+				Action: func(ctx context.Context, cmd *cli.Command) error {
+					yearInput := cmd.IntArg("year")
+					if yearInput == 0 {
+						return cli.Exit("Invalid value for year", 1)
+					}
+
+					dayInput := cmd.IntArg("day")
+					if dayInput == 0 {
+						return cli.Exit("Invalid value for day", 1)
+					}
+
+					day, dayFound := daysMap[DayMapKey{yearInput, dayInput}]
+					if !dayFound {
+						return cli.Exit(fmt.Sprintf("Day %d for year %d not found", dayInput, yearInput), 1)
+					}
+
+					partOneResult := day.PartOne()
+					fmt.Printf("%s\n", partOneResult)
+
+					partTwoResult := day.PartTwo()
+					fmt.Printf("%s\n", partTwoResult)
+
+					return nil
+				},
+			},
+		},
 	}
 
-	dayInput, err := strconv.Atoi(os.Args[2])
-	if err != nil {
-		panic(fmt.Sprintf("Invalid format for day: %+v", os.Args[2]))
-	}
-
-	day, dayFound := daysMap[DayMapKey{yearInput, dayInput}]
-
-	if !dayFound {
-		panic(fmt.Sprintf("Day %d for year %d not found", dayInput, yearInput))
-	}
-
-	fmt.Printf("Part one: %s\n", day.PartOne())
-	fmt.Printf("Part two: %s\n", day.PartOne())
+	cmd.Run(context.Background(), os.Args)
 }
