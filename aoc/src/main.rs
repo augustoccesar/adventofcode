@@ -5,38 +5,42 @@ use clap::Parser;
 mod file;
 
 mod golang;
+mod java;
 mod python;
 mod rust;
 mod typescript;
 
 #[derive(Clone, Debug, clap::ValueEnum)]
 enum Language {
-    #[value(alias("rs"))]
-    Rust,
     #[value(alias("go"))]
     Golang,
-    #[value(alias("ts"))]
-    Typescript,
+    Java,
     #[value(alias("py"))]
     Python,
+    #[value(alias("rs"))]
+    Rust,
+    #[value(alias("ts"))]
+    Typescript,
 }
 
 impl ManagedLanguage for Language {
     fn prepare_day(&self, year: u16, day: u8) {
         match self {
-            Language::Rust => rust::prepare_day(year, day),
             Language::Golang => golang::prepare_day(year, day),
-            Language::Typescript => typescript::prepare_day(year, day),
+            Language::Java => java::prepare_day(year, day),
             Language::Python => python::prepare_day(year, day),
+            Language::Rust => rust::prepare_day(year, day),
+            Language::Typescript => typescript::prepare_day(year, day),
         }
     }
 
     fn run(&self, year: u16, day: u8) {
         match self {
-            Language::Rust => rust::run(year, day),
             Language::Golang => golang::run(year, day),
-            Language::Typescript => typescript::run(year, day),
+            Language::Java => java::run(year, day),
             Language::Python => python::run(year, day),
+            Language::Rust => rust::run(year, day),
+            Language::Typescript => typescript::run(year, day),
         }
     }
 }

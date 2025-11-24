@@ -4,3 +4,5 @@ rust = { version = "1.91" }
 go = { version = "1.25.4" }
 uv = { version = "0.9.11" }
 python = { version = "3.13.2" }
+gradle = { version = "9.2.1" }
+java = { version = "25.0.1" }
