@@ -59,6 +59,12 @@ pub fn prepare_day(year: u16, day: u8) {
             "register_day",
             &format!("y{year}d{day:0>2}.getDay(),\n"),
         );
+
+        process::Command::new("zig")
+            .arg("fmt")
+            .current_dir(crate::base_path().join("zig"))
+            .status()
+            .unwrap();
     }
 }
 
