@@ -1,6 +1,7 @@
 const std = @import("std");
 
 const day = @import("day.zig");
+const y2022d01 = @import("y2022/d01.zig");
 // CODEGEN:import_day
 
 const DayKey = struct {
@@ -19,6 +20,7 @@ const DayKey = struct {
 const DayMap = std.HashMap(DayKey, day.Day, std.hash_map.AutoContext(DayKey), std.hash_map.default_max_load_percentage);
 
 const registered_days = [_]day.Day{
+    y2022d01.getDay(),
     // CODEGEN:register_day
 };
 
