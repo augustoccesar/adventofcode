@@ -2,3 +2,5 @@
 .idea
 
 inputs
+
+__pycache__

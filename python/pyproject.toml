@@ -1,0 +1,6 @@
+[project]
+name = "aoc-python"
+version = "0.1.0"
+dependencies = [
+    "click>=8.3.1",
+]
