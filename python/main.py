@@ -2,6 +2,7 @@ import click
 
 from day import get_day
 
+import y2018.d01
 # CODEGEN:import_day
 
 
