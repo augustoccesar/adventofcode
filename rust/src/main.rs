@@ -11,13 +11,13 @@ pub trait Day {
     fn part_one(&self) -> String;
     fn part_two(&self) -> String;
     fn read_input(&self, name: &str) -> String {
-        let path = if name == "" {
+        let path = if name.is_empty() {
             format!("../inputs/{}_{:0>2}.txt", self.year(), self.day(),)
         } else {
             format!("../inputs/{}_{:0>2}_{}.txt", self.year(), self.day(), name)
         };
 
-        return fs::read_to_string(path).unwrap();
+        fs::read_to_string(path).unwrap()
     }
     fn read_default_input(&self) -> String {
         self.read_input("")
