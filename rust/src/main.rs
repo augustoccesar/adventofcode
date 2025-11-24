@@ -5,14 +5,21 @@ use clap::Parser;
 // CODEGEN:year_module
 
 pub trait Day {
-    fn day(&self) -> &'static str;
+    fn year(&self) -> u16;
+    fn day(&self) -> u8;
     fn part_one(&self) -> String;
     fn part_two(&self) -> String;
     fn read_input(&self, name: &str) -> String {
-        return fs::read_to_string(format!("inputs/day{}_{}.txt", self.day(), name)).unwrap();
+        let path = if name == "" {
+            format!("../inputs/{}_{:0>2}.txt", self.year(), self.day(),)
+        } else {
+            format!("../inputs/{}_{:0>2}_{}.txt", self.year(), self.day(), name)
+        };
+
+        return fs::read_to_string(path).unwrap();
     }
     fn read_default_input(&self) -> String {
-        self.read_input("input")
+        self.read_input("")
     }
 }
 

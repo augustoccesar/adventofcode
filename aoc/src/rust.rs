@@ -83,6 +83,8 @@ fn create_day_module(year: u16, day: u8, year_module_path: &Path, day_module_pat
         .write_all(
             DAY_TEMPLATE
                 .replace("$padded_day", &format!("{day:0>2}"))
+                .replace("$day", &format!("{day}"))
+                .replace("$year", &format!("{year}"))
                 .as_bytes(),
         )
         .unwrap();
@@ -121,8 +123,12 @@ const DAY_TEMPLATE: &str = r#"use crate::Day;
 pub struct Day$padded_day {}
 
 impl Day for Day$padded_day {
-    fn day(&self) -> &'static str {
-        "$padded_day"
+    fn year(&self) -> u16 {
+        $year
+    }
+
+    fn day(&self) -> u8 {
+        $day
     }
 
     fn part_one(&self) -> String {
