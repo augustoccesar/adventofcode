@@ -3,6 +3,15 @@ import { Command } from "@cliffy/command";
 import { getDay } from "./Day.ts";
 
 import "./y2015/d01.ts";
+import "./y2015/d02.ts";
+import "./y2015/d03.ts";
+import "./y2015/d04.ts";
+import "./y2015/d05.ts";
+import "./y2015/d06.ts";
+import "./y2015/d07.ts";
+import "./y2015/d08.ts";
+import "./y2015/d09.ts";
+import "./y2015/d10.ts";
 // CODEGEN:import_day
 
 const runCommand = new Command()
