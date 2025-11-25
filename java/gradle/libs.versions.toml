@@ -3,6 +3,7 @@ guava = "33.4.6-jre"
 junit-jupiter = "5.12.1"
 reflections = "0.10.2"
 picocli = "4.7.7"
+lombok = "1.18.42"
 
 [libraries]
 guava = { module = "com.google.guava:guava", version.ref = "guava" }
@@ -10,3 +11,4 @@ junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "jun
 reflections = { module = "org.reflections:reflections", version.ref = "reflections" }
 picocli = { module = "info.picocli:picocli", version.ref = "picocli" }
 picocli-codegen = { module = "info.picocli:picocli-codegen", version.ref = "picocli" }
+lombok = { module = "org.projectlombok:lombok", version.ref = "lombok" }

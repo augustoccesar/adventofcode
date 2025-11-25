@@ -8,14 +8,17 @@ repositories {
 }
 
 dependencies {
-    testImplementation libs.junit.jupiter
+    compileOnly libs.lombok
 
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     annotationProcessor libs.picocli.codegen
+    annotationProcessor libs.lombok
 
     implementation libs.guava
     implementation libs.picocli
     implementation libs.reflections
+
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testImplementation libs.junit.jupiter
 }
 
 java {

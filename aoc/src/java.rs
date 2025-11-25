@@ -1,14 +1,13 @@
 use std::{
     fs::{self, OpenOptions},
     io::Write,
-    process::{self, Stdio},
+    process,
 };
 
 pub fn run(year: u16, day: u8) {
     process::Command::new("gradle")
         .args(["run", &format!("--args=run {} {}", year, day)])
         .current_dir(crate::base_path().join("java"))
-        .stderr(Stdio::null())
         .status()
         .unwrap();
 }
@@ -40,11 +39,12 @@ pub fn prepare_day(year: u16, day: u8) {
             )
             .unwrap();
 
-        process::Command::new("gradle")
-            .arg("spotlessApply")
-            .current_dir(crate::base_path().join("java"))
-            .status()
-            .unwrap();
+        // TODO: Think of a better way to do this. This is quite slow.
+        // process::Command::new("gradle")
+        //     .arg("spotlessApply")
+        //     .current_dir(crate::base_path().join("java"))
+        //     .status()
+        //     .unwrap();
     }
 }
 
@@ -55,15 +55,15 @@ import com.augustoccesar.aocjava.RunnableDay;
 
 @RunnableDay(year = $year, day = $day)
 public class Day$padded_day extends Day {
-    @Override
-    public String partOne() {
-        return "-";
-    }
+  @Override
+  public String partOne() {
+      return "-";
+  }
 
-    @Override
-    public String partTwo() {
-        return "-";
-    }
+  @Override
+  public String partTwo() {
+      return "-";
+  }
 }
 
 "#;
