@@ -3,6 +3,15 @@ import click
 from day import get_day
 
 import y2018.d01
+import y2018.d02
+import y2018.d03
+import y2018.d04
+import y2018.d05
+import y2018.d06
+import y2018.d07
+import y2018.d08
+import y2018.d09
+import y2018.d10
 # CODEGEN:import_day
 
 
