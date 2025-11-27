@@ -9,17 +9,12 @@ import (
 
 	"com.github/augustoccesar/adventofcode/golang/structure"
 	"com.github/augustoccesar/adventofcode/golang/y2020"
-	// CODEGEN:target_import
+	// CODEGEN:import_year_package
 )
 
-type DayMapKey struct {
-	year int
-	day  int
-}
-
-var daysMap = map[DayMapKey]structure.Day{
-	{2020, 1}: &y2020.Day01{},
-	// CODEGEN:target_dict
+var yearsMap = map[int]map[int]structure.Day{
+	2020: y2020.DaysMap,
+	// CODEGEN:register_year
 }
 
 func main() {
@@ -43,7 +38,12 @@ func main() {
 						return cli.Exit("Invalid value for day", 1)
 					}
 
-					day, dayFound := daysMap[DayMapKey{yearInput, dayInput}]
+					daysMap, yearFound := yearsMap[yearInput]
+					if !yearFound {
+						return cli.Exit(fmt.Sprintf("Day %d for year %d not found", dayInput, yearInput), 1)
+					}
+
+					day, dayFound := daysMap[dayInput]
 					if !dayFound {
 						return cli.Exit(fmt.Sprintf("Day %d for year %d not found", dayInput, yearInput), 1)
 					}

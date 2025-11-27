@@ -1,4 +1,4 @@
-package y2020
+package d01
 
 import (
 	"sort"
