@@ -2,69 +2,18 @@ use std::{fs::OpenOptions, io::Write, path::PathBuf};
 
 use clap::Parser;
 
+use crate::{commands::UpdateReadmesArgs, languages::Language};
+
+mod commands;
 mod file;
-
-mod csharp;
-mod golang;
-mod java;
-mod python;
-mod ruby;
-mod rust;
-mod typescript;
-
-#[derive(Clone, Debug, clap::ValueEnum)]
-enum Language {
-    #[value(alias("cs"))]
-    CSharp,
-    #[value(alias("go"))]
-    Golang,
-    Java,
-    #[value(alias("py"))]
-    Python,
-    #[value(alias("rb"))]
-    Ruby,
-    #[value(alias("rs"))]
-    Rust,
-    #[value(alias("ts"))]
-    Typescript,
-}
-
-impl ManagedLanguage for Language {
-    fn prepare_day(&self, year: u16, day: u8) {
-        match self {
-            Language::CSharp => csharp::prepare_day(year, day),
-            Language::Golang => golang::prepare_day(year, day),
-            Language::Java => java::prepare_day(year, day),
-            Language::Python => python::prepare_day(year, day),
-            Language::Ruby => ruby::prepare_day(year, day),
-            Language::Rust => rust::prepare_day(year, day),
-            Language::Typescript => typescript::prepare_day(year, day),
-        }
-    }
-
-    fn run(&self, year: u16, day: u8) {
-        match self {
-            Language::CSharp => csharp::run(year, day),
-            Language::Golang => golang::run(year, day),
-            Language::Java => java::run(year, day),
-            Language::Python => python::run(year, day),
-            Language::Ruby => ruby::run(year, day),
-            Language::Rust => rust::run(year, day),
-            Language::Typescript => typescript::run(year, day),
-        }
-    }
-}
-
-trait ManagedLanguage {
-    fn prepare_day(&self, year: u16, day: u8);
-    fn run(&self, year: u16, day: u8);
-}
+mod languages;
 
 #[derive(Parser)]
 enum ManagementCli {
     PrepareDay(PrepareDayArgs),
     Run(RunArgs),
     DownloadInput(DownloadInputArgs),
+    UpdateReadmes(UpdateReadmesArgs),
 }
 
 #[derive(clap::Args)]
@@ -76,7 +25,7 @@ struct PrepareDayArgs {
 
 impl PrepareDayArgs {
     fn handle(&self) {
-        self.language.prepare_day(self.year, self.day);
+        self.language.managed().prepare_day(self.year, self.day);
     }
 }
 
@@ -89,7 +38,7 @@ struct RunArgs {
 
 impl RunArgs {
     fn handle(&self) {
-        self.language.run(self.year, self.day);
+        self.language.managed().run(self.year, self.day);
     }
 }
 
@@ -141,5 +90,6 @@ fn main() {
         ManagementCli::PrepareDay(prepare_day_args) => prepare_day_args.handle(),
         ManagementCli::Run(run_args) => run_args.handle(),
         ManagementCli::DownloadInput(download_input_args) => download_input_args.handle(),
+        ManagementCli::UpdateReadmes(update_readmes_args) => update_readmes_args.handle(),
     }
 }

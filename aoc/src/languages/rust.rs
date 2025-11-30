@@ -1,43 +1,67 @@
 use std::{
+    collections::HashMap,
     fs::{self, OpenOptions},
     io::Write,
     path::{Path, PathBuf},
-    process,
+    process::{self, Stdio},
+    str::FromStr,
 };
 
-pub fn run(year: u16, day: u8) {
-    process::Command::new("cargo")
-        .args([
-            "run",
-            "--",
-            "run",
-            &format!("{}", year),
-            &format!("{}", day),
-        ])
-        .current_dir(crate::base_path().join("rust"))
-        .status()
-        .unwrap();
-}
+use crate::languages::{ManagedLanguage, parse_year_available_days};
 
-pub fn prepare_day(year: u16, day: u8) {
-    let year_module_path = crate::base_path().join(format!("rust/src/y{year}/mod.rs"));
+#[derive(Default)]
+pub struct Rust;
 
-    if !year_module_path.exists() {
-        create_year_module(year, &year_module_path);
+impl ManagedLanguage for Rust {
+    fn run(&self, year: u16, day: u8) {
+        process::Command::new("cargo")
+            .args([
+                "run",
+                "--",
+                "run",
+                &format!("{}", year),
+                &format!("{}", day),
+            ])
+            .current_dir(crate::base_path().join("rust"))
+            .status()
+            .unwrap();
     }
 
-    let mut day_module_path = PathBuf::from(year_module_path.parent().unwrap());
-    day_module_path.push(format!("d{day:0>2}.rs"));
+    fn available_days(&self) -> HashMap<u16, Vec<u8>> {
+        let output = process::Command::new("cargo")
+            .args(["run", "--", "days"])
+            .current_dir(crate::base_path().join("rust"))
+            .stderr(Stdio::null())
+            .output()
+            .unwrap();
 
-    if !day_module_path.exists() {
-        create_day_module(year, day, &year_module_path, &day_module_path);
+        parse_year_available_days(String::from_utf8_lossy(&output.stdout).as_ref())
     }
 
-    process::Command::new("cargo")
-        .arg("fmt")
-        .current_dir(crate::base_path().join("rust"))
-        .status()
-        .unwrap();
+    fn prepare_day(&self, year: u16, day: u8) {
+        let year_module_path = crate::base_path().join(format!("rust/src/y{year}/mod.rs"));
+
+        if !year_module_path.exists() {
+            create_year_module(year, &year_module_path);
+        }
+
+        let mut day_module_path = PathBuf::from(year_module_path.parent().unwrap());
+        day_module_path.push(format!("d{day:0>2}.rs"));
+
+        if !day_module_path.exists() {
+            create_day_module(year, day, &year_module_path, &day_module_path);
+        }
+
+        process::Command::new("cargo")
+            .arg("fmt")
+            .current_dir(crate::base_path().join("rust"))
+            .status()
+            .unwrap();
+    }
+
+    fn path_to_day(&self, year: u16, day: u8) -> PathBuf {
+        PathBuf::from_str(&format!("/rust/src/y{year}/d{day:0>2}.rs")).unwrap()
+    }
 }
 
 fn create_year_module(year: u16, year_module_path: &Path) {
