@@ -4,6 +4,8 @@ use clap::Parser;
 
 use crate::{Language, base_path};
 
+const CALENDAR_WIDTH_DAYS: usize = 5;
+
 #[derive(Parser)]
 pub struct Args {}
 
@@ -32,26 +34,29 @@ impl Args {
 
         for (year, days) in data {
             readme.push_str(&format!("## {year}\n\n"));
+            readme.push('|');
+            for _ in 0..CALENDAR_WIDTH_DAYS {
+                readme.push_str(" |");
+            }
+            readme.push('\n');
 
-            for (chunk_idx, chunk) in days.chunks(5).enumerate() {
+            readme.push('|');
+            for _ in 0..CALENDAR_WIDTH_DAYS {
+                readme.push_str(" :---: |");
+            }
+            readme.push('\n');
+
+            for (chunk_idx, chunk) in days.chunks(CALENDAR_WIDTH_DAYS).enumerate() {
                 readme.push('|');
                 for i in 0..chunk.len() {
-                    let day = (chunk_idx * 5) + i + 1;
+                    let day = (chunk_idx * CALENDAR_WIDTH_DAYS) + i + 1;
                     readme.push_str(&format!(" {:0>2} |", day));
                 }
                 readme.push('\n');
 
                 readme.push('|');
-                for _ in 0..chunk.len() {
-                    readme.push_str(" :---: |");
-                }
-                readme.push('\n');
-
-                readme.push('|');
                 for (i, languages) in chunk.iter().enumerate() {
-                    let day = ((chunk_idx * 5) + i + 1) as u8;
-
-                    readme.push_str("<div style=\"width:40px;\">");
+                    let day = ((chunk_idx * CALENDAR_WIDTH_DAYS) + i + 1) as u8;
 
                     if !languages.is_empty() {
                         for language in languages {
@@ -69,11 +74,13 @@ impl Args {
                         readme.push('—');
                     }
 
-                    readme.push_str("</div>|");
+                    readme.push_str("|");
                 }
 
-                readme.push_str("\n\n");
+                readme.push_str("\n");
             }
+
+            readme.push_str("\n");
         }
 
         readme.push_str(README_FOOTER);
