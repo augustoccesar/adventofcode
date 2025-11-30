@@ -12,7 +12,6 @@ mod python;
 mod ruby;
 mod rust;
 mod typescript;
-mod zig;
 
 #[derive(Clone, Debug, clap::ValueEnum)]
 enum Language {
@@ -30,7 +29,6 @@ enum Language {
     Rust,
     #[value(alias("ts"))]
     Typescript,
-    Zig,
 }
 
 impl ManagedLanguage for Language {
@@ -44,7 +42,6 @@ impl ManagedLanguage for Language {
             Language::Ruby => ruby::prepare_day(year, day),
             Language::Rust => rust::prepare_day(year, day),
             Language::Typescript => typescript::prepare_day(year, day),
-            Language::Zig => zig::prepare_day(year, day),
         }
     }
 
@@ -58,7 +55,6 @@ impl ManagedLanguage for Language {
             Language::Ruby => ruby::run(year, day),
             Language::Rust => rust::run(year, day),
             Language::Typescript => typescript::run(year, day),
-            Language::Zig => zig::run(year, day),
         }
     }
 }
