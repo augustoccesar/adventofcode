@@ -95,7 +95,7 @@ impl Args {
     }
 }
 
-const README_HEADER: &str = "🎄🎅 Advent of Code 🎅🎄\n\n";
+const README_HEADER: &str = "# 🎄🎅 Advent of Code 🎅🎄\n\n";
 const README_FOOTER: &str = "## How does this repository works?
 
 This repository is managed by the code under `/aoc`.
