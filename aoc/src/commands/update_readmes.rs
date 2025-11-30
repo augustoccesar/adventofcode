@@ -1,8 +1,4 @@
-use std::{
-    collections::{BTreeMap, HashMap},
-    fs::OpenOptions,
-    io::Write,
-};
+use std::{collections::BTreeMap, fs::OpenOptions, io::Write};
 
 use clap::Parser;
 
