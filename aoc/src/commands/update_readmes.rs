@@ -34,6 +34,7 @@ impl Args {
 
         let quick_links = data
             .keys()
+            .rev()
             .map(|year| format!("[{year}](#{year})"))
             .collect::<Vec<_>>()
             .join(" | ");
@@ -42,7 +43,7 @@ impl Args {
 
         readme.push_str("## Calendars\n\n");
 
-        for (year, days) in data {
+        for (year, days) in data.iter().rev() {
             readme.push_str(&format!("### {year}\n\n"));
             readme.push('|');
             for _ in 0..CALENDAR_WIDTH_DAYS {
@@ -72,7 +73,7 @@ impl Args {
                         for language in languages {
                             readme.push_str(&format!(
                                 "<a href={:?}>",
-                                language.managed().path_to_day(year, day)
+                                language.managed().path_to_day(*year, day)
                             ));
                             readme.push_str(&format!(
                                 "<img src=\"resources/icons/{}.svg\" width=\"20\" height=\"20\">",
