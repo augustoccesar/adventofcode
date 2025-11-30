@@ -29,7 +29,7 @@ java {
 }
 
 application {
-    mainClass = 'com.augustoccesar.aocjava.App'
+    mainClass = 'se.augustocesar.aocjava.App'
 }
 
 spotless {

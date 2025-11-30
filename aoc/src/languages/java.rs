@@ -34,7 +34,7 @@ impl ManagedLanguage for Java {
 
     fn prepare_day(&self, year: u16, day: u8) {
         let day_file_path = crate::base_path().join(format!(
-            "java/app/src/main/java/com/augustoccesar/aocjava/y{year}/Day{day:0>2}.java"
+            "java/app/src/main/java/se/augustocesar/aocjava/y{year}/Day{day:0>2}.java"
         ));
 
         if !day_file_path.exists() {
@@ -70,16 +70,16 @@ impl ManagedLanguage for Java {
 
     fn path_to_day(&self, year: u16, day: u8) -> PathBuf {
         PathBuf::from_str(&format!(
-            "/java/app/src/main/java/com/augustoccesar/aocjava/y{year}/Day{day:0>2}.java"
+            "/java/app/src/main/java/se/augustocesar/aocjava/y{year}/Day{day:0>2}.java"
         ))
         .unwrap()
     }
 }
 
-const DAY_TEMPLATE: &str = r#"package com.augustoccesar.aocjava.y$year;
+const DAY_TEMPLATE: &str = r#"package se.augustocesar.aocjava.y$year;
 
-import com.augustoccesar.aocjava.Day;
-import com.augustoccesar.aocjava.RunnableDay;
+import se.augustocesar.aocjava.Day;
+import se.augustocesar.aocjava.RunnableDay;
 
 @RunnableDay(year = $year, day = $day)
 public class Day$padded_day extends Day {
