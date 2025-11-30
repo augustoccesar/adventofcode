@@ -18,8 +18,8 @@ export class Day09 extends Day {
 }
 
 class Vertex {
-  name: string
-  neighbors: Map<Vertex, number>
+  name: string;
+  neighbors: Map<Vertex, number>;
 
   constructor(name: string) {
     this.name = name;
@@ -32,7 +32,7 @@ class Vertex {
 }
 
 class Graph {
-  verticesMap: Map<string, Vertex>
+  verticesMap: Map<string, Vertex>;
 
   constructor() {
     this.verticesMap = new Map();
@@ -55,7 +55,9 @@ class Graph {
   }
 
   traverseAll(traverseLookup: TraverseLookup): number {
-    let result = traverseLookup === TraverseLookup.MAX ? Number.NEGATIVE_INFINITY : Number.POSITIVE_INFINITY;
+    let result = traverseLookup === TraverseLookup.MAX
+      ? Number.NEGATIVE_INFINITY
+      : Number.POSITIVE_INFINITY;
     for (const vertex of this.verticesMap.values()) {
       const total = this.traverseFromVertex(vertex, traverseLookup);
       if (traverseLookupCmp(result, total, traverseLookup)) {
@@ -66,33 +68,44 @@ class Graph {
     return result;
   }
 
-  traverseFromVertex(start: Vertex, traverseLookup: TraverseLookup, visited: Map<Vertex, boolean> = new Map()): number {
+  traverseFromVertex(
+    start: Vertex,
+    traverseLookup: TraverseLookup,
+    visited: Map<Vertex, boolean> = new Map(),
+  ): number {
     visited.set(start, true);
 
-    const visitedKeys = Array.from(visited.keys()).map(vertex => vertex.name);
-    const neighborKeys = Array.from(start.neighbors.keys()).map(vertex => vertex.name);
+    const visitedKeys = Array.from(visited.keys()).map((vertex) => vertex.name);
+    const neighborKeys = Array.from(start.neighbors.keys()).map((vertex) =>
+      vertex.name
+    );
 
-    const nonVisitedKeys = neighborKeys.filter(key => {
-      return !visitedKeys.includes(key)
+    const nonVisitedKeys = neighborKeys.filter((key) => {
+      return !visitedKeys.includes(key);
     });
 
     if (nonVisitedKeys.length === 0) {
       return 0;
     }
 
-    let result = traverseLookup === TraverseLookup.MAX ? Number.NEGATIVE_INFINITY : Number.POSITIVE_INFINITY;
+    let result = traverseLookup === TraverseLookup.MAX
+      ? Number.NEGATIVE_INFINITY
+      : Number.POSITIVE_INFINITY;
     for (const key of nonVisitedKeys) {
       let total = 0;
-      const neighbor = this.verticesMap.get(key)!
+      const neighbor = this.verticesMap.get(key)!;
       total += start.neighbors.get(neighbor)!;
 
-      total += this.traverseFromVertex(neighbor, traverseLookup, cloneVisited(visited));
+      total += this.traverseFromVertex(
+        neighbor,
+        traverseLookup,
+        cloneVisited(visited),
+      );
 
       if (traverseLookupCmp(result, total, traverseLookup)) {
         result = total;
       }
     }
-
 
     return result;
   }
@@ -101,7 +114,7 @@ class Graph {
     const graph = new Graph();
     for (const line of input.split("\n")) {
       const [path, distance] = line.split("=");
-      const [from, to] = path.split("to").map(item => item.trim());
+      const [from, to] = path.split("to").map((item) => item.trim());
 
       graph.addEdge(from, to, Number(distance.trim()));
     }
@@ -112,10 +125,14 @@ class Graph {
 
 enum TraverseLookup {
   MIN,
-  MAX
+  MAX,
 }
 
-function traverseLookupCmp(baseNumber: number, newNumber: number, traverseLookup: TraverseLookup) {
+function traverseLookupCmp(
+  baseNumber: number,
+  newNumber: number,
+  traverseLookup: TraverseLookup,
+) {
   switch (traverseLookup) {
     case TraverseLookup.MAX:
       return baseNumber < newNumber;

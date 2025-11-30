@@ -78,6 +78,12 @@ def load_days
   end
 end
 
+def get_days_registry
+  load_days if DAY_REGISTRY.empty?
+
+  DAY_REGISTRY
+end
+
 def get_day(year, day)
   load_days if DAY_REGISTRY.empty?
 

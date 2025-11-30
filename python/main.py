@@ -1,6 +1,6 @@
 import click
 
-from day import get_day
+from day import DAY_REGISTRY, get_day
 
 import y2018.d01
 import y2018.d02
@@ -30,6 +30,18 @@ def run(year: int, day: int):
         print(day_instance.part_two())
     else:
         print(f"Day {day} not found for year {year}")
+
+@cli.command("days")
+def run():
+    year_days = {}
+    for (year, day) in map(lambda key: key.split("-"), DAY_REGISTRY.keys()):
+        if year not in year_days:
+            year_days[year] = []
+        
+        year_days[year].append(day)
+    
+    for (year, days) in year_days.items():
+        print(f"{year};{";".join(days)}")
 
 
 if __name__ == "__main__":

@@ -10,7 +10,7 @@ export class Day08 extends Day {
   }
 
   override partTwo(): string {
-    const data = this.readInput().split("\n").map(item => encode(item));
+    const data = this.readInput().split("\n").map((item) => encode(item));
     const result = calculate(data);
 
     return result.toString();
@@ -18,14 +18,14 @@ export class Day08 extends Day {
 }
 
 function encode(str: string): string {
-  return "\"" + str.replace(/\\/g, "\\\\").replace(/\"/g, "\\\"") + "\""
+  return '"' + str.replace(/\\/g, "\\\\").replace(/\"/g, '\\"') + '"';
 }
 
 function calculate(data: string[]): number {
   let codeChars = 0;
   let memoryChars = 0;
 
-  data.forEach(item => {
+  data.forEach((item) => {
     codeChars += item.length;
     memoryChars += eval(item).length;
   });

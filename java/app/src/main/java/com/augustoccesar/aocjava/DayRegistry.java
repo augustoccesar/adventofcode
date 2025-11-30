@@ -50,6 +50,10 @@ public class DayRegistry {
     return Optional.ofNullable(this.dayMap.get(dayKey(year, day)));
   }
 
+  public HashMap<String, Day> getDayMap() {
+    return this.dayMap;
+  }
+
   private DayRegistry(HashMap<String, Day> dayMap) {
     this.dayMap = dayMap;
   }

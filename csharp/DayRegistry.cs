@@ -4,7 +4,9 @@ namespace aoc;
 
 public class DayRegistry
 {
-    private readonly Dictionary<string, Day> _dayMap = new();
+    private readonly Dictionary<string, Day> _dayMap = [];
+    public IReadOnlyDictionary<string, Day> DaysMap => _dayMap;
+
 
     public static DayRegistry Load()
     {

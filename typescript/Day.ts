@@ -29,6 +29,13 @@ export function getDay(year: number, day: number): Day | undefined {
   return new DayConstructor(year, day);
 }
 
+export function getDaysRegistry(): Map<
+  string,
+  new (year: number, day: number) => Day
+> {
+  return DAY_REGISTRY;
+}
+
 export function RegisterDay(year: number, day: number) {
   return function <T extends new (year: number, day: number) => Day>(
     constructor: T,

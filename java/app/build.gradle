@@ -16,6 +16,7 @@ dependencies {
     implementation libs.guava
     implementation libs.picocli
     implementation libs.reflections
+    implementation libs.slf4j
 
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     testImplementation libs.junit.jupiter

@@ -16,7 +16,7 @@ export class Day03 extends Day {
 
       const newPos: [number, number] = [
         pos[0] + modifier[0],
-        pos[1] + modifier[1]
+        pos[1] + modifier[1],
       ];
 
       pos = moveAndLog(pos, modifier, log);
@@ -65,11 +65,11 @@ function toKey(pos: [number, number]): String {
 function moveAndLog(
   pos: [number, number],
   modifier: [number, number],
-  log: Map<String, number>
+  log: Map<String, number>,
 ): [number, number] {
   const newPos: [number, number] = [
     pos[0] + modifier[0],
-    pos[1] + modifier[1]
+    pos[1] + modifier[1],
   ];
 
   const currentValue = log.get(toKey(newPos));

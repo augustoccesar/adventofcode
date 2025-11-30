@@ -37,6 +37,17 @@ module AOC
         end
       end
 
+      class Days < Dry::CLI::Command
+        def call(**)
+          get_days_registry.keys
+            .map { |key| key.split("-") }
+            .group_by(&:first)
+            .transform_values { |entries| entries.map(&:last) }
+            .each { |year, days| puts "#{year};#{days.join(";")}"}
+        end
+      end
+
+      register 'days', Days
       register 'run', Run
     end
   end

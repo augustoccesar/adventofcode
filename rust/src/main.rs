@@ -28,6 +28,7 @@ pub trait Day {
 #[derive(Parser)]
 enum Cli {
     Run(RunArgs),
+    Days,
 }
 
 #[derive(clap::Args)]
@@ -86,5 +87,24 @@ fn main() {
                 exit(1);
             }
         },
+        Cli::Days => {
+            let mut years: HashMap<u16, Vec<u8>> = HashMap::new();
+
+            for (year, day) in days_map.keys() {
+                years.entry(*year).or_insert_with(Vec::new).push(*day);
+            }
+
+            for (year, mut days) in years {
+                days.sort();
+
+                let days_str = days
+                    .iter()
+                    .map(|day| day.to_string())
+                    .collect::<Vec<_>>()
+                    .join(";");
+
+                println!("{};{}", year, days_str);
+            }
+        }
     }
 }

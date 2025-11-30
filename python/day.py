@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-_DAY_REGISTRY = {}
+DAY_REGISTRY = {}
 
 
 class Day(ABC):
@@ -32,7 +32,7 @@ def register_day(year: int, day: int):
             def __init__(self):
                 super().__init__(year, day)
 
-        _DAY_REGISTRY[f"{year}-{day}"] = BoundDay
+        DAY_REGISTRY[f"{year}-{day}"] = BoundDay
 
         return cls
 
@@ -40,7 +40,7 @@ def register_day(year: int, day: int):
 
 
 def get_day(year: int, day: int) -> Day | None:
-    day_cls = _DAY_REGISTRY.get(f"{year}-{day}")
+    day_cls = DAY_REGISTRY.get(f"{year}-{day}")
     if not day_cls:
         return None
 

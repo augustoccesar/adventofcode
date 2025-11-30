@@ -89,8 +89,8 @@ function parseInput(input: string): Array<Command> {
     commands.push(
       new Command(
         res[1] as CommandType,
-        [Point.fromString(res[2]), Point.fromString(res[3])]
-      )
+        [Point.fromString(res[2]), Point.fromString(res[3])],
+      ),
     );
   }
 
@@ -110,15 +110,15 @@ class Point {
 
   // str = x,y
   static fromString(str: string): Point {
-    const values = str.split(',');
+    const values = str.split(",");
     return new Point(Number(values[0]), Number(values[1]));
   }
 }
 
 enum CommandType {
-  TOGGLE = 'toggle',
-  TURN_ON = 'turn on',
-  TURN_OFF = 'turn off'
+  TOGGLE = "toggle",
+  TURN_ON = "turn on",
+  TURN_OFF = "turn off",
 }
 
 class Command {

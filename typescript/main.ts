@@ -1,6 +1,6 @@
 import { Command } from "@cliffy/command";
 
-import { getDay } from "./Day.ts";
+import { getDay, getDaysRegistry } from "./Day.ts";
 
 import "./y2015/d01.ts";
 import "./y2015/d02.ts";
@@ -30,10 +30,33 @@ const runCommand = new Command()
     console.log(dayInstance.partTwo());
   });
 
+const daysCommand = new Command()
+  .name("days")
+  .description("list available years and its days")
+  // deno-lint-ignore no-explicit-any
+  .action((_options: any) => {
+    const daysRegistry = getDaysRegistry();
+
+    const yearDays = Array.from(daysRegistry.keys()).map((key) =>
+      key.split("-")
+    ).reduce((acc, [year, day]) => {
+      if (!acc[year]) {
+        acc[year] = [];
+      }
+      acc[year].push(day);
+      return acc;
+    }, {} as Record<string, string[]>);
+
+    for (const [year, days] of Object.entries(yearDays)) {
+      console.log(`${year};${days.join(";")}`)
+    }
+  });
+
 const cli = new Command()
   .name("aoc-ts")
   .version("0.1.0")
-  .command("run", runCommand);
+  .command("run", runCommand)
+  .command("days", daysCommand);
 
 if (import.meta.main) {
   cli.parse(Deno.args);

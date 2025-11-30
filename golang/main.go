@@ -3,7 +3,12 @@ package main
 import (
 	"context"
 	"fmt"
+	"maps"
 	"os"
+	"slices"
+	"sort"
+	"strconv"
+	"strings"
 
 	"github.com/urfave/cli/v3"
 
@@ -53,6 +58,26 @@ func main() {
 
 					partTwoResult := day.PartTwo()
 					fmt.Printf("%s\n", partTwoResult)
+
+					return nil
+				},
+			},
+			{
+				Name:  "days",
+				Usage: "list all the years and the included days",
+				Action: func(ctx context.Context, cmd *cli.Command) error {
+					for year := range yearsMap {
+						keys := maps.Keys(yearsMap[year])
+						dayKeys := slices.Collect(keys)
+						sort.Ints(dayKeys)
+
+						dayStrings := make([]string, len(dayKeys))
+						for i, day := range dayKeys {
+							dayStrings[i] = strconv.Itoa(day)
+						}
+
+						fmt.Printf("%d;%s\n", year, strings.Join(dayStrings, ";"))
+					}
 
 					return nil
 				},

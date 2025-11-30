@@ -7,9 +7,9 @@ export class Day07 extends Day {
     const wiresMap = new Map<string, number>();
 
     const operations: Map<string, boolean> = new Map();
-    input.split('\n').forEach(line => operations.set(line, false));
+    input.split("\n").forEach((line) => operations.set(line, false));
 
-    const result = execute(operations, wiresMap, 'a');
+    const result = execute(operations, wiresMap, "a");
 
     return String(result);
   }
@@ -19,19 +19,19 @@ export class Day07 extends Day {
     const wiresMap = new Map<string, number>();
 
     const operations: Map<string, boolean> = new Map();
-    input.split('\n').forEach(line => operations.set(line, false));
+    input.split("\n").forEach((line) => operations.set(line, false));
 
-    let result = execute(operations, wiresMap, 'a');
+    let result = execute(operations, wiresMap, "a");
 
     // Rewire 'b' and reset all other wires
     wiresMap.clear();
-    wiresMap.set('b', result);
+    wiresMap.set("b", result);
 
     for (const key of operations.keys()) {
       operations.set(key, false);
     }
 
-    result = execute(operations, wiresMap, 'a');
+    result = execute(operations, wiresMap, "a");
 
     return String(result);
   }
@@ -44,9 +44,13 @@ const REG = {
   LSHIFT: /^(.+) LSHIFT (.+) -> (\w+)$/,
   RSHIFT: /^(.+) RSHIFT (.+) -> (\w+)$/,
   NOT: /^NOT (.+) -> (\w+)$/,
-}
+};
 
-function execute(operations: Map<string, boolean>, wiresMap: Map<string, number>, output: string): number {
+function execute(
+  operations: Map<string, boolean>,
+  wiresMap: Map<string, number>,
+  output: string,
+): number {
   let result = undefined;
   while (!result) {
     for (const [op, executed] of operations.entries()) {
@@ -67,7 +71,7 @@ function execute(operations: Map<string, boolean>, wiresMap: Map<string, number>
           continue;
         }
 
-        const in1 = evaluateInput(matches[1], wiresMap)
+        const in1 = evaluateInput(matches[1], wiresMap);
         if (in1 == undefined) {
           continue;
         }
@@ -125,7 +129,6 @@ function execute(operations: Map<string, boolean>, wiresMap: Map<string, number>
         const out = matches[3];
 
         if (in1 == undefined || in2 == undefined) {
-          ;
           continue;
         }
 
@@ -152,7 +155,10 @@ function execute(operations: Map<string, boolean>, wiresMap: Map<string, number>
   return result;
 }
 
-function evaluateInput(input: string, wiresMap: Map<string, number>): number | undefined {
+function evaluateInput(
+  input: string,
+  wiresMap: Map<string, number>,
+): number | undefined {
   const numeric = Number(input);
 
   if (!isNaN(numeric)) {

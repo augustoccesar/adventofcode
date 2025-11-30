@@ -4,6 +4,7 @@ junit-jupiter = "5.12.1"
 reflections = "0.10.2"
 picocli = "4.7.7"
 lombok = "1.18.42"
+slf4j = "2.0.9"
 
 [libraries]
 guava = { module = "com.google.guava:guava", version.ref = "guava" }
@@ -12,3 +13,4 @@ reflections = { module = "org.reflections:reflections", version.ref = "reflectio
 picocli = { module = "info.picocli:picocli", version.ref = "picocli" }
 picocli-codegen = { module = "info.picocli:picocli-codegen", version.ref = "picocli" }
 lombok = { module = "org.projectlombok:lombok", version.ref = "lombok" }
+slf4j = { module = "org.slf4j:slf4j-nop", version.ref = "slf4j" }
