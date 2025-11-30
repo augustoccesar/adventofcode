@@ -4,9 +4,9 @@ use crate::base_path;
 
 #[derive(clap::Args)]
 pub struct Args {
-    year: u16,
-    day: u8,
-    aoc_session: String,
+    pub year: u16,
+    pub day: u8,
+    pub aoc_session: String,
 }
 
 impl Args {
