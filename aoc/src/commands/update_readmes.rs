@@ -32,8 +32,18 @@ impl Args {
         let mut readme = String::new();
         readme.push_str(README_HEADER);
 
+        let quick_links = data
+            .keys()
+            .map(|year| format!("[{year}](#{year})"))
+            .collect::<Vec<_>>()
+            .join(" | ");
+        readme.push_str(&quick_links);
+        readme.push_str("\n\n");
+
+        readme.push_str("## Calendars\n\n");
+
         for (year, days) in data {
-            readme.push_str(&format!("## {year}\n\n"));
+            readme.push_str(&format!("### {year}\n\n"));
             readme.push('|');
             for _ in 0..CALENDAR_WIDTH_DAYS {
                 readme.push_str(" |");
