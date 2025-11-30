@@ -4,7 +4,6 @@ use clap::Parser;
 
 mod file;
 
-mod cpp;
 mod csharp;
 mod golang;
 mod java;
@@ -15,7 +14,6 @@ mod typescript;
 
 #[derive(Clone, Debug, clap::ValueEnum)]
 enum Language {
-    Cpp,
     #[value(alias("cs"))]
     CSharp,
     #[value(alias("go"))]
@@ -34,7 +32,6 @@ enum Language {
 impl ManagedLanguage for Language {
     fn prepare_day(&self, year: u16, day: u8) {
         match self {
-            Language::Cpp => cpp::prepare_day(year, day),
             Language::CSharp => csharp::prepare_day(year, day),
             Language::Golang => golang::prepare_day(year, day),
             Language::Java => java::prepare_day(year, day),
@@ -47,7 +44,6 @@ impl ManagedLanguage for Language {
 
     fn run(&self, year: u16, day: u8) {
         match self {
-            Language::Cpp => cpp::run(year, day),
             Language::CSharp => csharp::run(year, day),
             Language::Golang => golang::run(year, day),
             Language::Java => java::run(year, day),
