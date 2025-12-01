@@ -13,85 +13,83 @@ impl Day for Day01 {
 
     fn part_one(&self) -> String {
         let input = self.read_default_input();
-        let input = input.lines().map(|line| {
-            let chars = line.chars().collect::<Vec<_>>();
+        let mut safe = Safe::new(PasswordMethod::Default);
 
-            let number = chars[1..]
-                .iter()
-                .copied()
-                .collect::<String>()
-                .parse::<i32>()
-                .expect("Invalid format of line");
-
-            let number = number % 100;
-
-            match &chars[0] {
-                'R' => number,
-                'L' => number * -1,
-                _ => unreachable!("Invalid format of line"),
-            }
-        });
-
-        let mut total = 0;
-        let mut position = 50;
-
-        for rotation in input {
-            position += rotation;
-
-            if position < 0 {
-                position = 100 + position;
-            } else if position > 99 {
-                position %= 100;
-            }
-
-            if position == 0 {
-                total += 1;
-            }
+        let mut result = 0;
+        for line in input.lines() {
+            result += safe.rotate(line);
         }
 
-        total.to_string()
+        result.to_string()
     }
 
     fn part_two(&self) -> String {
         let input = self.read_default_input();
-        let input = input.lines().map(|line| {
-            let chars = line.chars().collect::<Vec<_>>();
+        let mut safe = Safe::new(PasswordMethod::X434C49434B);
 
-            let number = chars[1..]
-                .iter()
-                .copied()
-                .collect::<String>()
-                .parse::<i32>()
-                .expect("Invalid format of line");
+        let mut result = 0;
+        for line in input.lines() {
+            result += safe.rotate(line);
+        }
 
-            match &chars[0] {
-                'R' => number,
-                'L' => number * -1,
-                _ => unreachable!("Invalid format of line"),
-            }
-        });
+        result.to_string()
+    }
+}
 
+#[derive(PartialEq)]
+enum PasswordMethod {
+    Default,
+    X434C49434B,
+}
+
+struct Safe {
+    dial: i32,
+    method: PasswordMethod,
+}
+
+impl Safe {
+    pub fn new(method: PasswordMethod) -> Self {
+        Self { dial: 50, method }
+    }
+
+    pub fn rotate(&mut self, input: &str) -> i32 {
         let mut clicks = 0;
-        let mut position = 50;
 
-        // TODO: There must be a better way xD
-        for rotation in input {
-            let direction = if rotation > 0 { 1 } else { -1 };
-            for _ in 0..rotation.abs() {
-                position += direction;
+        let chars = input.chars().collect::<Vec<_>>();
+        let direction = match chars[0] {
+            'R' => 1,
+            'L' => -1,
+            _ => unreachable!("Invalid input format"),
+        };
 
-                if position == -1 {
-                    position = 99;
-                } else if position == 100 {
-                    position = 0;
-                }
+        let rotation = chars[1..]
+            .iter()
+            .copied()
+            .collect::<String>()
+            .parse::<i32>()
+            .expect("Invalid format of line");
 
-                if position == 0 {
-                    clicks += 1;
-                }
+        // TODO[2025-12-01]: There must be a better way xD
+        for _ in 0..rotation.abs() {
+            self.dial += direction;
+
+            if self.dial == -1 {
+                self.dial = 99;
+            } else if self.dial == 100 {
+                self.dial = 0;
+            }
+
+            // 0x434C49434B method increments everytime it passes through 0
+            if self.method == PasswordMethod::X434C49434B && self.dial == 0 {
+                clicks += 1;
             }
         }
 
-        clicks.to_string()
+        // Default method only increments if the dial stops at 0
+        if self.method == PasswordMethod::Default && self.dial == 0 {
+            clicks += 1;
+        }
+
+        clicks
     }
 }
