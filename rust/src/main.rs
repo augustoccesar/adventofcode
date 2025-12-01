@@ -4,6 +4,7 @@ use clap::Parser;
 
 mod y2016;
 mod y2023;
+mod y2025;
 // CODEGEN:year_module
 
 pub trait Day {
@@ -68,6 +69,7 @@ fn main() {
         ((2023, 7), Box::new(y2023::d07::Day07 {}) as Box<dyn Day>),
         ((2023, 8), Box::new(y2023::d08::Day08 {}) as Box<dyn Day>),
         ((2023, 9), Box::new(y2023::d09::Day09 {}) as Box<dyn Day>),
+        ((2025, 1), Box::new(y2025::d01::Day01 {}) as Box<dyn Day>),
         // CODEGEN:day_map
     ]);
 
