@@ -15,7 +15,7 @@ impl Day for Day02 {
         let mut total = 0;
 
         for (start, end) in parse_input(&self.read_default_input()) {
-            if int_len(start) == int_len(end) && int_len(start) % 2 != 0 {
+            if int_len(start) == int_len(end) && !int_len(start).is_multiple_of(2) {
                 continue;
             }
 
@@ -28,7 +28,7 @@ impl Day for Day02 {
 
                 let half_idx = number_digits.len() / 2;
 
-                if &number_digits[0..half_idx] == &number_digits[half_idx..] {
+                if number_digits[0..half_idx] == number_digits[half_idx..] {
                     total += number;
                 }
             }
@@ -115,7 +115,7 @@ fn divisors(number: usize) -> Vec<usize> {
     // Since when we are grouping we don't want to group by the number and also
     // we the groups must be bigger than 2, so this just those cases.
     for i in 2..=limit {
-        if number % i == 0 {
+        if number.is_multiple_of(i) {
             divisors.push(i);
 
             if i * i != number {

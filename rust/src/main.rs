@@ -94,7 +94,7 @@ fn main() {
             let mut years: HashMap<u16, Vec<u8>> = HashMap::new();
 
             for (year, day) in days_map.keys() {
-                years.entry(*year).or_insert_with(Vec::new).push(*day);
+                years.entry(*year).or_default().push(*day);
             }
 
             for (year, mut days) in years {
