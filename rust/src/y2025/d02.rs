@@ -19,7 +19,7 @@ impl Day for Day02 {
                 continue;
             }
 
-            'a: for number in start..=end {
+            'number_loop: for number in start..=end {
                 let number_digits = number.to_string().chars().collect::<Vec<char>>();
 
                 if number_digits.len() % 2 != 0 {
@@ -37,7 +37,7 @@ impl Day for Day02 {
 
                         continue;
                     } else {
-                        continue 'a;
+                        continue 'number_loop;
                     }
                 }
 
