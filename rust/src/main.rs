@@ -70,6 +70,7 @@ fn main() {
         ((2023, 8), Box::new(y2023::d08::Day08 {}) as Box<dyn Day>),
         ((2023, 9), Box::new(y2023::d09::Day09 {}) as Box<dyn Day>),
         ((2025, 1), Box::new(y2025::d01::Day01 {}) as Box<dyn Day>),
+        ((2025, 2), Box::new(y2025::d02::Day02 {}) as Box<dyn Day>),
         // CODEGEN:day_map
     ]);
 
