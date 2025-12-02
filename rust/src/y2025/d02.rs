@@ -15,7 +15,6 @@ impl Day for Day02 {
         let mut total = 0;
 
         for mut range in self
-            // .read_input("example")
             .read_default_input()
             .split(",")
             .map(|range| range.split("-"))
