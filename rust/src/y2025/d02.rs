@@ -19,29 +19,18 @@ impl Day for Day02 {
                 continue;
             }
 
-            'number_loop: for number in start..=end {
+            for number in start..=end {
                 let number_digits = number.to_string().chars().collect::<Vec<char>>();
 
                 if number_digits.len() % 2 != 0 {
                     continue;
                 }
 
-                // TODO: Don't think I even need this. Just split the string and compare the two halves
-                let mut i = 0;
-                let mut j = number_digits.len() / 2;
+                let half_idx = number_digits.len() / 2;
 
-                for _ in 0..number_digits.len() / 2 {
-                    if number_digits[i] == number_digits[j] {
-                        i += 1;
-                        j += 1;
-
-                        continue;
-                    } else {
-                        continue 'number_loop;
-                    }
+                if &number_digits[0..half_idx] == &number_digits[half_idx..] {
+                    total += number;
                 }
-
-                total += number;
             }
         }
 
