@@ -14,22 +14,7 @@ impl Day for Day02 {
     fn part_one(&self) -> String {
         let mut total = 0;
 
-        for mut range in self
-            .read_default_input()
-            .split(",")
-            .map(|range| range.split("-"))
-        {
-            let start = range
-                .next()
-                .expect("range to have at two parts. Missing first.")
-                .parse::<i64>()
-                .unwrap();
-            let end = range
-                .next()
-                .expect("range to have at two parts. Missing second.")
-                .parse::<i64>()
-                .unwrap();
-
+        for (start, end) in parse_input(&self.read_default_input()) {
             if int_len(start) == int_len(end) && int_len(start) % 2 != 0 {
                 continue;
             }
@@ -66,22 +51,7 @@ impl Day for Day02 {
     fn part_two(&self) -> String {
         let mut total = 0;
 
-        for mut range in self
-            .read_default_input()
-            .split(",")
-            .map(|range| range.split("-"))
-        {
-            let start = range
-                .next()
-                .expect("range to have at two parts. Missing first.")
-                .parse::<i64>()
-                .unwrap();
-            let end = range
-                .next()
-                .expect("range to have at two parts. Missing second.")
-                .parse::<i64>()
-                .unwrap();
-
+        for (start, end) in parse_input(&self.read_default_input()) {
             'number_loop: for number in start..=end {
                 let number_digits = number.to_string().chars().collect::<Vec<char>>();
 
@@ -113,6 +83,23 @@ impl Day for Day02 {
 
         total.to_string()
     }
+}
+
+fn parse_input(input: &str) -> Vec<(i64, i64)> {
+    input
+        .split(",")
+        .map(|range| range.split("-").map(|side| side.parse::<i64>().unwrap()))
+        .map(|mut range| {
+            (
+                range
+                    .next()
+                    .expect("range to have at two parts. Missing first."),
+                range
+                    .next()
+                    .expect("range to have at two parts. Missing second."),
+            )
+        })
+        .collect::<_>()
 }
 
 fn int_len(integer: i64) -> usize {
