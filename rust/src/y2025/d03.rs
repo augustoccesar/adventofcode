@@ -24,7 +24,7 @@ impl Day for Day03 {
 
             for i in 0..bank.len() {
                 for j in i + 1..bank.len() {
-                    let value = concatenate_digits(bank[i], bank[j]);
+                    let value = bank[i] * 10 + bank[j];
 
                     if value > largest {
                         largest = value;
@@ -45,25 +45,4 @@ impl Day for Day03 {
 
 fn char_to_digit(c: char) -> u8 {
     c.to_digit(10).unwrap() as u8
-}
-
-fn concatenate_digits(a: u8, b: u8) -> u8 {
-    if a > 9 || b > 9 {
-        panic!("input must be single digit")
-    }
-
-    a * 10 + b
-}
-
-#[cfg(test)]
-mod tests {
-    use crate::y2025::d03::concatenate_digits;
-
-    #[test]
-    fn test_concatenate_digits() {
-        assert_eq!(98, concatenate_digits(9, 8));
-        assert_eq!(89, concatenate_digits(8, 9));
-        assert_eq!(10, concatenate_digits(1, 0));
-        assert_eq!(1, concatenate_digits(0, 1));
-    }
 }
