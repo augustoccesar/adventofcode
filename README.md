@@ -9,7 +9,7 @@
 | | | | | |
 | :---: | :---: | :---: | :---: | :---: |
 | 01 | 02 | 03 | 04 | 05 |
-|<a href="/rust/src/y2025/d01.rs"><img src="resources/icons/rust.svg" width="20" height="20"></a>|<a href="/rust/src/y2025/d02.rs"><img src="resources/icons/rust.svg" width="20" height="20"></a>|<a href="/rust/src/y2025/d03.rs"><img src="resources/icons/rust.svg" width="20" height="20"></a>|—|—|
+|<a href="/rust/src/y2025/d01.rs"><img src="resources/icons/rust.svg" width="20" height="20"></a>|<a href="/rust/src/y2025/d02.rs"><img src="resources/icons/rust.svg" width="20" height="20"></a>|<a href="/rust/src/y2025/d03.rs"><img src="resources/icons/rust.svg" width="20" height="20"></a>|<a href="/rust/src/y2025/d04.rs"><img src="resources/icons/rust.svg" width="20" height="20"></a>|—|
 | 06 | 07 | 08 | 09 | 10 |
 |—|—|—|—|—|
 | 11 | 12 | 13 | 14 | 15 |
