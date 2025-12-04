@@ -1,6 +1,6 @@
 # 🎄🎅 Advent of Code 🎅🎄
 
-[2025](#2025) | [2024](#2024) | [2023](#2023) | [2021](#2021) | [2020](#2020) | [2019](#2019) | [2018](#2018) | [2016](#2016) | [2015](#2015)
+[2025](#user-content-2025-expanded) | [2024](#user-content-2024-expanded) | [2023](#user-content-2023-expanded) | [2021](#user-content-2021-expanded) | [2020](#user-content-2020-expanded) | [2019](#user-content-2019-expanded) | [2018](#user-content-2018-expanded) | [2016](#user-content-2016-expanded) | [2015](#user-content-2015-expanded)
 
 ## Stats
 
@@ -20,6 +20,8 @@
 
 <summary><h3>2025</h3></summary>
 
+<div id="2025-expanded">
+
 | | | | | |
 | :---: | :---: | :---: | :---: | :---: |
 | 01 | 02 | 03 | 04 | 05 |
@@ -32,11 +34,14 @@
 |—|—|—|—|—|
 | 21 | 22 | 23 | 24 | 25 |
 |—|—|—|—|—|
+</div>
 </details>
 
 <details>
 
 <summary><h3>2024</h3></summary>
+
+<div id="2024-expanded">
 
 | | | | | |
 | :---: | :---: | :---: | :---: | :---: |
@@ -50,11 +55,14 @@
 |—|—|—|—|—|
 | 21 | 22 | 23 | 24 | 25 |
 |—|—|—|—|—|
+</div>
 </details>
 
 <details>
 
 <summary><h3>2023</h3></summary>
+
+<div id="2023-expanded">
 
 | | | | | |
 | :---: | :---: | :---: | :---: | :---: |
@@ -68,11 +76,14 @@
 |<a href="/rust/src/y2023/d16.rs"><img src="resources/icons/rust.svg" width="20" height="20"></a>|<a href="/rust/src/y2023/d17.rs"><img src="resources/icons/rust.svg" width="20" height="20"></a>|<a href="/rust/src/y2023/d18.rs"><img src="resources/icons/rust.svg" width="20" height="20"></a>|<a href="/rust/src/y2023/d19.rs"><img src="resources/icons/rust.svg" width="20" height="20"></a>|—|
 | 21 | 22 | 23 | 24 | 25 |
 |—|—|—|—|—|
+</div>
 </details>
 
 <details>
 
 <summary><h3>2021</h3></summary>
+
+<div id="2021-expanded">
 
 | | | | | |
 | :---: | :---: | :---: | :---: | :---: |
@@ -86,11 +97,14 @@
 |—|—|—|—|—|
 | 21 | 22 | 23 | 24 | 25 |
 |—|—|—|—|—|
+</div>
 </details>
 
 <details>
 
 <summary><h3>2020</h3></summary>
+
+<div id="2020-expanded">
 
 | | | | | |
 | :---: | :---: | :---: | :---: | :---: |
@@ -104,11 +118,14 @@
 |<a href="/golang/y2020/d16/d16.go"><img src="resources/icons/golang.svg" width="20" height="20"></a>|<a href="/golang/y2020/d17/d17.go"><img src="resources/icons/golang.svg" width="20" height="20"></a>|<a href="/golang/y2020/d18/d18.go"><img src="resources/icons/golang.svg" width="20" height="20"></a>|<a href="/golang/y2020/d19/d19.go"><img src="resources/icons/golang.svg" width="20" height="20"></a>|<a href="/golang/y2020/d20/d20.go"><img src="resources/icons/golang.svg" width="20" height="20"></a>|
 | 21 | 22 | 23 | 24 | 25 |
 |<a href="/golang/y2020/d21/d21.go"><img src="resources/icons/golang.svg" width="20" height="20"></a>|<a href="/golang/y2020/d22/d22.go"><img src="resources/icons/golang.svg" width="20" height="20"></a>|<a href="/golang/y2020/d23/d23.go"><img src="resources/icons/golang.svg" width="20" height="20"></a>|<a href="/golang/y2020/d24/d24.go"><img src="resources/icons/golang.svg" width="20" height="20"></a>|<a href="/golang/y2020/d25/d25.go"><img src="resources/icons/golang.svg" width="20" height="20"></a>|
+</div>
 </details>
 
 <details>
 
 <summary><h3>2019</h3></summary>
+
+<div id="2019-expanded">
 
 | | | | | |
 | :---: | :---: | :---: | :---: | :---: |
@@ -122,11 +139,14 @@
 |—|—|—|—|—|
 | 21 | 22 | 23 | 24 | 25 |
 |—|—|—|—|—|
+</div>
 </details>
 
 <details>
 
 <summary><h3>2018</h3></summary>
+
+<div id="2018-expanded">
 
 | | | | | |
 | :---: | :---: | :---: | :---: | :---: |
@@ -140,11 +160,14 @@
 |—|—|—|—|—|
 | 21 | 22 | 23 | 24 | 25 |
 |—|—|—|—|—|
+</div>
 </details>
 
 <details>
 
 <summary><h3>2016</h3></summary>
+
+<div id="2016-expanded">
 
 | | | | | |
 | :---: | :---: | :---: | :---: | :---: |
@@ -158,11 +181,14 @@
 |—|—|—|—|—|
 | 21 | 22 | 23 | 24 | 25 |
 |—|—|—|—|—|
+</div>
 </details>
 
 <details>
 
 <summary><h3>2015</h3></summary>
+
+<div id="2015-expanded">
 
 | | | | | |
 | :---: | :---: | :---: | :---: | :---: |
@@ -176,6 +202,7 @@
 |—|—|—|—|—|
 | 21 | 22 | 23 | 24 | 25 |
 |—|—|—|—|—|
+</div>
 </details>
 
 ## How does this repository works?

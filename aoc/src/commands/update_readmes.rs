@@ -63,7 +63,7 @@ fn build_readme_data() -> BTreeMap<u16, [Vec<Language>; 25]> {
 fn quick_links(data: &BTreeMap<u16, [Vec<Language>; 25]>) -> String {
     data.keys()
         .rev()
-        .map(|year| format!("[{year}](#{year})"))
+        .map(|year| format!("[{year}](#user-content-{year}-expanded)"))
         .collect::<Vec<_>>()
         .join(" | ")
 }
@@ -110,6 +110,8 @@ fn year_calendar(year: u16, days: &[Vec<Language>]) -> String {
     section.push_str("<details>\n\n");
 
     section.push_str(&format!("<summary><h3>{year}</h3></summary>\n\n"));
+    section.push_str(&format!("<div id=\"{year}-expanded\">\n\n"));
+
     section.push('|');
     for _ in 0..CALENDAR_WIDTH_DAYS {
         section.push_str(" |");
@@ -156,6 +158,7 @@ fn year_calendar(year: u16, days: &[Vec<Language>]) -> String {
         section.push_str("\n");
     }
 
+    section.push_str("</div>\n");
     section.push_str("</details>\n\n");
 
     section
