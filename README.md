@@ -1,16 +1,16 @@
 # 🎄🎅 Advent of Code 🎅🎄
 
-[2025](#user-content-2025-expanded) | [2024](#user-content-2024-expanded) | [2023](#user-content-2023-expanded) | [2021](#user-content-2021-expanded) | [2020](#user-content-2020-expanded) | [2019](#user-content-2019-expanded) | [2018](#user-content-2018-expanded) | [2016](#user-content-2016-expanded) | [2015](#user-content-2015-expanded)
+[2025](#user-content-2025-expanded) | [2024](#user-content-2024-expanded) | [2023](#user-content-2023-expanded) | [2022](#user-content-2022-expanded) | [2021](#user-content-2021-expanded) | [2020](#user-content-2020-expanded) | [2019](#user-content-2019-expanded) | [2018](#user-content-2018-expanded) | [2016](#user-content-2016-expanded) | [2015](#user-content-2015-expanded)
 
 ## Stats
 
-**Total days**: _121_
+**Total days**: _122_
 
 - <img src="resources/icons/rust.svg" width="20" height="20"> **Rust**: _33 days_ (27%)
-- <img src="resources/icons/golang.svg" width="20" height="20"> **Golang**: _25 days_ (21%)
+- <img src="resources/icons/golang.svg" width="20" height="20"> **Golang**: _25 days_ (20%)
+- <img src="resources/icons/java.svg" width="20" height="20"> **Java**: _15 days_ (12%)
 - <img src="resources/icons/ruby.svg" width="20" height="20"> **Ruby**: _15 days_ (12%)
-- <img src="resources/icons/csharp.svg" width="20" height="20"> **C#**: _14 days_ (12%)
-- <img src="resources/icons/java.svg" width="20" height="20"> **Java**: _14 days_ (12%)
+- <img src="resources/icons/csharp.svg" width="20" height="20"> **C#**: _14 days_ (11%)
 - <img src="resources/icons/python.svg" width="20" height="20"> **Python**: _10 days_ (8%)
 - <img src="resources/icons/typescript.svg" width="20" height="20"> **Typescript**: _10 days_ (8%)
 
@@ -74,6 +74,27 @@
 |<a href="/rust/src/y2023/d11.rs"><img src="resources/icons/rust.svg" width="20" height="20"></a>|<a href="/rust/src/y2023/d12.rs"><img src="resources/icons/rust.svg" width="20" height="20"></a>|<a href="/rust/src/y2023/d13.rs"><img src="resources/icons/rust.svg" width="20" height="20"></a>|<a href="/rust/src/y2023/d14.rs"><img src="resources/icons/rust.svg" width="20" height="20"></a>|<a href="/rust/src/y2023/d15.rs"><img src="resources/icons/rust.svg" width="20" height="20"></a>|
 | 16 | 17 | 18 | 19 | 20 |
 |<a href="/rust/src/y2023/d16.rs"><img src="resources/icons/rust.svg" width="20" height="20"></a>|<a href="/rust/src/y2023/d17.rs"><img src="resources/icons/rust.svg" width="20" height="20"></a>|<a href="/rust/src/y2023/d18.rs"><img src="resources/icons/rust.svg" width="20" height="20"></a>|<a href="/rust/src/y2023/d19.rs"><img src="resources/icons/rust.svg" width="20" height="20"></a>|—|
+| 21 | 22 | 23 | 24 | 25 |
+|—|—|—|—|—|
+</div>
+</details>
+
+<details>
+
+<summary><h3>2022</h3></summary>
+
+<div id="2022-expanded">
+
+| | | | | |
+| :---: | :---: | :---: | :---: | :---: |
+| 01 | 02 | 03 | 04 | 05 |
+|<a href="/java/app/src/main/java/se/augustocesar/aocjava/y2022/Day01.java"><img src="resources/icons/java.svg" width="20" height="20"></a>|—|—|—|—|
+| 06 | 07 | 08 | 09 | 10 |
+|—|—|—|—|—|
+| 11 | 12 | 13 | 14 | 15 |
+|—|—|—|—|—|
+| 16 | 17 | 18 | 19 | 20 |
+|—|—|—|—|—|
 | 21 | 22 | 23 | 24 | 25 |
 |—|—|—|—|—|
 </div>
