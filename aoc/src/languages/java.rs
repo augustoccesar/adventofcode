@@ -85,13 +85,12 @@ import se.augustocesar.aocjava.RunnableDay;
 public class Day$padded_day extends Day {
   @Override
   public String partOne() {
-      return "-";
+    return "-";
   }
 
   @Override
   public String partTwo() {
-      return "-";
+    return "-";
   }
 }
-
 "#;
