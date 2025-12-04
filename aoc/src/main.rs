@@ -3,7 +3,7 @@ use std::path::PathBuf;
 use clap::Parser;
 
 use crate::{
-    commands::{DownloadInputArgs, PrepareArgs, RunArgs, UpdateReadmesArgs},
+    commands::{CreateInputArgs, DownloadInputArgs, PrepareArgs, RunArgs, UpdateReadmesArgs},
     languages::Language,
 };
 
@@ -15,6 +15,7 @@ mod languages;
 enum ManagementCli {
     Prepare(PrepareArgs),
     Run(RunArgs),
+    CreateInput(CreateInputArgs),
     DownloadInput(DownloadInputArgs),
     UpdateReadmes(UpdateReadmesArgs),
 }
@@ -32,6 +33,7 @@ fn main() {
     match cli {
         ManagementCli::Prepare(prepare_args) => prepare_args.handle(),
         ManagementCli::Run(run_args) => run_args.handle(),
+        ManagementCli::CreateInput(create_input_args) => create_input_args.handle(),
         ManagementCli::DownloadInput(download_input_args) => download_input_args.handle(),
         ManagementCli::UpdateReadmes(update_readmes_args) => update_readmes_args.handle(),
     }
