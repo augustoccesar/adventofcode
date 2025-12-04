@@ -2,9 +2,23 @@
 
 [2025](#2025) | [2024](#2024) | [2023](#2023) | [2021](#2021) | [2020](#2020) | [2019](#2019) | [2018](#2018) | [2016](#2016) | [2015](#2015)
 
+## Stats
+
+**Total days**: _121_
+
+- <img src="resources/icons/rust.svg" width="20" height="20"> **Rust**: _33 days_ (27%)
+- <img src="resources/icons/golang.svg" width="20" height="20"> **Golang**: _25 days_ (21%)
+- <img src="resources/icons/ruby.svg" width="20" height="20"> **Ruby**: _15 days_ (12%)
+- <img src="resources/icons/csharp.svg" width="20" height="20"> **Csharp**: _14 days_ (12%)
+- <img src="resources/icons/java.svg" width="20" height="20"> **Java**: _14 days_ (12%)
+- <img src="resources/icons/python.svg" width="20" height="20"> **Python**: _10 days_ (8%)
+- <img src="resources/icons/typescript.svg" width="20" height="20"> **Typescript**: _10 days_ (8%)
+
 ## Calendars
 
-### 2025
+<details>
+
+<summary><h3>2025</h3></summary>
 
 | | | | | |
 | :---: | :---: | :---: | :---: | :---: |
@@ -18,8 +32,11 @@
 |—|—|—|—|—|
 | 21 | 22 | 23 | 24 | 25 |
 |—|—|—|—|—|
+</details>
 
-### 2024
+<details>
+
+<summary><h3>2024</h3></summary>
 
 | | | | | |
 | :---: | :---: | :---: | :---: | :---: |
@@ -33,8 +50,11 @@
 |—|—|—|—|—|
 | 21 | 22 | 23 | 24 | 25 |
 |—|—|—|—|—|
+</details>
 
-### 2023
+<details>
+
+<summary><h3>2023</h3></summary>
 
 | | | | | |
 | :---: | :---: | :---: | :---: | :---: |
@@ -48,8 +68,11 @@
 |<a href="/rust/src/y2023/d16.rs"><img src="resources/icons/rust.svg" width="20" height="20"></a>|<a href="/rust/src/y2023/d17.rs"><img src="resources/icons/rust.svg" width="20" height="20"></a>|<a href="/rust/src/y2023/d18.rs"><img src="resources/icons/rust.svg" width="20" height="20"></a>|<a href="/rust/src/y2023/d19.rs"><img src="resources/icons/rust.svg" width="20" height="20"></a>|—|
 | 21 | 22 | 23 | 24 | 25 |
 |—|—|—|—|—|
+</details>
 
-### 2021
+<details>
+
+<summary><h3>2021</h3></summary>
 
 | | | | | |
 | :---: | :---: | :---: | :---: | :---: |
@@ -63,8 +86,11 @@
 |—|—|—|—|—|
 | 21 | 22 | 23 | 24 | 25 |
 |—|—|—|—|—|
+</details>
 
-### 2020
+<details>
+
+<summary><h3>2020</h3></summary>
 
 | | | | | |
 | :---: | :---: | :---: | :---: | :---: |
@@ -78,8 +104,11 @@
 |<a href="/golang/y2020/d16/d16.go"><img src="resources/icons/golang.svg" width="20" height="20"></a>|<a href="/golang/y2020/d17/d17.go"><img src="resources/icons/golang.svg" width="20" height="20"></a>|<a href="/golang/y2020/d18/d18.go"><img src="resources/icons/golang.svg" width="20" height="20"></a>|<a href="/golang/y2020/d19/d19.go"><img src="resources/icons/golang.svg" width="20" height="20"></a>|<a href="/golang/y2020/d20/d20.go"><img src="resources/icons/golang.svg" width="20" height="20"></a>|
 | 21 | 22 | 23 | 24 | 25 |
 |<a href="/golang/y2020/d21/d21.go"><img src="resources/icons/golang.svg" width="20" height="20"></a>|<a href="/golang/y2020/d22/d22.go"><img src="resources/icons/golang.svg" width="20" height="20"></a>|<a href="/golang/y2020/d23/d23.go"><img src="resources/icons/golang.svg" width="20" height="20"></a>|<a href="/golang/y2020/d24/d24.go"><img src="resources/icons/golang.svg" width="20" height="20"></a>|<a href="/golang/y2020/d25/d25.go"><img src="resources/icons/golang.svg" width="20" height="20"></a>|
+</details>
 
-### 2019
+<details>
+
+<summary><h3>2019</h3></summary>
 
 | | | | | |
 | :---: | :---: | :---: | :---: | :---: |
@@ -93,8 +122,11 @@
 |—|—|—|—|—|
 | 21 | 22 | 23 | 24 | 25 |
 |—|—|—|—|—|
+</details>
 
-### 2018
+<details>
+
+<summary><h3>2018</h3></summary>
 
 | | | | | |
 | :---: | :---: | :---: | :---: | :---: |
@@ -108,8 +140,11 @@
 |—|—|—|—|—|
 | 21 | 22 | 23 | 24 | 25 |
 |—|—|—|—|—|
+</details>
 
-### 2016
+<details>
+
+<summary><h3>2016</h3></summary>
 
 | | | | | |
 | :---: | :---: | :---: | :---: | :---: |
@@ -123,8 +158,11 @@
 |—|—|—|—|—|
 | 21 | 22 | 23 | 24 | 25 |
 |—|—|—|—|—|
+</details>
 
-### 2015
+<details>
+
+<summary><h3>2015</h3></summary>
 
 | | | | | |
 | :---: | :---: | :---: | :---: | :---: |
@@ -138,6 +176,7 @@
 |—|—|—|—|—|
 | 21 | 22 | 23 | 24 | 25 |
 |—|—|—|—|—|
+</details>
 
 ## How does this repository works?
 

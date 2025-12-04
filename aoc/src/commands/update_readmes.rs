@@ -1,4 +1,8 @@
-use std::{collections::BTreeMap, fs::OpenOptions, io::Write};
+use std::{
+    collections::{BTreeMap, HashMap},
+    fs::OpenOptions,
+    io::Write,
+};
 
 use clap::Parser;
 
@@ -11,99 +15,168 @@ pub struct Args {}
 
 impl Args {
     pub fn handle(&self) {
-        let mut data: BTreeMap<u16, [Vec<Language>; 25]> = BTreeMap::new();
-        for language in Language::all() {
-            let available_days = language.managed().available_days();
-
-            for (year, days) in &available_days {
-                let data_days = data
-                    .entry(*year)
-                    .or_insert_with(|| std::array::from_fn(|_| Vec::new()));
-
-                for day in days {
-                    data_days
-                        .get_mut((*day - 1) as usize)
-                        .unwrap()
-                        .push(language.clone());
-                }
-            }
-        }
+        let data = build_readme_data();
 
         let mut readme = String::new();
         readme.push_str(README_HEADER);
 
-        let quick_links = data
-            .keys()
-            .rev()
-            .map(|year| format!("[{year}](#{year})"))
-            .collect::<Vec<_>>()
-            .join(" | ");
-        readme.push_str(&quick_links);
+        readme.push_str(&quick_links(&data));
         readme.push_str("\n\n");
+
+        readme.push_str(&stats_section(&data));
+        readme.push_str("\n");
 
         readme.push_str("## Calendars\n\n");
 
         for (year, days) in data.iter().rev() {
-            readme.push_str(&format!("### {year}\n\n"));
-            readme.push('|');
-            for _ in 0..CALENDAR_WIDTH_DAYS {
-                readme.push_str(" |");
-            }
-            readme.push('\n');
-
-            readme.push('|');
-            for _ in 0..CALENDAR_WIDTH_DAYS {
-                readme.push_str(" :---: |");
-            }
-            readme.push('\n');
-
-            for (chunk_idx, chunk) in days.chunks(CALENDAR_WIDTH_DAYS).enumerate() {
-                readme.push('|');
-                for i in 0..chunk.len() {
-                    let day = (chunk_idx * CALENDAR_WIDTH_DAYS) + i + 1;
-                    readme.push_str(&format!(" {:0>2} |", day));
-                }
-                readme.push('\n');
-
-                readme.push('|');
-                for (i, languages) in chunk.iter().enumerate() {
-                    let day = ((chunk_idx * CALENDAR_WIDTH_DAYS) + i + 1) as u8;
-
-                    if !languages.is_empty() {
-                        for language in languages {
-                            readme.push_str(&format!(
-                                "<a href={:?}>",
-                                language.managed().path_to_day(*year, day)
-                            ));
-                            readme.push_str(&format!(
-                                "<img src=\"resources/icons/{}.svg\" width=\"20\" height=\"20\">",
-                                language
-                            ));
-                            readme.push_str("</a>");
-                        }
-                    } else {
-                        readme.push('—');
-                    }
-
-                    readme.push_str("|");
-                }
-
-                readme.push_str("\n");
-            }
-
-            readme.push_str("\n");
+            readme.push_str(&year_calendar(*year, days));
         }
 
         readme.push_str(README_FOOTER);
 
-        let mut readme_file = OpenOptions::new()
-            .write(true)
-            .truncate(true)
-            .open(base_path().join("README.md"))
-            .unwrap();
-
-        readme_file.write_all(readme.as_bytes()).unwrap();
+        write_to_readme(&readme);
     }
+}
+
+fn build_readme_data() -> BTreeMap<u16, [Vec<Language>; 25]> {
+    let mut data: BTreeMap<u16, [Vec<Language>; 25]> = BTreeMap::new();
+    for language in Language::all() {
+        let available_days = language.managed().available_days();
+
+        for (year, days) in &available_days {
+            let data_days = data
+                .entry(*year)
+                .or_insert_with(|| std::array::from_fn(|_| Vec::new()));
+
+            for day in days {
+                data_days
+                    .get_mut((*day - 1) as usize)
+                    .unwrap()
+                    .push(language.clone());
+            }
+        }
+    }
+
+    data
+}
+
+fn quick_links(data: &BTreeMap<u16, [Vec<Language>; 25]>) -> String {
+    data.keys()
+        .rev()
+        .map(|year| format!("[{year}](#{year})"))
+        .collect::<Vec<_>>()
+        .join(" | ")
+}
+
+fn stats_section(data: &BTreeMap<u16, [Vec<Language>; 25]>) -> String {
+    let mut total_days = 0;
+    let mut languages_days_count = HashMap::<&Language, usize>::new();
+    for (_year, days) in data {
+        for languages in days {
+            for language in languages {
+                total_days += 1;
+                languages_days_count
+                    .entry(&language)
+                    .and_modify(|entry| *entry += 1)
+                    .or_insert(1);
+            }
+        }
+    }
+
+    let mut section = String::new();
+    section.push_str("## Stats\n\n");
+
+    section.push_str(&format!("**Total days**: _{total_days}_\n\n"));
+
+    let mut sorted_languages: Vec<_> = languages_days_count.iter().collect();
+    sorted_languages.sort_by(|a, b| b.1.cmp(a.1).then_with(|| a.0.cmp(b.0)));
+
+    for (language, count) in sorted_languages {
+        let percent = ((*count as f64 / total_days as f64) * 100.0).round() as u64;
+        let lang_str = capitalize((*language).into());
+
+        section.push_str(&format!(
+            "- <img src=\"resources/icons/{}.svg\" width=\"20\" height=\"20\"> **{}**: _{} days_ ({}%)\n",
+            language, lang_str, count, percent
+        ));
+    }
+
+    section
+}
+
+fn year_calendar(year: u16, days: &[Vec<Language>]) -> String {
+    let mut section = String::new();
+
+    section.push_str("<details>\n\n");
+
+    section.push_str(&format!("<summary><h3>{year}</h3></summary>\n\n"));
+    section.push('|');
+    for _ in 0..CALENDAR_WIDTH_DAYS {
+        section.push_str(" |");
+    }
+    section.push('\n');
+
+    section.push('|');
+    for _ in 0..CALENDAR_WIDTH_DAYS {
+        section.push_str(" :---: |");
+    }
+    section.push('\n');
+
+    for (chunk_idx, chunk) in days.chunks(CALENDAR_WIDTH_DAYS).enumerate() {
+        section.push('|');
+        for i in 0..chunk.len() {
+            let day = (chunk_idx * CALENDAR_WIDTH_DAYS) + i + 1;
+            section.push_str(&format!(" {:0>2} |", day));
+        }
+        section.push('\n');
+
+        section.push('|');
+        for (i, languages) in chunk.iter().enumerate() {
+            let day = ((chunk_idx * CALENDAR_WIDTH_DAYS) + i + 1) as u8;
+
+            if !languages.is_empty() {
+                for language in languages {
+                    section.push_str(&format!(
+                        "<a href={:?}>",
+                        language.managed().path_to_day(year, day)
+                    ));
+                    section.push_str(&format!(
+                        "<img src=\"resources/icons/{}.svg\" width=\"20\" height=\"20\">",
+                        language
+                    ));
+                    section.push_str("</a>");
+                }
+            } else {
+                section.push('—');
+            }
+
+            section.push_str("|");
+        }
+
+        section.push_str("\n");
+    }
+
+    section.push_str("</details>\n\n");
+
+    section
+}
+
+fn capitalize(input: &str) -> String {
+    let mut chars = input.chars();
+    match chars.next() {
+        None => String::new(),
+        Some(character) => character.to_uppercase().collect::<String>() + chars.as_str(),
+    }
+}
+
+fn write_to_readme(text: &str) {
+    let mut readme_file = OpenOptions::new()
+        .write(true)
+        .truncate(true)
+        .open(base_path().join("README.md"))
+        .unwrap();
+
+    readme_file.write_all(text.as_bytes()).unwrap();
 }
 
 const README_HEADER: &str = "# 🎄🎅 Advent of Code 🎅🎄\n\n";

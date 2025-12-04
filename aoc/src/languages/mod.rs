@@ -20,7 +20,7 @@ pub trait ManagedLanguage {
     fn path_to_day(&self, year: u16, day: u8) -> PathBuf;
 }
 
-#[derive(Clone, Debug, clap::ValueEnum)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, clap::ValueEnum)]
 pub enum Language {
     #[value(alias("cs"))]
     CSharp,
