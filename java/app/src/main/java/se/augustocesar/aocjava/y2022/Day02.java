@@ -121,30 +121,10 @@ enum Hand {
       return Result.DRAW;
     }
 
-    if (this == Hand.ROCK) {
-      if (opponent == Hand.SCISSORS) {
-        return Result.WIN;
-      } else {
-        return Result.LOSS;
-      }
+    if (this.winAgainst() == opponent) {
+      return Result.WIN;
+    } else {
+      return Result.LOSS;
     }
-
-    if (this == Hand.PAPER) {
-      if (opponent == Hand.ROCK) {
-        return Result.WIN;
-      } else {
-        return Result.LOSS;
-      }
-    }
-
-    if (this == Hand.SCISSORS) {
-      if (opponent == Hand.PAPER) {
-        return Result.WIN;
-      } else {
-        return Result.LOSS;
-      }
-    }
-
-    throw new RuntimeException("Unreachable");
   }
 }
