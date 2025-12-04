@@ -40,7 +40,44 @@ impl Day for Day04 {
     }
 
     fn part_two(&self) -> String {
-        "-".to_owned()
+        let mut map = self
+            .read_default_input()
+            .lines()
+            .map(|line| line.chars().collect::<Vec<char>>())
+            .collect::<Vec<Vec<char>>>();
+
+        let mut removed = 0;
+        loop {
+            let mut to_be_removed = Vec::<(usize, usize)>::new();
+
+            for (y, row) in map.iter().enumerate() {
+                for (x, cell) in row.iter().enumerate() {
+                    if *cell != '@' {
+                        continue;
+                    }
+
+                    let neighbor_rolls = neighbors(&map, x as i32, y as i32)
+                        .iter()
+                        .filter(|neighbor_cell| **neighbor_cell == '@')
+                        .count();
+
+                    if neighbor_rolls < 4 {
+                        to_be_removed.push((x, y));
+                    }
+                }
+            }
+
+            if to_be_removed.is_empty() {
+                break;
+            }
+
+            for remove_pos in &to_be_removed {
+                map[remove_pos.1][remove_pos.0] = '.';
+                removed += 1;
+            }
+        }
+
+        removed.to_string()
     }
 }
 
