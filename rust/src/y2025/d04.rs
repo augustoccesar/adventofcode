@@ -25,12 +25,7 @@ impl Day for Day04 {
                     continue;
                 }
 
-                let neighbor_rolls = neighbors(&map, x as i32, y as i32)
-                    .iter()
-                    .filter(|neighbor_cell| **neighbor_cell == '@')
-                    .count();
-
-                if neighbor_rolls < 4 {
+                if neighbor_rolls(&map, x as i32, y as i32) < 4 {
                     result += 1;
                 }
             }
@@ -56,12 +51,7 @@ impl Day for Day04 {
                         continue;
                     }
 
-                    let neighbor_rolls = neighbors(&map, x as i32, y as i32)
-                        .iter()
-                        .filter(|neighbor_cell| **neighbor_cell == '@')
-                        .count();
-
-                    if neighbor_rolls < 4 {
+                    if neighbor_rolls(&map, x as i32, y as i32) < 4 {
                         to_be_removed.push((x, y));
                     }
                 }
@@ -121,11 +111,11 @@ impl Direction {
     }
 }
 
-fn neighbors(map: &[Vec<char>], x: i32, y: i32) -> [char; 8] {
-    let mut neighbors = ['-'; 8];
+fn neighbor_rolls(map: &[Vec<char>], x: i32, y: i32) -> usize {
+    let mut neighbor_rolls = 0;
     let position = (x, y);
 
-    for (i, direction) in Direction::all().enumerate() {
+    for direction in Direction::all() {
         let modifier = direction.modifier();
         let neighbor_pos = (position.0 + modifier.0, position.1 + modifier.1);
 
@@ -137,8 +127,11 @@ fn neighbors(map: &[Vec<char>], x: i32, y: i32) -> [char; 8] {
             continue;
         }
 
-        neighbors[i] = map[neighbor_pos.1 as usize][neighbor_pos.0 as usize]
+        let neighbor_cell = map[neighbor_pos.1 as usize][neighbor_pos.0 as usize];
+        if neighbor_cell == '@' {
+            neighbor_rolls += 1;
+        }
     }
 
-    neighbors
+    neighbor_rolls
 }
