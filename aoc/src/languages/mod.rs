@@ -62,11 +62,25 @@ impl Language {
         ]
         .into_iter()
     }
+
+    pub fn icon(&self) -> String {
+        let language_str: &str = self.into();
+
+        format!("resources/icons/{language_str}.svg")
+    }
 }
 
 impl Display for Language {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.write_str(self.into())
+        match self {
+            Language::CSharp => f.write_str("C#"),
+            Language::Golang => f.write_str("Golang"),
+            Language::Java => f.write_str("Java"),
+            Language::Python => f.write_str("Python"),
+            Language::Ruby => f.write_str("Ruby"),
+            Language::Rust => f.write_str("Rust"),
+            Language::Typescript => f.write_str("Typescript"),
+        }
     }
 }
 

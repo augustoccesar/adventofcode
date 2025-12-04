@@ -9,7 +9,7 @@
 - <img src="resources/icons/rust.svg" width="20" height="20"> **Rust**: _33 days_ (27%)
 - <img src="resources/icons/golang.svg" width="20" height="20"> **Golang**: _25 days_ (21%)
 - <img src="resources/icons/ruby.svg" width="20" height="20"> **Ruby**: _15 days_ (12%)
-- <img src="resources/icons/csharp.svg" width="20" height="20"> **Csharp**: _14 days_ (12%)
+- <img src="resources/icons/csharp.svg" width="20" height="20"> **C#**: _14 days_ (12%)
 - <img src="resources/icons/java.svg" width="20" height="20"> **Java**: _14 days_ (12%)
 - <img src="resources/icons/python.svg" width="20" height="20"> **Python**: _10 days_ (8%)
 - <img src="resources/icons/typescript.svg" width="20" height="20"> **Typescript**: _10 days_ (8%)

@@ -93,11 +93,13 @@ fn stats_section(data: &BTreeMap<u16, [Vec<Language>; 25]>) -> String {
 
     for (language, count) in sorted_languages {
         let percent = ((*count as f64 / total_days as f64) * 100.0).round() as u64;
-        let lang_str = capitalize((*language).into());
 
         section.push_str(&format!(
-            "- <img src=\"resources/icons/{}.svg\" width=\"20\" height=\"20\"> **{}**: _{} days_ ({}%)\n",
-            language, lang_str, count, percent
+            "- <img src=\"{}\" width=\"20\" height=\"20\"> **{}**: _{} days_ ({}%)\n",
+            language.icon(),
+            language,
+            count,
+            percent
         ));
     }
 
@@ -143,8 +145,8 @@ fn year_calendar(year: u16, days: &[Vec<Language>]) -> String {
                         language.managed().path_to_day(year, day)
                     ));
                     section.push_str(&format!(
-                        "<img src=\"resources/icons/{}.svg\" width=\"20\" height=\"20\">",
-                        language
+                        "<img src=\"{}\" width=\"20\" height=\"20\">",
+                        language.icon()
                     ));
                     section.push_str("</a>");
                 }
@@ -162,14 +164,6 @@ fn year_calendar(year: u16, days: &[Vec<Language>]) -> String {
     section.push_str("</details>\n\n");
 
     section
-}
-
-fn capitalize(input: &str) -> String {
-    let mut chars = input.chars();
-    match chars.next() {
-        None => String::new(),
-        Some(character) => character.to_uppercase().collect::<String>() + chars.as_str(),
-    }
 }
 
 fn write_to_readme(text: &str) {
