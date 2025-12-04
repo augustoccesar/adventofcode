@@ -4,11 +4,11 @@
 
 ## Stats
 
-**Total days**: _122_
+**Total days**: _123_
 
 - <img src="resources/icons/rust.svg" width="20" height="20"> **Rust**: _33 days_ (27%)
 - <img src="resources/icons/golang.svg" width="20" height="20"> **Golang**: _25 days_ (20%)
-- <img src="resources/icons/java.svg" width="20" height="20"> **Java**: _15 days_ (12%)
+- <img src="resources/icons/java.svg" width="20" height="20"> **Java**: _16 days_ (13%)
 - <img src="resources/icons/ruby.svg" width="20" height="20"> **Ruby**: _15 days_ (12%)
 - <img src="resources/icons/csharp.svg" width="20" height="20"> **C#**: _14 days_ (11%)
 - <img src="resources/icons/python.svg" width="20" height="20"> **Python**: _10 days_ (8%)
@@ -88,7 +88,7 @@
 | | | | | |
 | :---: | :---: | :---: | :---: | :---: |
 | 01 | 02 | 03 | 04 | 05 |
-|<a href="/java/app/src/main/java/se/augustocesar/aocjava/y2022/Day01.java"><img src="resources/icons/java.svg" width="20" height="20"></a>|—|—|—|—|
+|<a href="/java/app/src/main/java/se/augustocesar/aocjava/y2022/Day01.java"><img src="resources/icons/java.svg" width="20" height="20"></a>|<a href="/java/app/src/main/java/se/augustocesar/aocjava/y2022/Day02.java"><img src="resources/icons/java.svg" width="20" height="20"></a>|—|—|—|
 | 06 | 07 | 08 | 09 | 10 |
 |—|—|—|—|—|
 | 11 | 12 | 13 | 14 | 15 |
