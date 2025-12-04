@@ -51,9 +51,10 @@ impl Day for Day03 {
         for bank in &banks {
             let mut batteries_set = [0; 12];
             let mut from_idx = 0;
-            for i in 0..12 {
+
+            for (i, battery) in batteries_set.iter_mut().enumerate() {
                 let idx = next_largest_possible_starts(bank, from_idx, 12 - i);
-                batteries_set[i] = idx;
+                *battery = idx;
 
                 from_idx = idx + 1;
             }
@@ -66,7 +67,7 @@ impl Day for Day03 {
                 .unwrap();
         }
 
-        return total.to_string();
+        total.to_string()
     }
 }
 
