@@ -12,22 +12,12 @@ impl Day for Day04 {
     }
 
     fn part_one(&self) -> String {
-        let map = self
-            .read_default_input()
-            .lines()
-            .map(|line| line.chars().collect::<Vec<char>>())
-            .collect::<Vec<Vec<char>>>();
+        let map = parse_input(&self.read_default_input());
 
         let mut result = 0;
-        for (y, row) in map.iter().enumerate() {
-            for (x, cell) in row.iter().enumerate() {
-                if *cell != '@' {
-                    continue;
-                }
-
-                if neighbor_rolls(&map, x as i32, y as i32) < 4 {
-                    result += 1;
-                }
+        for (x, y) in rolls_positions(&map) {
+            if count_neighbor_rolls(&map, x, y) < 4 {
+                result += 1;
             }
         }
 
@@ -35,25 +25,15 @@ impl Day for Day04 {
     }
 
     fn part_two(&self) -> String {
-        let mut map = self
-            .read_default_input()
-            .lines()
-            .map(|line| line.chars().collect::<Vec<char>>())
-            .collect::<Vec<Vec<char>>>();
+        let mut map = parse_input(&self.read_default_input());
 
         let mut removed = 0;
         loop {
-            let mut to_be_removed = Vec::<(usize, usize)>::new();
+            let mut to_be_removed = Vec::<Position>::new();
 
-            for (y, row) in map.iter().enumerate() {
-                for (x, cell) in row.iter().enumerate() {
-                    if *cell != '@' {
-                        continue;
-                    }
-
-                    if neighbor_rolls(&map, x as i32, y as i32) < 4 {
-                        to_be_removed.push((x, y));
-                    }
+            for (x, y) in rolls_positions(&map) {
+                if count_neighbor_rolls(&map, x, y) < 4 {
+                    to_be_removed.push((x, y));
                 }
             }
 
@@ -70,6 +50,9 @@ impl Day for Day04 {
         removed.to_string()
     }
 }
+
+type Map = Vec<Vec<char>>;
+type Position = (usize, usize);
 
 enum Direction {
     N,
@@ -111,13 +94,37 @@ impl Direction {
     }
 }
 
-fn neighbor_rolls(map: &[Vec<char>], x: i32, y: i32) -> usize {
+fn parse_input(input: &str) -> Map {
+    input
+        .lines()
+        .map(|line| line.chars().collect::<Vec<char>>())
+        .collect::<Vec<Vec<char>>>()
+}
+
+fn rolls_positions(map: &Map) -> Vec<Position> {
+    let mut positions = Vec::new();
+
+    for (y, row) in map.iter().enumerate() {
+        for (x, cell) in row.iter().enumerate() {
+            if *cell == '@' {
+                positions.push((x, y));
+            }
+        }
+    }
+
+    positions
+}
+
+fn count_neighbor_rolls(map: &[Vec<char>], x: usize, y: usize) -> usize {
     let mut neighbor_rolls = 0;
     let position = (x, y);
 
     for direction in Direction::all() {
         let modifier = direction.modifier();
-        let neighbor_pos = (position.0 + modifier.0, position.1 + modifier.1);
+        let neighbor_pos = (
+            position.0 as i32 + modifier.0,
+            position.1 as i32 + modifier.1,
+        );
 
         if neighbor_pos.0 < 0 || neighbor_pos.1 < 0 {
             continue;
