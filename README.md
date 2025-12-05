@@ -4,9 +4,9 @@
 
 ## Stats
 
-**Total days**: _124_
+**Total days**: _125_
 
-- <img src="resources/icons/rust.svg" width="20" height="20"> **Rust**: _33 days_ (27%)
+- <img src="resources/icons/rust.svg" width="20" height="20"> **Rust**: _34 days_ (27%)
 - <img src="resources/icons/golang.svg" width="20" height="20"> **Golang**: _25 days_ (20%)
 - <img src="resources/icons/java.svg" width="20" height="20"> **Java**: _17 days_ (14%)
 - <img src="resources/icons/ruby.svg" width="20" height="20"> **Ruby**: _15 days_ (12%)
@@ -25,7 +25,7 @@
 | | | | | |
 | :---: | :---: | :---: | :---: | :---: |
 | 01 | 02 | 03 | 04 | 05 |
-|<a href="/rust/src/y2025/d01.rs"><img src="resources/icons/rust.svg" width="20" height="20"></a>|<a href="/rust/src/y2025/d02.rs"><img src="resources/icons/rust.svg" width="20" height="20"></a>|<a href="/rust/src/y2025/d03.rs"><img src="resources/icons/rust.svg" width="20" height="20"></a>|<a href="/rust/src/y2025/d04.rs"><img src="resources/icons/rust.svg" width="20" height="20"></a>|—|
+|<a href="/rust/src/y2025/d01.rs"><img src="resources/icons/rust.svg" width="20" height="20"></a>|<a href="/rust/src/y2025/d02.rs"><img src="resources/icons/rust.svg" width="20" height="20"></a>|<a href="/rust/src/y2025/d03.rs"><img src="resources/icons/rust.svg" width="20" height="20"></a>|<a href="/rust/src/y2025/d04.rs"><img src="resources/icons/rust.svg" width="20" height="20"></a>|<a href="/rust/src/y2025/d05.rs"><img src="resources/icons/rust.svg" width="20" height="20"></a>|
 | 06 | 07 | 08 | 09 | 10 |
 |—|—|—|—|—|
 | 11 | 12 | 13 | 14 | 15 |
