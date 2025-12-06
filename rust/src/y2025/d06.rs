@@ -89,7 +89,7 @@ impl Day for Day06 {
                 _ => (),
             }
 
-            let digits = scan
+            let mut digits = scan
                 .iter()
                 .filter(|c| **c != ' ' && **c != '*' && **c != '+')
                 .map(|c| {
@@ -98,20 +98,20 @@ impl Day for Day06 {
                         as i64
                 })
                 .rev()
-                .collect::<Vec<_>>();
+                .peekable();
 
             // The only vertical scan without any digits is the one before the start of a new
             // problem, so add the total of the current problem to the aggregate total and
             // move to the next vertical scan.
-            if digits.is_empty() {
+            if let None = digits.peek() {
                 total += curr_problem_total;
 
                 continue;
             }
 
             let mut number = 0i64;
-            for (i, digit) in digits.iter().enumerate() {
-                number += *digit * (10i64.pow(i as u32));
+            for (i, digit) in digits.enumerate() {
+                number += digit * (10i64.pow(i as u32));
             }
 
             match curr_operation.clone().unwrap() {
