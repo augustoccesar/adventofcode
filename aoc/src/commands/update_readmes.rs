@@ -182,4 +182,20 @@ const README_FOOTER: &str = "## How does this repository works?
 This repository is managed by the code under `/aoc`.
 It is a program that helps generating and running days per language, and it has a
 compiled binary (For ARM Mac only at the moment) under `/bin` so that it can be ran from it.
+
+### Usual workflow
+1. `./bin/aoc prepare-day <lang> <year> <day> --full`
+
+   Prepare the day using `--full` so that it also download the input (if `AOC_SESSION` 
+   environment variable is set).
+   This will also update this README with links and update stats.
+
+2. `./bin/aoc create-input <year> <day>`
+
+   To create an empty example input so that can add the example that is usually
+   given for the day.
+
+3. `./bin/aoc run <lang> <year> <day>`
+
+   This will run the day for the language with the correct toolchain.
 ";
