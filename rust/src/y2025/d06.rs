@@ -22,14 +22,18 @@ impl Day for Day06 {
                     .next()
                     .expect("each operation should be a single character")
             })
-            .collect::<Vec<char>>();
+            .map(|operation_char| match operation_char {
+                '*' => Operation::Mult,
+                '+' => Operation::Add,
+                _ => panic!("invalid operation character"),
+            })
+            .collect::<Vec<Operation>>();
 
         let mut total = vec![0; operations.len()];
         for (i, operation) in operations.iter().enumerate() {
             match operation {
-                '+' => total[i] = 0,
-                '*' => total[i] = 1,
-                _ => panic!("invalid operation character"),
+                Operation::Add => total[i] = 0,
+                Operation::Mult => total[i] = 1,
             }
         }
 
@@ -47,9 +51,8 @@ impl Day for Day06 {
 
             for i in 0..total.len() {
                 match operations[i] {
-                    '+' => total[i] += numbers[i],
-                    '*' => total[i] *= numbers[i],
-                    _ => panic!("invalid operation character"),
+                    Operation::Add => total[i] += numbers[i],
+                    Operation::Mult => total[i] *= numbers[i],
                 }
             }
         }
@@ -125,6 +128,6 @@ impl Day for Day06 {
 
 #[derive(Debug, Clone)]
 enum Operation {
-    Mult,
     Add,
+    Mult,
 }
