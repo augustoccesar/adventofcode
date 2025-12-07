@@ -8,4 +8,3 @@ python = { version = "3.13.2" }
 ruby = { version = "3.4.7" }
 rust = { version = "1.91" }
 uv = { version = "0.9.11" }
-zig = { version = "0.15.2" }
