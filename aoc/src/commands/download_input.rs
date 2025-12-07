@@ -24,14 +24,20 @@ impl Args {
         .unwrap();
 
         let input = input.trim_ascii();
+        let input_path = base_path().join(format!("inputs/{}_{:0>2}.txt", self.year, self.day));
 
         let mut input_file = OpenOptions::new()
             .create(true)
             .truncate(true)
             .write(true)
-            .open(base_path().join(format!("inputs/{}_{:0>2}.txt", self.year, self.day)))
+            .open(&input_path)
             .unwrap();
 
         input_file.write_all(input.as_bytes()).unwrap();
+
+        println!(
+            "Input downloaded: {}",
+            input_path.to_str().expect("Input path should be valid str")
+        )
     }
 }

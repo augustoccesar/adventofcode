@@ -39,7 +39,7 @@ impl ManagedLanguage for Typescript {
         parse_year_available_days(String::from_utf8_lossy(&output.stdout).as_ref())
     }
 
-    fn prepare_day(&self, year: u16, day: u8) {
+    fn prepare_day(&self, year: u16, day: u8) -> PathBuf {
         let day_file_path = crate::base_path().join(format!("typescript/y{year}/d{day:0>2}.ts"));
 
         if !day_file_path.exists() {
@@ -51,7 +51,7 @@ impl ManagedLanguage for Typescript {
                 .write(true)
                 .create(true)
                 .truncate(true)
-                .open(day_file_path)
+                .open(&day_file_path)
                 .unwrap();
 
             day_file
@@ -82,6 +82,8 @@ impl ManagedLanguage for Typescript {
                 .status()
                 .unwrap();
         }
+
+        day_file_path
     }
 
     fn path_to_day(&self, year: u16, day: u8) -> PathBuf {

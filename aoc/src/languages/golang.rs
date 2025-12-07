@@ -38,7 +38,7 @@ impl ManagedLanguage for Golang {
         parse_year_available_days(String::from_utf8_lossy(&output.stdout).as_ref())
     }
 
-    fn prepare_day(&self, year: u16, day: u8) {
+    fn prepare_day(&self, year: u16, day: u8) -> PathBuf {
         let year_package_file_path = crate::base_path().join(format!("golang/y{year}/y{year}.go"));
         if let Some(path) = year_package_file_path.parent() {
             fs::create_dir_all(path).unwrap();
@@ -92,7 +92,7 @@ impl ManagedLanguage for Golang {
                 .write(true)
                 .create(true)
                 .truncate(true)
-                .open(day_file_path)
+                .open(&day_file_path)
                 .unwrap();
 
             day_file
@@ -129,6 +129,8 @@ impl ManagedLanguage for Golang {
             .current_dir(crate::base_path().join("golang"))
             .status()
             .unwrap();
+
+        day_file_path
     }
 
     fn path_to_day(&self, year: u16, day: u8) -> PathBuf {

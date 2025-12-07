@@ -32,7 +32,7 @@ impl ManagedLanguage for Java {
         parse_year_available_days(String::from_utf8_lossy(&output.stdout).as_ref())
     }
 
-    fn prepare_day(&self, year: u16, day: u8) {
+    fn prepare_day(&self, year: u16, day: u8) -> PathBuf {
         let day_file_path = crate::base_path().join(format!(
             "java/app/src/main/java/se/augustocesar/aocjava/y{year}/Day{day:0>2}.java"
         ));
@@ -46,7 +46,7 @@ impl ManagedLanguage for Java {
                 .write(true)
                 .create(true)
                 .truncate(true)
-                .open(day_file_path)
+                .open(&day_file_path)
                 .unwrap();
 
             day_file
@@ -66,6 +66,8 @@ impl ManagedLanguage for Java {
             //     .status()
             //     .unwrap();
         }
+
+        day_file_path
     }
 
     fn path_to_day(&self, year: u16, day: u8) -> PathBuf {

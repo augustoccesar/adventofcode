@@ -38,7 +38,7 @@ impl ManagedLanguage for Rust {
         parse_year_available_days(String::from_utf8_lossy(&output.stdout).as_ref())
     }
 
-    fn prepare_day(&self, year: u16, day: u8) {
+    fn prepare_day(&self, year: u16, day: u8) -> PathBuf {
         let year_module_path = crate::base_path().join(format!("rust/src/y{year}/mod.rs"));
 
         if !year_module_path.exists() {
@@ -57,6 +57,8 @@ impl ManagedLanguage for Rust {
             .current_dir(crate::base_path().join("rust"))
             .status()
             .unwrap();
+
+        day_module_path
     }
 
     fn path_to_day(&self, year: u16, day: u8) -> PathBuf {

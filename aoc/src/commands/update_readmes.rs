@@ -15,6 +15,7 @@ pub struct Args {}
 
 impl Args {
     pub fn handle(&self) {
+        println!("Updating READMEs...");
         let data = build_readme_data();
 
         let mut readme = String::new();
@@ -43,6 +44,7 @@ type ReadmeData = BTreeMap<u16, Vec<Vec<Language>>>;
 fn build_readme_data() -> ReadmeData {
     let mut data: ReadmeData = BTreeMap::new();
     for language in Language::all() {
+        println!("\tFetching days done in {language}...");
         let available_days = language.managed().available_days();
 
         for (year, days) in &available_days {

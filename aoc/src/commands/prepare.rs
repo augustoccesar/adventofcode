@@ -17,7 +17,12 @@ pub struct Args {
 
 impl Args {
     pub fn handle(&self) {
-        self.language.managed().prepare_day(self.year, self.day);
+        println!(
+            "Preparing {} files for {}-{:0>2}",
+            self.language, self.year, self.day
+        );
+
+        let day_file_path = self.language.managed().prepare_day(self.year, self.day);
 
         if self.full {
             commands::UpdateReadmesArgs {}.handle();
@@ -32,5 +37,12 @@ impl Args {
                 .handle();
             }
         }
+
+        println!(
+            "Day ready at: {}",
+            day_file_path
+                .to_str()
+                .expect("Day file path should be valid str")
+        )
     }
 }
