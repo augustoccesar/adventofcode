@@ -1,5 +1,5 @@
 use std::{
-    collections::HashSet,
+    collections::{HashMap, HashSet},
     fmt::{Display, Write},
 };
 
@@ -60,7 +60,44 @@ impl Day for Day07 {
     }
 
     fn part_two(&self) -> String {
-        "-".to_owned()
+        let (manifold, start_position) = parse_input(&self.read_default_input());
+        let mut split_cache = HashMap::<Position, u64>::new();
+
+        fn walk_beam(
+            manifold: &Manifold,
+            split_cache: &mut HashMap<Position, u64>,
+            mut pos: Position,
+        ) -> u64 {
+            loop {
+                pos = (pos.0, pos.1 + 1);
+
+                if let Some(timelines) = split_cache.get(&pos) {
+                    return *timelines;
+                }
+
+                if pos.1 == manifold.len() {
+                    return 1;
+                }
+
+                let next_tile = &manifold[pos.1][pos.0];
+
+                match next_tile {
+                    Tile::Beam | Tile::Empty => (), // Noop
+                    Tile::Entry => unreachable!("Entry point should not be reachable again"),
+                    Tile::Splitter => {
+                        let timelines_left = walk_beam(manifold, split_cache, (pos.0 - 1, pos.1));
+                        let timelines_right = walk_beam(manifold, split_cache, (pos.0 + 1, pos.1));
+                        let total_timelines = timelines_left + timelines_right;
+
+                        split_cache.insert(pos, total_timelines);
+
+                        return timelines_left + timelines_right;
+                    }
+                }
+            }
+        }
+
+        walk_beam(&manifold, &mut split_cache, start_position).to_string()
     }
 }
 

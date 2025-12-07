@@ -24,6 +24,9 @@ pub trait Day {
     fn read_default_input(&self) -> String {
         self.read_input("")
     }
+    fn read_example(&self, example_idx: u8) -> String {
+        self.read_input(&format!("example_{example_idx}"))
+    }
 }
 
 #[derive(Parser)]
