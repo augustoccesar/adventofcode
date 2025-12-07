@@ -76,12 +76,18 @@ fn quick_links(data: &ReadmeData) -> String {
 }
 
 fn stats_section(data: &ReadmeData) -> String {
-    let mut total_days = 0;
+    let mut total_aoc_days = 0;
+    let mut total_days_done = 0;
+
     let mut languages_days_count = HashMap::<&Language, usize>::new();
     for (_year, days) in data {
         for languages in days {
+            total_aoc_days += 1;
+            if languages.len() > 0 {
+                total_days_done += 1;
+            }
+
             for language in languages {
-                total_days += 1;
                 languages_days_count
                     .entry(&language)
                     .and_modify(|entry| *entry += 1)
@@ -93,13 +99,14 @@ fn stats_section(data: &ReadmeData) -> String {
     let mut section = String::new();
     section.push_str("## Stats\n\n");
 
-    section.push_str(&format!("**Total days**: _{total_days}_\n\n"));
+    section.push_str(&format!("**Total AoC days**: _{total_aoc_days}_</br>\n"));
+    section.push_str(&format!("**Total days done**: _{total_days_done}_\n\n"));
 
     let mut sorted_languages: Vec<_> = languages_days_count.iter().collect();
     sorted_languages.sort_by(|a, b| b.1.cmp(a.1).then_with(|| a.0.cmp(b.0)));
 
     for (language, count) in sorted_languages {
-        let percent = ((*count as f64 / total_days as f64) * 100.0).round() as u64;
+        let percent = ((*count as f64 / total_days_done as f64) * 100.0).round() as u64;
 
         section.push_str(&format!(
             "- <img src=\"{}\" width=\"20\" height=\"20\"> **{}**: _{} days_ ({}%)\n",

@@ -4,7 +4,8 @@
 
 ## Stats
 
-**Total days**: _127_
+**Total AoC days**: _237_</br>
+**Total days done**: _127_
 
 - <img src="resources/icons/rust.svg" width="20" height="20"> **Rust**: _36 days_ (28%)
 - <img src="resources/icons/golang.svg" width="20" height="20"> **Golang**: _25 days_ (20%)
