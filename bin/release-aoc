@@ -1,3 +1,5 @@
+#!/bin/bash
+
 platform="unknown"
 
 if [[ "$OSTYPE" == "darwin"* ]]; then
