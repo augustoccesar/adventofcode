@@ -28,12 +28,8 @@
 |<a href="/rust/src/y2025/d01.rs"><img src="resources/icons/rust.svg" width="20" height="20"></a>|<a href="/rust/src/y2025/d02.rs"><img src="resources/icons/rust.svg" width="20" height="20"></a>|<a href="/rust/src/y2025/d03.rs"><img src="resources/icons/rust.svg" width="20" height="20"></a>|<a href="/rust/src/y2025/d04.rs"><img src="resources/icons/rust.svg" width="20" height="20"></a>|<a href="/rust/src/y2025/d05.rs"><img src="resources/icons/rust.svg" width="20" height="20"></a>|
 | 06 | 07 | 08 | 09 | 10 |
 |<a href="/rust/src/y2025/d06.rs"><img src="resources/icons/rust.svg" width="20" height="20"></a>|<a href="/rust/src/y2025/d07.rs"><img src="resources/icons/rust.svg" width="20" height="20"></a>|—|—|—|
-| 11 | 12 | 13 | 14 | 15 |
-|—|—|—|—|—|
-| 16 | 17 | 18 | 19 | 20 |
-|—|—|—|—|—|
-| 21 | 22 | 23 | 24 | 25 |
-|—|—|—|—|—|
+| 11 | 12 |
+|—|—|
 </div>
 </details>
 

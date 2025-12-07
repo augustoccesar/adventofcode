@@ -38,15 +38,22 @@ impl Args {
     }
 }
 
-fn build_readme_data() -> BTreeMap<u16, [Vec<Language>; 25]> {
-    let mut data: BTreeMap<u16, [Vec<Language>; 25]> = BTreeMap::new();
+type ReadmeData = BTreeMap<u16, Vec<Vec<Language>>>;
+
+fn build_readme_data() -> ReadmeData {
+    let mut data: ReadmeData = BTreeMap::new();
     for language in Language::all() {
         let available_days = language.managed().available_days();
 
         for (year, days) in &available_days {
+            let days_count = match year {
+                ..2025 => 25,
+                2025.. => 12,
+            };
+
             let data_days = data
                 .entry(*year)
-                .or_insert_with(|| std::array::from_fn(|_| Vec::new()));
+                .or_insert_with(|| vec![vec![]; days_count]);
 
             for day in days {
                 data_days
@@ -60,7 +67,7 @@ fn build_readme_data() -> BTreeMap<u16, [Vec<Language>; 25]> {
     data
 }
 
-fn quick_links(data: &BTreeMap<u16, [Vec<Language>; 25]>) -> String {
+fn quick_links(data: &ReadmeData) -> String {
     data.keys()
         .rev()
         .map(|year| format!("[{year}](#user-content-{year}-expanded)"))
@@ -68,7 +75,7 @@ fn quick_links(data: &BTreeMap<u16, [Vec<Language>; 25]>) -> String {
         .join(" | ")
 }
 
-fn stats_section(data: &BTreeMap<u16, [Vec<Language>; 25]>) -> String {
+fn stats_section(data: &ReadmeData) -> String {
     let mut total_days = 0;
     let mut languages_days_count = HashMap::<&Language, usize>::new();
     for (_year, days) in data {
