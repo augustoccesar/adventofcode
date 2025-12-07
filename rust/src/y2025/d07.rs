@@ -121,16 +121,6 @@ fn parse_input(input: &str) -> (Manifold, Position) {
     (manifold, start_position)
 }
 
-#[allow(dead_code)]
-fn print_manifold(manifold: &Manifold) {
-    for row in manifold.iter() {
-        for tile in row.iter() {
-            print!("{}", tile);
-        }
-        println!()
-    }
-}
-
 #[derive(Debug, Clone, PartialEq)]
 enum Tile {
     Beam,
