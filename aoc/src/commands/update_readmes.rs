@@ -25,7 +25,7 @@ impl Args {
         readme.push_str("\n\n");
 
         readme.push_str(&stats_section(&data));
-        readme.push_str("\n");
+        readme.push('\n');
 
         readme.push_str("## Calendars\n\n");
 
@@ -82,16 +82,16 @@ fn stats_section(data: &ReadmeData) -> String {
     let mut total_days_done = 0;
 
     let mut languages_days_count = HashMap::<&Language, usize>::new();
-    for (_year, days) in data {
+    for days in data.values() {
         for languages in days {
             total_aoc_days += 1;
-            if languages.len() > 0 {
+            if !languages.is_empty() {
                 total_days_done += 1;
             }
 
             for language in languages {
                 languages_days_count
-                    .entry(&language)
+                    .entry(language)
                     .and_modify(|entry| *entry += 1)
                     .or_insert(1);
             }
@@ -177,10 +177,10 @@ fn year_calendar(year: u16, days: &[Vec<Language>]) -> String {
                 section.push('—');
             }
 
-            section.push_str("|");
+            section.push('|');
         }
 
-        section.push_str("\n");
+        section.push('\n');
     }
 
     section.push_str("</div>\n");

@@ -32,7 +32,7 @@ impl Args {
                 commands::DownloadInputArgs {
                     year: self.year,
                     day: self.day,
-                    aoc_session: aoc_session,
+                    aoc_session,
                 }
                 .handle();
             }

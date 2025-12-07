@@ -47,6 +47,7 @@ impl Args {
 
         OpenOptions::new()
             .create(true)
+            .truncate(true)
             .write(true)
             .open(&new_input_path)
             .expect("should be able to create new input file");
