@@ -17,7 +17,7 @@ impl Day for Day07 {
     }
 
     fn part_one(&self) -> String {
-        let (mut manifold, start_position) = parse_input(&self.read_default_input());
+        let (manifold, start_position) = parse_input(&self.read_default_input());
         let mut splits_hit = 0;
 
         let mut active_beams: HashSet<Position> = HashSet::new();
@@ -31,21 +31,17 @@ impl Day for Day07 {
                 let tile_in_new_position = &manifold[new_position.1][new_position.0];
 
                 match tile_in_new_position {
-                    Tile::Beam => (), // Noop?
+                    Tile::Beam => (),
                     Tile::Empty => {
                         new_active_beams.insert(new_position);
-                        manifold[new_position.1][new_position.0] = Tile::Beam;
                     }
                     Tile::Splitter => {
                         splits_hit += 1;
+
                         new_active_beams.insert((new_position.0 + 1, new_position.1));
-                        manifold[new_position.1][new_position.0 + 1] = Tile::Beam;
                         new_active_beams.insert((new_position.0 - 1, new_position.1));
-                        manifold[new_position.1][new_position.0 - 1] = Tile::Beam;
                     }
-                    Tile::Entry => {
-                        unreachable!("moving beam should not be able to hit the entry again")
-                    }
+                    Tile::Entry => unreachable!("Entry point should not be reachable again"),
                 }
             }
 
@@ -82,7 +78,7 @@ impl Day for Day07 {
                 let next_tile = &manifold[pos.1][pos.0];
 
                 match next_tile {
-                    Tile::Beam | Tile::Empty => (), // Noop
+                    Tile::Beam | Tile::Empty => (),
                     Tile::Entry => unreachable!("Entry point should not be reachable again"),
                     Tile::Splitter => {
                         let timelines_left = walk_beam(manifold, split_cache, (pos.0 - 1, pos.1));
