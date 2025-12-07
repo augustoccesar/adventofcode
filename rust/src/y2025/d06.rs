@@ -103,7 +103,7 @@ impl Day for Day06 {
             // The only vertical scan without any digits is the one before the start of a new
             // problem, so add the total of the current problem to the aggregate total and
             // move to the next vertical scan.
-            if let None = digits.peek() {
+            if digits.peek().is_none() {
                 total += curr_problem_total;
 
                 continue;
