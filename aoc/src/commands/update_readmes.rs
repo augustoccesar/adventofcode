@@ -129,6 +129,9 @@ fn year_calendar(year: u16, days: &[Vec<Language>]) -> String {
 
     section.push_str(&format!("<summary><h3>{year}</h3></summary>\n\n"));
     section.push_str(&format!("<div id=\"{year}-expanded\">\n\n"));
+    section.push_str(&format!(
+        "<a href=\"https://adventofcode.com/{year}\">See on AoC website</a>\n\n"
+    ));
 
     section.push('|');
     for _ in 0..CALENDAR_WIDTH_DAYS {
@@ -146,7 +149,11 @@ fn year_calendar(year: u16, days: &[Vec<Language>]) -> String {
         section.push('|');
         for i in 0..chunk.len() {
             let day = (chunk_idx * CALENDAR_WIDTH_DAYS) + i + 1;
-            section.push_str(&format!(" {:0>2} |", day));
+
+            section.push_str(&format!(
+                " [{:0>2}](https://adventofcode.com/{year}/day/{day}) |",
+                day
+            ));
         }
         section.push('\n');
 
