@@ -1,5 +1,5 @@
 use std::{
-    collections::{HashMap, HashSet},
+    collections::HashMap,
     fmt::{Display, Write},
 };
 
@@ -18,80 +18,16 @@ impl Day for Day07 {
 
     fn part_one(&self) -> String {
         let (manifold, start_position) = parse_input(&self.read_default_input());
-        let mut splits_hit = 0;
+        let mut split_cache = SplitCache::new();
 
-        let mut active_beams: HashSet<Position> = HashSet::new();
-        active_beams.insert((start_position.0, start_position.1 + 1));
+        walk_beam(&manifold, &mut split_cache, start_position).to_string();
 
-        loop {
-            let mut new_active_beams = HashSet::<Position>::new();
-
-            for beam in active_beams.iter() {
-                let new_position = (beam.0, beam.1 + 1);
-                let tile_in_new_position = &manifold[new_position.1][new_position.0];
-
-                match tile_in_new_position {
-                    Tile::Beam => (),
-                    Tile::Empty => {
-                        new_active_beams.insert(new_position);
-                    }
-                    Tile::Splitter => {
-                        splits_hit += 1;
-
-                        new_active_beams.insert((new_position.0 + 1, new_position.1));
-                        new_active_beams.insert((new_position.0 - 1, new_position.1));
-                    }
-                    Tile::Entry => unreachable!("Entry point should not be reachable again"),
-                }
-            }
-
-            active_beams = new_active_beams;
-
-            if active_beams.iter().map(|beam| beam.1).next().unwrap() == manifold.len() - 1 {
-                break;
-            }
-        }
-
-        splits_hit.to_string()
+        split_cache.len().to_string()
     }
 
     fn part_two(&self) -> String {
         let (manifold, start_position) = parse_input(&self.read_default_input());
-        let mut split_cache = HashMap::<Position, u64>::new();
-
-        fn walk_beam(
-            manifold: &Manifold,
-            split_cache: &mut HashMap<Position, u64>,
-            mut pos: Position,
-        ) -> u64 {
-            loop {
-                pos = (pos.0, pos.1 + 1);
-
-                if let Some(timelines) = split_cache.get(&pos) {
-                    return *timelines;
-                }
-
-                if pos.1 == manifold.len() {
-                    return 1;
-                }
-
-                let next_tile = &manifold[pos.1][pos.0];
-
-                match next_tile {
-                    Tile::Beam | Tile::Empty => (),
-                    Tile::Entry => unreachable!("Entry point should not be reachable again"),
-                    Tile::Splitter => {
-                        let timelines_left = walk_beam(manifold, split_cache, (pos.0 - 1, pos.1));
-                        let timelines_right = walk_beam(manifold, split_cache, (pos.0 + 1, pos.1));
-                        let total_timelines = timelines_left + timelines_right;
-
-                        split_cache.insert(pos, total_timelines);
-
-                        return timelines_left + timelines_right;
-                    }
-                }
-            }
-        }
+        let mut split_cache = SplitCache::new();
 
         walk_beam(&manifold, &mut split_cache, start_position).to_string()
     }
@@ -99,6 +35,7 @@ impl Day for Day07 {
 
 type Position = (usize, usize);
 type Manifold = Vec<Vec<Tile>>;
+type SplitCache = HashMap<Position, u64>;
 
 fn parse_input(input: &str) -> (Manifold, Position) {
     let lines = input.lines().collect::<Vec<_>>();
@@ -119,6 +56,36 @@ fn parse_input(input: &str) -> (Manifold, Position) {
     }
 
     (manifold, start_position)
+}
+
+fn walk_beam(manifold: &Manifold, split_cache: &mut SplitCache, mut pos: Position) -> u64 {
+    loop {
+        pos = (pos.0, pos.1 + 1);
+
+        if let Some(timelines) = split_cache.get(&pos) {
+            return *timelines;
+        }
+
+        if pos.1 == manifold.len() {
+            return 1;
+        }
+
+        let next_tile = &manifold[pos.1][pos.0];
+
+        match next_tile {
+            Tile::Beam | Tile::Empty => (),
+            Tile::Entry => unreachable!("Entry point should not be reachable again"),
+            Tile::Splitter => {
+                let timelines_left = walk_beam(manifold, split_cache, (pos.0 - 1, pos.1));
+                let timelines_right = walk_beam(manifold, split_cache, (pos.0 + 1, pos.1));
+                let total_timelines = timelines_left + timelines_right;
+
+                split_cache.insert(pos, total_timelines);
+
+                return timelines_left + timelines_right;
+            }
+        }
+    }
 }
 
 #[derive(Debug, Clone, PartialEq)]
