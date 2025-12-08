@@ -14,7 +14,7 @@ use crate::languages::{
 };
 
 pub trait ManagedLanguage {
-    fn run(&self, year: u16, day: u8);
+    fn run(&self, year: u16, day: u8) -> String;
     fn available_days(&self) -> HashMap<u16, Vec<u8>>;
     fn prepare_day(&self, year: u16, day: u8) -> PathBuf;
     fn path_to_day(&self, year: u16, day: u8) -> PathBuf;

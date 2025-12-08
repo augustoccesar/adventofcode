@@ -32,8 +32,17 @@ module AOC
             exit 1
           end
 
-          puts day_instance.part_one
-          puts day_instance.part_two
+          part_one_start = Process.clock_gettime(Process::CLOCK_MONOTONIC, :nanosecond)
+          part_one_result = day_instance.part_one
+          part_one_end = Process.clock_gettime(Process::CLOCK_MONOTONIC, :nanosecond)
+
+          puts "#{part_one_result};#{part_one_end - part_one_start}"
+
+          part_two_start = Process.clock_gettime(Process::CLOCK_MONOTONIC, :nanosecond)
+          part_two_result = day_instance.part_two
+          part_two_end = Process.clock_gettime(Process::CLOCK_MONOTONIC, :nanosecond)
+
+          puts "#{part_two_result};#{part_two_end - part_two_start}"
         end
       end
 

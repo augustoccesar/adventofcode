@@ -9,6 +9,7 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/urfave/cli/v3"
 
@@ -53,11 +54,15 @@ func main() {
 						return cli.Exit(fmt.Sprintf("Day %d for year %d not found", dayInput, yearInput), 1)
 					}
 
+					partOneStart := time.Now()
 					partOneResult := day.PartOne()
-					fmt.Printf("%s\n", partOneResult)
+					partOneEnd := time.Now()
+					fmt.Printf("%s;%d\n", partOneResult, partOneEnd.Sub(partOneStart).Nanoseconds())
 
+					partTwoStart := time.Now()
 					partTwoResult := day.PartTwo()
-					fmt.Printf("%s\n", partTwoResult)
+					partTwoEnd := time.Now()
+					fmt.Printf("%s;%d\n", partTwoResult, partTwoEnd.Sub(partTwoStart).Nanoseconds())
 
 					return nil
 				},

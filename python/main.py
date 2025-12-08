@@ -1,3 +1,4 @@
+import time
 import click
 
 from day import DAY_REGISTRY, get_day
@@ -26,8 +27,15 @@ def cli():
 def run(year: int, day: int):
     day_instance = get_day(year, day)
     if day_instance:
-        print(day_instance.part_one())
-        print(day_instance.part_two())
+        part_one_start = time.perf_counter_ns()
+        part_one_result = day_instance.part_one()
+        part_one_end = time.perf_counter_ns()
+        print(f"{part_one_result};{part_one_end - part_one_start}")
+
+        part_two_start = time.perf_counter_ns()
+        part_two_result = day_instance.part_two()
+        part_two_end = time.perf_counter_ns()
+        print(f"{part_two_result};{part_two_end - part_two_start}")
     else:
         print(f"Day {day} not found for year {year}")
 

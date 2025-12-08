@@ -13,8 +13,8 @@ use crate::languages::{ManagedLanguage, parse_year_available_days};
 pub struct Rust;
 
 impl ManagedLanguage for Rust {
-    fn run(&self, year: u16, day: u8) {
-        process::Command::new("cargo")
+    fn run(&self, year: u16, day: u8) -> String {
+        let stdout = process::Command::new("cargo")
             .args([
                 "run",
                 "--",
@@ -23,8 +23,11 @@ impl ManagedLanguage for Rust {
                 &format!("{}", day),
             ])
             .current_dir(crate::base_path().join("rust"))
-            .status()
-            .unwrap();
+            .output()
+            .unwrap()
+            .stdout;
+
+        String::from_utf8(stdout).expect("stdout should be valid UTF-8")
     }
 
     fn available_days(&self) -> HashMap<u16, Vec<u8>> {

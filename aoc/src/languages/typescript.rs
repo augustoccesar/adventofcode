@@ -13,19 +13,23 @@ use crate::languages::{ManagedLanguage, parse_year_available_days};
 pub struct Typescript;
 
 impl ManagedLanguage for Typescript {
-    fn run(&self, year: u16, day: u8) {
-        process::Command::new("deno")
+    fn run(&self, year: u16, day: u8) -> String {
+        let stdout = process::Command::new("deno")
             .args([
                 "run",
                 "-A",
+                "--unstable-temporal",
                 "main.ts",
                 "run",
                 &format!("{}", year),
                 &format!("{}", day),
             ])
             .current_dir(crate::base_path().join("typescript"))
-            .status()
-            .unwrap();
+            .output()
+            .unwrap()
+            .stdout;
+
+        String::from_utf8(stdout).expect("stdout should be valid UTF-8")
     }
 
     fn available_days(&self) -> HashMap<u16, Vec<u8>> {

@@ -1,4 +1,4 @@
-use std::{collections::HashMap, fs, process::exit};
+use std::{collections::HashMap, fs, process::exit, time::Instant};
 
 use clap::Parser;
 
@@ -88,11 +88,17 @@ fn main() {
     match cli {
         Cli::Run(run_args) => match days_map.get(&(run_args.year, run_args.day)) {
             Some(day_handler) => {
+                let start = Instant::now();
                 let part_one_result = day_handler.part_one();
-                println!("{part_one_result}");
+                let end = Instant::now();
 
+                println!("{part_one_result};{}", (end - start).as_nanos());
+
+                let start = Instant::now();
                 let part_two_result = day_handler.part_two();
-                println!("{part_two_result}");
+                let end = Instant::now();
+
+                println!("{part_two_result};{}", (end - start).as_nanos());
             }
             None => {
                 eprintln!("Day {} not found for year {}", run_args.day, run_args.year);

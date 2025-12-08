@@ -13,8 +13,8 @@ use crate::languages::{ManagedLanguage, parse_year_available_days};
 pub struct CSharp;
 
 impl ManagedLanguage for CSharp {
-    fn run(&self, year: u16, day: u8) {
-        process::Command::new("dotnet")
+    fn run(&self, year: u16, day: u8) -> String {
+        let stdout = process::Command::new("dotnet")
             .args([
                 "run",
                 "--",
@@ -26,8 +26,11 @@ impl ManagedLanguage for CSharp {
             ])
             .current_dir(crate::base_path().join("csharp"))
             .stderr(Stdio::null())
-            .status()
-            .unwrap();
+            .output()
+            .unwrap()
+            .stdout;
+
+        String::from_utf8(stdout).expect("stdout should be valid UTF-8")
     }
 
     fn available_days(&self) -> HashMap<u16, Vec<u8>> {

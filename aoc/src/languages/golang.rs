@@ -13,8 +13,8 @@ use crate::languages::{ManagedLanguage, parse_year_available_days};
 pub struct Golang;
 
 impl ManagedLanguage for Golang {
-    fn run(&self, year: u16, day: u8) {
-        process::Command::new("go")
+    fn run(&self, year: u16, day: u8) -> String {
+        let stdout = process::Command::new("go")
             .args([
                 "run",
                 "main.go",
@@ -23,8 +23,11 @@ impl ManagedLanguage for Golang {
                 &format!("{}", day),
             ])
             .current_dir(crate::base_path().join("golang"))
-            .status()
-            .unwrap();
+            .output()
+            .unwrap()
+            .stdout;
+
+        String::from_utf8(stdout).expect("stdout should be valid UTF-8")
     }
 
     fn available_days(&self) -> HashMap<u16, Vec<u8>> {

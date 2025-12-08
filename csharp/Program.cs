@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.Design;
+using System.Diagnostics;
 using aoc;
 using ConsoleAppFramework;
 
@@ -13,8 +14,22 @@ static void RunCommand(int year, int day)
         Environment.Exit(1);
     }
 
-    Console.WriteLine(dayInstance.PartOne());
-    Console.WriteLine(dayInstance.PartTwo());
+    Stopwatch stopwatch = new();
+    double nanosecondsPerTick = (1000.0 * 1000.0 * 1000.0) / Stopwatch.Frequency;
+
+    stopwatch.Start();
+    var partOneResult = dayInstance.PartOne();
+    stopwatch.Stop();
+
+    Console.WriteLine($"{partOneResult};{stopwatch.ElapsedTicks * nanosecondsPerTick}");
+
+    stopwatch.Reset();
+
+    stopwatch.Start();
+    var partTwoResult = dayInstance.PartTwo();
+    stopwatch.Stop();
+
+    Console.WriteLine($"{partTwoResult};{stopwatch.ElapsedTicks * nanosecondsPerTick}");
 }
 
 static void DaysCommand()

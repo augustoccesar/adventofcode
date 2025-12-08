@@ -25,8 +25,17 @@ public class DayRun implements Callable<Integer> {
       return 1;
     }
 
-    System.out.println(day.get().partOne());
-    System.out.println(day.get().partTwo());
+    long partOneStart = System.nanoTime();
+    String resultPartOne = day.get().partOne();
+    long partOneEnd = System.nanoTime();
+
+    System.out.printf("%s;%d\n", resultPartOne, partOneEnd - partOneStart);
+
+    long partTwoStart = System.nanoTime();
+    String resultPartTwo = day.get().partTwo();
+    long partTwoEnd = System.nanoTime();
+
+    System.out.printf("%s;%d\n", resultPartTwo, partTwoEnd - partTwoStart);
 
     return 0;
   }

@@ -26,8 +26,15 @@ const runCommand = new Command()
       Deno.exit(1);
     }
 
-    console.log(dayInstance.partOne());
-    console.log(dayInstance.partTwo());
+    const partOneStart = Temporal.Now.instant();
+    const partOneResult = dayInstance.partOne();
+    const partOneEnd = Temporal.Now.instant();
+    console.log(`${partOneResult};${partOneEnd.epochNanoseconds - partOneStart.epochNanoseconds}`);
+
+    const partTwoStart = Temporal.Now.instant();
+    const partTwoResult = dayInstance.partTwo();
+    const partTwoEnd = Temporal.Now.instant();
+    console.log(`${partTwoResult};${partTwoEnd.epochNanoseconds - partTwoStart.epochNanoseconds}`);
   });
 
 const daysCommand = new Command()
