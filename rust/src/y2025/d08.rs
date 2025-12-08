@@ -89,7 +89,70 @@ impl Day for Day08 {
     }
 
     fn part_two(&self) -> String {
-        "-".to_owned()
+        let input = self.read_default_input();
+        let juncion_boxes = input
+            .lines()
+            .map(|line| {
+                let mut coordinates = line.split(",").map(|number_str| {
+                    number_str
+                        .parse::<i64>()
+                        .expect("number should be valid i64")
+                });
+
+                JunctionBox {
+                    x: coordinates
+                        .next()
+                        .expect("coordinates should have a first value for 'x'"),
+                    y: coordinates
+                        .next()
+                        .expect("coordinates should have a first value for 'y'"),
+                    z: coordinates
+                        .next()
+                        .expect("coordinates should have a first value for 'z'"),
+                }
+            })
+            .collect::<Vec<JunctionBox>>();
+
+        let mut circuits: Vec<Circuit> = Vec::new();
+        for junction_box in &juncion_boxes {
+            circuits.push(HashSet::from([junction_box]));
+        }
+
+        // Do as a HashMap first to ensure that, given a distance
+        // function `d`, `d(a,b)` does not duplicate with `d(b,a)`.
+        let mut distances: HashMap<PointTuple, f64> = HashMap::new();
+        for i in 0..juncion_boxes.len() {
+            for j in 0..juncion_boxes.len() {
+                if i == j {
+                    continue;
+                }
+
+                let a = &juncion_boxes[i];
+                let b = &juncion_boxes[j];
+                let distance = distance_between_points(a, b);
+
+                distances.insert(PointTuple(a.clone(), b.clone()), distance);
+            }
+        }
+
+        // Change distances to be a Vec now so that we can order
+        let mut distances = distances.into_iter().collect::<Vec<(PointTuple, f64)>>();
+        distances.sort_by(|a, b| {
+            a.1.partial_cmp(&b.1)
+                .expect("distance values should be comparable")
+        });
+
+        let mut latest_connection = None;
+        for (tuple, _) in distances.iter() {
+            if let Some(connection) = connect_junction_boxes(&mut circuits, &tuple.0, &tuple.1) {
+                latest_connection = Some(connection);
+            }
+        }
+
+        let latest_connection =
+            latest_connection.expect("there should have been a latest connection");
+
+        (latest_connection.0.x * latest_connection.1.x).to_string()
     }
 }
 
@@ -129,7 +192,7 @@ fn connect_junction_boxes<'a>(
     circuits: &mut Vec<Circuit<'a>>,
     jb1: &'a JunctionBox,
     jb2: &'a JunctionBox,
-) {
+) -> Option<(&'a JunctionBox, &'a JunctionBox)> {
     let mut from_index: Option<usize> = None;
     let mut to_index: Option<usize> = None;
 
@@ -153,7 +216,7 @@ fn connect_junction_boxes<'a>(
 
     // They are already on the same circuit
     if from_idx == to_idx {
-        return;
+        return None;
     }
 
     // Since we are merging two different indexes of the same vector and we don't care
@@ -167,6 +230,8 @@ fn connect_junction_boxes<'a>(
     // Pop the largest index one to extend to the smallest index one
     let circuit_to_merge = circuits.remove(larger_idx);
     circuits[smaller_idx].extend(circuit_to_merge);
+
+    Some((jb1, jb2))
 }
 
 fn distance_between_points(a: &Point3D, b: &Point3D) -> f64 {
