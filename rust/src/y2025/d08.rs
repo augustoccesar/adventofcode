@@ -16,135 +16,35 @@ impl Day for Day08 {
         8
     }
 
-    // TODO: This is probably way more complicated than it needs to be xD. But that is
-    //       a problem for future me.
     fn part_one(&self) -> String {
         let input = self.read_default_input();
-        let juncion_boxes = input
-            .lines()
-            .map(|line| {
-                let mut coordinates = line.split(",").map(|number_str| {
-                    number_str
-                        .parse::<i64>()
-                        .expect("number should be valid i64")
-                });
+        let mut decoration = Decoration::parse(&input);
 
-                JunctionBox {
-                    x: coordinates
-                        .next()
-                        .expect("coordinates should have a first value for 'x'"),
-                    y: coordinates
-                        .next()
-                        .expect("coordinates should have a first value for 'y'"),
-                    z: coordinates
-                        .next()
-                        .expect("coordinates should have a first value for 'z'"),
-                }
-            })
-            .collect::<Vec<JunctionBox>>();
-
-        let mut circuits: Vec<Circuit> = Vec::new();
-        for junction_box in &juncion_boxes {
-            circuits.push(HashSet::from([junction_box]));
+        for tuple in decoration.closest_junction_boxes.iter().take(1000) {
+            connect_junction_boxes(&mut decoration.circuits, &tuple.0, &tuple.1);
         }
 
-        // Do as a HashMap first to ensure that, given a distance
-        // function `d`, `d(a,b)` does not duplicate with `d(b,a)`.
-        let mut distances: HashMap<PointTuple, f64> = HashMap::new();
-        for i in 0..juncion_boxes.len() {
-            for j in 0..juncion_boxes.len() {
-                if i == j {
-                    continue;
-                }
-
-                let a = &juncion_boxes[i];
-                let b = &juncion_boxes[j];
-                let distance = distance_between_points(a, b);
-
-                distances.insert(PointTuple(a.clone(), b.clone()), distance);
-            }
-        }
-
-        // Change distances to be a Vec now so that we can order
-        let mut distances = distances.into_iter().collect::<Vec<(PointTuple, f64)>>();
-        distances.sort_by(|a, b| {
-            a.1.partial_cmp(&b.1)
-                .expect("distance values should be comparable")
-        });
-
-        for (tuple, _) in distances.iter().take(1000) {
-            connect_junction_boxes(&mut circuits, &tuple.0, &tuple.1);
-        }
-
-        let mut circuit_sizes = circuits
-            .into_iter()
+        let mut circuit_sizes = decoration
+            .circuits
+            .iter()
             .map(|circuit| circuit.len())
             .collect::<Vec<usize>>();
         circuit_sizes.sort();
         circuit_sizes.reverse();
 
-        let total = circuit_sizes.iter().take(3).product::<usize>();
-
-        total.to_string()
+        circuit_sizes.iter().take(3).product::<usize>().to_string()
     }
 
     fn part_two(&self) -> String {
         let input = self.read_default_input();
-        let juncion_boxes = input
-            .lines()
-            .map(|line| {
-                let mut coordinates = line.split(",").map(|number_str| {
-                    number_str
-                        .parse::<i64>()
-                        .expect("number should be valid i64")
-                });
 
-                JunctionBox {
-                    x: coordinates
-                        .next()
-                        .expect("coordinates should have a first value for 'x'"),
-                    y: coordinates
-                        .next()
-                        .expect("coordinates should have a first value for 'y'"),
-                    z: coordinates
-                        .next()
-                        .expect("coordinates should have a first value for 'z'"),
-                }
-            })
-            .collect::<Vec<JunctionBox>>();
-
-        let mut circuits: Vec<Circuit> = Vec::new();
-        for junction_box in &juncion_boxes {
-            circuits.push(HashSet::from([junction_box]));
-        }
-
-        // Do as a HashMap first to ensure that, given a distance
-        // function `d`, `d(a,b)` does not duplicate with `d(b,a)`.
-        let mut distances: HashMap<PointTuple, f64> = HashMap::new();
-        for i in 0..juncion_boxes.len() {
-            for j in 0..juncion_boxes.len() {
-                if i == j {
-                    continue;
-                }
-
-                let a = &juncion_boxes[i];
-                let b = &juncion_boxes[j];
-                let distance = distance_between_points(a, b);
-
-                distances.insert(PointTuple(a.clone(), b.clone()), distance);
-            }
-        }
-
-        // Change distances to be a Vec now so that we can order
-        let mut distances = distances.into_iter().collect::<Vec<(PointTuple, f64)>>();
-        distances.sort_by(|a, b| {
-            a.1.partial_cmp(&b.1)
-                .expect("distance values should be comparable")
-        });
+        let mut decoration = Decoration::parse(&input);
 
         let mut latest_connection = None;
-        for (tuple, _) in distances.iter() {
-            if let Some(connection) = connect_junction_boxes(&mut circuits, &tuple.0, &tuple.1) {
+        for tuple in decoration.closest_junction_boxes.iter() {
+            if let Some(connection) =
+                connect_junction_boxes(&mut decoration.circuits, &tuple.0, &tuple.1)
+            {
                 latest_connection = Some(connection);
             }
         }
@@ -157,7 +57,80 @@ impl Day for Day08 {
 }
 
 type JunctionBox = Point3D;
-type Circuit<'a> = HashSet<&'a JunctionBox>;
+type Circuit = HashSet<JunctionBox>;
+
+struct Decoration {
+    circuits: Vec<Circuit>,
+    closest_junction_boxes: Vec<PointTuple>,
+}
+
+impl Decoration {
+    // TODO: This is probably way more complicated than it needs to be xD. But that is
+    //       a problem for future me.
+    fn parse(s: &str) -> Self {
+        let juncion_boxes = s
+            .lines()
+            .map(|line| {
+                let mut coordinates = line.split(",").map(|number_str| {
+                    number_str
+                        .parse::<i64>()
+                        .expect("number should be valid i64")
+                });
+
+                JunctionBox {
+                    x: coordinates
+                        .next()
+                        .expect("coordinates should have a first value for 'x'"),
+                    y: coordinates
+                        .next()
+                        .expect("coordinates should have a first value for 'y'"),
+                    z: coordinates
+                        .next()
+                        .expect("coordinates should have a first value for 'z'"),
+                }
+            })
+            .collect::<Vec<JunctionBox>>();
+
+        let mut circuits: Vec<Circuit> = Vec::new();
+        for junction_box in &juncion_boxes {
+            circuits.push(HashSet::from([junction_box.to_owned()]));
+        }
+
+        // Do as a HashMap first to ensure that, given a distance
+        // function `d`, `d(a,b)` does not duplicate with `d(b,a)`.
+        let mut distances: HashMap<PointTuple, f64> = HashMap::new();
+        for i in 0..juncion_boxes.len() {
+            for j in 0..juncion_boxes.len() {
+                if i == j {
+                    continue;
+                }
+
+                let a = &juncion_boxes[i];
+                let b = &juncion_boxes[j];
+                let distance = distance_between_points(a, b);
+
+                distances.insert(PointTuple(a.clone(), b.clone()), distance);
+            }
+        }
+
+        // Change distances to be a Vec now so that we can order
+        let mut distances = distances.into_iter().collect::<Vec<(PointTuple, f64)>>();
+        distances.sort_by(|a, b| {
+            a.1.partial_cmp(&b.1)
+                .expect("distance values should be comparable")
+        });
+
+        let distances = distances
+            .iter()
+            .map(|distance| distance.0.clone())
+            .collect::<Vec<PointTuple>>();
+
+        Self {
+            circuits,
+            closest_junction_boxes: distances,
+        }
+    }
+}
 
 #[derive(Debug, Default, Clone, PartialEq, Eq, PartialOrd, Hash)]
 struct Point3D {
@@ -189,7 +162,7 @@ impl Hash for PointTuple {
 }
 
 fn connect_junction_boxes<'a>(
-    circuits: &mut Vec<Circuit<'a>>,
+    circuits: &mut Vec<Circuit>,
     jb1: &'a JunctionBox,
     jb2: &'a JunctionBox,
 ) -> Option<(&'a JunctionBox, &'a JunctionBox)> {
@@ -202,11 +175,11 @@ fn connect_junction_boxes<'a>(
             break;
         }
 
-        if circuit.contains(&jb1) {
+        if circuit.contains(jb1) {
             from_index = Some(i);
         }
 
-        if circuit.contains(&jb2) {
+        if circuit.contains(jb2) {
             to_index = Some(i);
         }
     }
