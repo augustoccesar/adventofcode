@@ -80,6 +80,7 @@ fn main() {
         ((2025, 6), Box::new(y2025::d06::Day06 {}) as Box<dyn Day>),
         ((2025, 7), Box::new(y2025::d07::Day07 {}) as Box<dyn Day>),
         ((2025, 8), Box::new(y2025::d08::Day08 {}) as Box<dyn Day>),
+        ((2025, 9), Box::new(y2025::d09::Day09 {}) as Box<dyn Day>),
         // CODEGEN:day_map
     ]);
 
