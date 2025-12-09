@@ -13,24 +13,7 @@ impl Day for Day09 {
 
     fn part_one(&self) -> String {
         let input = self.read_default_input();
-        let red_tiles_pos: Vec<Position> = input
-            .lines()
-            .map(|line| {
-                let [x, y] = line
-                    .split(",")
-                    .map(|number| {
-                        number
-                            .parse::<i64>()
-                            .expect("numbers on the input should be valid i64")
-                    })
-                    .collect::<Vec<i64>>()[..]
-                else {
-                    panic!("Invalid line format");
-                };
-
-                (x, y)
-            })
-            .collect::<Vec<_>>();
+        let red_tiles_pos: Vec<Position> = parse_input(&input);
 
         let mut largest_area = 0;
         for i in 0..red_tiles_pos.len() {
@@ -57,3 +40,24 @@ impl Day for Day09 {
 }
 
 type Position = (i64, i64);
+
+fn parse_input(input: &str) -> Vec<Position> {
+    input
+        .lines()
+        .map(|line| {
+            let [x, y] = line
+                .split(",")
+                .map(|number| {
+                    number
+                        .parse::<i64>()
+                        .expect("numbers on the input should be valid i64")
+                })
+                .collect::<Vec<i64>>()[..]
+            else {
+                panic!("Invalid line format");
+            };
+
+            (x, y)
+        })
+        .collect::<Vec<_>>()
+}
