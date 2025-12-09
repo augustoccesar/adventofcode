@@ -2,7 +2,6 @@ use std::{
     collections::{BTreeMap, HashMap},
     fs::OpenOptions,
     io::Write,
-    sync::mpsc,
     thread,
 };
 
@@ -45,32 +44,24 @@ type ReadmeData = BTreeMap<u16, Vec<Vec<Language>>>;
 
 fn build_readme_data() -> ReadmeData {
     let mut data: ReadmeData = BTreeMap::new();
-    let (sender, receiver) = mpsc::channel();
     let mut thread_handles = vec![];
 
     for language in Language::all() {
-        let language_sender = sender.clone();
         let handle = thread::spawn(move || {
             println!("\tFetching days done in {language}...");
             let available_days = language.managed().available_days();
 
-            language_sender
-                .send((language, available_days))
-                .expect("receiver should still be receiving messages");
+            (language, available_days)
         });
 
         thread_handles.push(handle);
     }
 
-    drop(sender);
-
     for handle in thread_handles {
-        handle
+        let (language, available_days) = handle
             .join()
             .expect("should be able to join language day discovery thread to main thread");
-    }
 
-    while let Ok((language, available_days)) = receiver.recv() {
         for (year, days) in &available_days {
             let days_count = match year {
                 ..2025 => 25,
