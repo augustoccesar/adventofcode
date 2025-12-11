@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <RootNamespace>aoc</RootNamespace>
+    <AssemblyName>aoc</AssemblyName>
     <OutputType>Exe</OutputType>
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>

@@ -13,6 +13,12 @@ use crate::languages::{ManagedLanguage, parse_year_available_days};
 pub struct Ruby;
 
 impl ManagedLanguage for Ruby {
+    fn build(&self) {}
+
+    fn release_run(&self, year: u16, day: u8) -> String {
+        self.run(year, day)
+    }
+
     fn run(&self, year: u16, day: u8) -> String {
         let stdout = process::Command::new("bundle")
             .args([
@@ -20,8 +26,8 @@ impl ManagedLanguage for Ruby {
                 "ruby",
                 "main.rb",
                 "run",
-                &format!("{}", year),
-                &format!("{}", day),
+                &year.to_string(),
+                &day.to_string(),
             ])
             .current_dir(crate::base_path().join("ruby"))
             .output()

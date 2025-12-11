@@ -32,6 +32,22 @@ application {
     mainClass = 'se.augustocesar.aocjava.App'
 }
 
+run {
+    workingDir = project.rootDir
+}
+
+jar {
+    manifest {
+        attributes(
+            'Main-Class': 'se.augustocesar.aocjava.App'
+        )
+    }
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
 spotless {
   java {
     googleJavaFormat()

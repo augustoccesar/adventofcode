@@ -13,6 +13,33 @@ use crate::languages::{ManagedLanguage, parse_year_available_days};
 pub struct CSharp;
 
 impl ManagedLanguage for CSharp {
+    fn build(&self) {
+        process::Command::new("dotnet")
+            .args(["build", "--configuration", "Release"])
+            .current_dir(crate::base_path().join("csharp"))
+            .stderr(Stdio::null())
+            .output()
+            .unwrap();
+    }
+
+    fn release_run(&self, year: u16, day: u8) -> String {
+        let stdout = process::Command::new("./bin/Release/net10.0/aoc")
+            .args([
+                "run",
+                "--year",
+                &year.to_string(),
+                "--day",
+                &day.to_string(),
+            ])
+            .current_dir(crate::base_path().join("csharp"))
+            .stderr(Stdio::null())
+            .output()
+            .unwrap()
+            .stdout;
+
+        String::from_utf8(stdout).expect("stdout should be valid UTF-8")
+    }
+
     fn run(&self, year: u16, day: u8) -> String {
         let stdout = process::Command::new("dotnet")
             .args([

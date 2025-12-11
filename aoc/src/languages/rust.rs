@@ -13,15 +13,29 @@ use crate::languages::{ManagedLanguage, parse_year_available_days};
 pub struct Rust;
 
 impl ManagedLanguage for Rust {
+    fn build(&self) {
+        process::Command::new("cargo")
+            .args(["build", "--release"])
+            .current_dir(crate::base_path().join("rust"))
+            .stderr(Stdio::null())
+            .status()
+            .unwrap();
+    }
+
+    fn release_run(&self, year: u16, day: u8) -> String {
+        let stdout = process::Command::new("./target/release/aoc-rust")
+            .args(["run", &year.to_string(), &day.to_string()])
+            .current_dir(crate::base_path().join("rust"))
+            .output()
+            .unwrap()
+            .stdout;
+
+        String::from_utf8(stdout).expect("stdout should be valid UTF-8")
+    }
+
     fn run(&self, year: u16, day: u8) -> String {
         let stdout = process::Command::new("cargo")
-            .args([
-                "run",
-                "--",
-                "run",
-                &format!("{}", year),
-                &format!("{}", day),
-            ])
+            .args(["run", "--", "run", &year.to_string(), &day.to_string()])
             .current_dir(crate::base_path().join("rust"))
             .output()
             .unwrap()

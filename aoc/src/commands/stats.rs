@@ -34,12 +34,17 @@ fn generate() -> Registry {
     for language in Language::all() {
         let registry = Arc::clone(&years_registry);
         let handle = thread::spawn(move || {
-            println!("\tCollecting days done in {language}...");
+            println!("[RUNNING] Building language project...");
+            language.managed().build();
+            println!("[DONE] Built!");
+
+            println!("[RUNNING] Collecting days done in {language}...");
             let available_days = language.managed().available_days();
+            println!("[DONE] Collected!");
 
             for (year_number, days) in &available_days {
                 for day_number in days {
-                    println!("\t[RUNNING] Day {day_number} for year {year_number}...");
+                    println!("[RUNNING] Day {day_number} for year {year_number}...");
 
                     let resolution: Vec<(String, Duration)> =
                         language.managed().formatted_run(*year_number, *day_number);
@@ -56,7 +61,7 @@ fn generate() -> Registry {
                             part_two: resolution.get(1).map(|r| r.1),
                         });
 
-                    println!("\t[DONE] Day {day_number} for year {year_number}...");
+                    println!("[DONE] Day {day_number} for year {year_number}...");
                 }
             }
 

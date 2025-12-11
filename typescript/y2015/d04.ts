@@ -25,7 +25,7 @@ function lookup(secret: String, leading_zeros: number) {
   for (let i = 1; result == -1; i++) {
     const md = md5(`${secret}${i}`);
 
-    if (md.slice(0, leading_zeros).split("").every((item) => item == "0")) {
+    if (md.slice(0, leading_zeros).split("").every((item: string) => item == "0")) {
       result = i;
     }
   }

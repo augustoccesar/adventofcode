@@ -13,6 +13,31 @@ use crate::languages::{ManagedLanguage, parse_year_available_days};
 pub struct Java;
 
 impl ManagedLanguage for Java {
+    fn build(&self) {
+        process::Command::new("gradle")
+            .args(["clean", "build"])
+            .current_dir(crate::base_path().join("java"))
+            .stderr(Stdio::null())
+            .output()
+            .unwrap();
+    }
+
+    fn release_run(&self, year: u16, day: u8) -> String {
+        let output = process::Command::new("java")
+            .args([
+                "-jar",
+                "app/build/libs/app.jar",
+                "run",
+                &year.to_string(),
+                &day.to_string(),
+            ])
+            .current_dir(crate::base_path().join("java"))
+            .output()
+            .unwrap();
+
+        String::from_utf8(output.stdout).expect("stdout should be valid UTF-8")
+    }
+
     fn run(&self, year: u16, day: u8) -> String {
         let stdout = process::Command::new("gradle")
             .args(["run", &format!("--args=run {} {}", year, day)])

@@ -13,6 +13,32 @@ use crate::languages::{ManagedLanguage, parse_year_available_days};
 pub struct Typescript;
 
 impl ManagedLanguage for Typescript {
+    fn build(&self) {
+        process::Command::new("deno")
+            .args([
+                "compile",
+                "-A",
+                "--unstable-temporal",
+                "-o",
+                "build/aoc",
+                "main.ts",
+            ])
+            .current_dir(crate::base_path().join("typescript"))
+            .stderr(Stdio::null())
+            .status()
+            .unwrap();
+    }
+
+    fn release_run(&self, year: u16, day: u8) -> String {
+        let output = process::Command::new("./build/aoc")
+            .args(["run", &year.to_string(), &day.to_string()])
+            .current_dir(crate::base_path().join("typescript"))
+            .output()
+            .unwrap();
+
+        String::from_utf8(output.stdout).expect("stdout should be valid UTF-8")
+    }
+
     fn run(&self, year: u16, day: u8) -> String {
         let stdout = process::Command::new("deno")
             .args([
@@ -21,8 +47,8 @@ impl ManagedLanguage for Typescript {
                 "--unstable-temporal",
                 "main.ts",
                 "run",
-                &format!("{}", year),
-                &format!("{}", day),
+                &year.to_string(),
+                &day.to_string(),
             ])
             .current_dir(crate::base_path().join("typescript"))
             .output()

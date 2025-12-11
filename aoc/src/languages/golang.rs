@@ -13,15 +13,29 @@ use crate::languages::{ManagedLanguage, parse_year_available_days};
 pub struct Golang;
 
 impl ManagedLanguage for Golang {
+    fn build(&self) {
+        process::Command::new("go")
+            .args(["build", "-o", "build/aoc"])
+            .current_dir(crate::base_path().join("golang"))
+            .stderr(Stdio::null())
+            .status()
+            .unwrap();
+    }
+
+    fn release_run(&self, year: u16, day: u8) -> String {
+        let stdout = process::Command::new("./build/aoc")
+            .args(["run", &year.to_string(), &day.to_string()])
+            .current_dir(crate::base_path().join("golang"))
+            .output()
+            .unwrap()
+            .stdout;
+
+        String::from_utf8(stdout).expect("stdout should be valid UTF-8")
+    }
+
     fn run(&self, year: u16, day: u8) -> String {
         let stdout = process::Command::new("go")
-            .args([
-                "run",
-                "main.go",
-                "run",
-                &format!("{}", year),
-                &format!("{}", day),
-            ])
+            .args(["run", "main.go", "run", &year.to_string(), &day.to_string()])
             .current_dir(crate::base_path().join("golang"))
             .output()
             .unwrap()

@@ -29,7 +29,7 @@ public abstract class Day {
   protected List<String> readInputLines(final String name) {
     final String fileName = fileName(name);
 
-    File file = new File(String.format("../../inputs/%s", fileName));
+    File file = new File(String.format("../inputs/%s", fileName));
     try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
       return reader.lines().toList();
     } catch (IOException e) {
