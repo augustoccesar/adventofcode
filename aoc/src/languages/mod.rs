@@ -6,7 +6,9 @@ mod ruby;
 mod rust;
 mod typescript;
 
-use std::{collections::HashMap, fmt::Display, path::PathBuf};
+use std::{collections::HashMap, fmt::Display, path::PathBuf, time::Duration};
+
+use anyhow::{Context, anyhow};
 
 use crate::languages::{
     csharp::CSharp, golang::Golang, java::Java, python::Python, ruby::Ruby, rust::Rust,
@@ -18,6 +20,12 @@ pub trait ManagedLanguage {
     fn available_days(&self) -> HashMap<u16, Vec<u8>>;
     fn prepare_day(&self, year: u16, day: u8) -> PathBuf;
     fn path_to_day(&self, year: u16, day: u8) -> PathBuf;
+
+    fn formatted_run(&self, year: u16, day: u8) -> Vec<(String, Duration)> {
+        let output = self.run(year, day);
+
+        parse_run_output(&output).unwrap().collect::<Vec<_>>()
+    }
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, clap::ValueEnum)]
@@ -126,4 +134,36 @@ fn parse_year_available_days(input: &str) -> HashMap<u16, Vec<u8>> {
     }
 
     map
+}
+
+// Parse the format:
+// <output_1>;<duration_nanosecs_1>
+// <output_2>;<duration_nanosecs_2>
+fn parse_run_output(
+    output: &str,
+) -> Result<impl Iterator<Item = (String, Duration)>, anyhow::Error> {
+    let lines = output.lines().collect::<Vec<_>>();
+
+    if lines.len() != 2 {
+        return Err(anyhow!("Output should have exactly two lines"));
+    }
+
+    let results: Result<Vec<_>, anyhow::Error> = lines
+        .into_iter()
+        .map(|line| {
+            let mut line_iter = line.split(";");
+            let result = line_iter.next().expect("line should have a result");
+            let duration = Duration::from_nanos(
+                line_iter
+                    .next()
+                    .context("line should have a duration")?
+                    .parse::<u64>()
+                    .context("duration should be a valid u64")?,
+            );
+
+            Ok((result.to_owned(), duration))
+        })
+        .collect();
+
+    Ok(results?.into_iter())
 }
