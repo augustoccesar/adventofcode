@@ -7,12 +7,12 @@
 ## Stats
 
 **Total AoC days**: _237_</br>
-**Total days done**: _130_
+**Total days done**: _131_
 
-- <img src="resources/icons/rust.svg" width="20" height="20"> **Rust**: _39 days_ (30%)
+- <img src="resources/icons/rust.svg" width="20" height="20"> **Rust**: _40 days_ (31%)
 - <img src="resources/icons/golang.svg" width="20" height="20"> **Golang**: _25 days_ (19%)
 - <img src="resources/icons/java.svg" width="20" height="20"> **Java**: _17 days_ (13%)
-- <img src="resources/icons/ruby.svg" width="20" height="20"> **Ruby**: _15 days_ (12%)
+- <img src="resources/icons/ruby.svg" width="20" height="20"> **Ruby**: _15 days_ (11%)
 - <img src="resources/icons/csharp.svg" width="20" height="20"> **C#**: _14 days_ (11%)
 - <img src="resources/icons/python.svg" width="20" height="20"> **Python**: _10 days_ (8%)
 - <img src="resources/icons/typescript.svg" width="20" height="20"> **Typescript**: _10 days_ (8%)
@@ -34,7 +34,7 @@
 | [06](https://adventofcode.com/2025/day/6) | [07](https://adventofcode.com/2025/day/7) | [08](https://adventofcode.com/2025/day/8) | [09](https://adventofcode.com/2025/day/9) | [10](https://adventofcode.com/2025/day/10) |
 |<a href="/rust/src/y2025/d06.rs"><img src="resources/icons/rust.svg" width="20" height="20"></a>|<a href="/rust/src/y2025/d07.rs"><img src="resources/icons/rust.svg" width="20" height="20"></a>|<a href="/rust/src/y2025/d08.rs"><img src="resources/icons/rust.svg" width="20" height="20"></a>|<a href="/rust/src/y2025/d09.rs"><img src="resources/icons/rust.svg" width="20" height="20"></a>|<a href="/rust/src/y2025/d10.rs"><img src="resources/icons/rust.svg" width="20" height="20"></a>|
 | [11](https://adventofcode.com/2025/day/11) | [12](https://adventofcode.com/2025/day/12) |
-|—|—|
+|<a href="/rust/src/y2025/d11.rs"><img src="resources/icons/rust.svg" width="20" height="20"></a>|—|
 </div>
 </details>
 
