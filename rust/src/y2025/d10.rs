@@ -1,3 +1,5 @@
+use itertools::Itertools;
+
 use crate::Day;
 
 pub struct Day10 {}
@@ -16,7 +18,24 @@ impl Day for Day10 {
 
         let mut total = 0;
         for manual in &manuals {
-            total += find_min_clicks(manual, vec![false; manual.indicator_lights.len()], 0, 1);
+            let mut minimal_clicks = usize::MAX;
+            for pattern in &buttons_combinations(&manual.buttons) {
+                let mut lights = vec![false; manual.indicator_lights.len()];
+
+                for button in pattern {
+                    for light_idx in *button {
+                        lights[*light_idx] = !lights[*light_idx];
+                    }
+                }
+
+                if lights == manual.indicator_lights {
+                    if pattern.len() < minimal_clicks {
+                        minimal_clicks = pattern.len();
+                    }
+                }
+            }
+
+            total += minimal_clicks;
         }
 
         total.to_string()
@@ -75,43 +94,17 @@ fn parse_input(input: &str) -> Vec<Manual> {
     manuals
 }
 
-fn find_min_clicks(
-    manual: &Manual,
-    current_lights: Vec<bool>,
-    clicking_idx: usize,
-    clicks_so_far: usize,
-) -> usize {
-    for i in clicking_idx..manual.buttons.len() {
-        let button = &manual.buttons[i];
+fn buttons_combinations(buttons: &[Vec<usize>]) -> Vec<Vec<&Vec<usize>>> {
+    let mut patterns = vec![];
 
-        let mut test_lights = current_lights.clone();
-        for toggling_light in button {
-            test_lights[*toggling_light] = !test_lights[*toggling_light];
-        }
-
-        if test_lights
+    for buttons_count in 1..=buttons.len() {
+        let pattern = buttons
             .iter()
-            .enumerate()
-            .all(|(i, light)| *light == manual.indicator_lights[i])
-        {
-            return clicks_so_far;
-        }
+            .combinations(buttons_count)
+            .collect::<Vec<_>>();
+
+        patterns.extend(pattern);
     }
 
-    let mut min_clicks = usize::MAX;
-    for i in clicking_idx..manual.buttons.len() {
-        let button = &manual.buttons[i];
-
-        let mut test_lights = current_lights.clone();
-        for toggling_light in button {
-            test_lights[*toggling_light] = !test_lights[*toggling_light];
-        }
-
-        let new_clicks = find_min_clicks(manual, test_lights, i + 1, clicks_so_far + 1);
-        if new_clicks < min_clicks {
-            min_clicks = new_clicks;
-        }
-    }
-
-    min_clicks
+    patterns
 }
